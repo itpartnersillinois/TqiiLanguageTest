@@ -1,0 +1,21 @@
+﻿@page
+@model TqiiLanguageTest.Pages.SampleRecordingModel
+@{
+}
+<h1>Sample Answer - Recording</h1>
+
+<p>Sample answer for recording</p>
+
+<div>
+    <p id="countdown" class="hidden">10</p>
+</div>
+
+<div class="hidden" id="information">
+    <p>The recording has stopped. You may continue to the next question at any time.</p>
+    <p><a href="/Question" class="il-button">Start Test</a></p>
+    
+</div>
+
+@section Scripts {
+    <script src="~/js/sample-recording.js" asp-append-version="true"></script>
+}

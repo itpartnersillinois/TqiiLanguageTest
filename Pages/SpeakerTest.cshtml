@@ -1,0 +1,20 @@
+﻿@page
+@model TqiiLanguageTest.Pages.SpeakerTestModel
+@{
+}
+<h1>Speaker Test</h1>
+
+<div>
+    <button id="play" class="il-button">Play</button>
+</div>
+
+<div id="information">
+</div>
+
+<div>
+    <a href="/MicrophoneTest" class="il-button hidden" id="continue">Test your microphone</a>
+</div>
+
+@section Scripts {
+    <script src="~/js/speaker-test.js" asp-append-version="true"></script>
+}

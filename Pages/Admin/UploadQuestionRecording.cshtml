@@ -1,0 +1,17 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.UploadQuestionRecordingModel
+@{
+}
+
+<form method="post" enctype="multipart/form-data">
+    <div>
+    <label for="id">Question ID (integer):</label>
+    <input id="id" name="id" />
+    </div>
+    <div>
+    <label><span>Choose an audio recording to upload:</span> <input name="file" type="file" /></label>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>

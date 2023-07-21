@@ -1,0 +1,23 @@
+﻿@page
+@model TqiiLanguageTest.Pages.MicrophoneTestModel
+@{
+    ViewData["Title"] = "Microphone Test";
+}
+<h1>Microphone Test</h1>
+
+<div>
+    <button id="record" class="il-button">Start Recording</button>
+</div>
+
+<p>Note that you may need to authorize the browser to use the microphone. Click "Allow".</p>
+
+<div id="information">
+</div>
+
+<div>
+    <a href="/SampleQuestion" class="il-button hidden" id="continue">Go to the sample question</a>
+</div>
+
+@section Scripts {
+    <script src="~/js/microphone-test.js" asp-append-version="true"></script>
+}

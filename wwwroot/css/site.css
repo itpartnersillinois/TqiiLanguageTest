@@ -1,0 +1,29 @@
+main {
+    margin: auto;
+    max-width: 1200px;
+}
+
+.buttons {
+    display: flex;
+    flex: 0 1 50%;
+}
+
+.il-button.hidden, .hidden {
+    display: none;
+}
+
+#countdown {
+    position: absolute;
+    font-weight: 700;
+    z-index: 10;
+    left: 0;
+    top: 0;
+    padding: 20px;
+    margin: 10px;
+    font-size: 24px;
+    border: 2px solid var(--il-blue);
+}
+
+    #countdown.background {
+        background-color: #ffaaaa;
+    }
