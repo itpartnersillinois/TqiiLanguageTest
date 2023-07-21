@@ -1,0 +1,22 @@
+﻿@page
+@model TqiiLanguageTest.Pages.QuestionModel
+@{
+}
+
+<h1>Listen to the Recording</h1>
+
+<p>Please listen to the clip. When it is done, it will direct you to the next page. Do not press refresh during this time, as this will prevent you from answering this question.</p>
+
+<p>Recording @Model.Question?.CurrentQuestionNumber of @Model.Question?.TotalQuestions</p>
+
+<div>
+    <button id="play" class="il-button">Play Clip</button>
+</div>
+
+<div id="question" class="hidden">@Model.Question?.Guid</div>
+<div id="route" class="hidden">@Model.Question?.Route</div>
+
+
+@section Scripts {
+    <script src="~/js/question.js" asp-append-version="true"></script>
+}

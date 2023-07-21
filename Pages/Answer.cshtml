@@ -1,0 +1,34 @@
+﻿@page
+@model TqiiLanguageTest.Pages.AnswerModel
+@{
+}
+<h1>Answer the question</h1>
+<div class="hidden" id="display-after-recording">
+
+    <p>Please answer the following. When you are done or when time runs out, it will direct you to the next page</p>
+
+    <p>Answering @Model.Answer?.CurrentQuestionNumber of @Model.Answer?.TotalQuestions</p>
+
+    <p>@Model.Answer.QuestionText</p>
+
+    <div class="flexbox buttons">
+        @foreach (var a in Model.ButtonAnswers)
+        {
+            <a class="il-button">@a</a>
+        }
+    </div>
+
+    <div>
+        <p id="countdown">@Model.Answer?.DurationAnswerInSeconds</p>
+    </div>
+</div>
+
+<form method="post" class="hidden" id="form">
+    <input id="answer" type="hidden" value="@Model.Answer?.Guid" name="answerguid">
+    <input id="answertext" type="hidden" name="answertext">
+    <input id="id" type="hidden" name="id">
+</form>
+
+@section Scripts {
+    <script src="~/js/answer.js" asp-append-version="true"></script>
+}

@@ -30,6 +30,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                 returnValue = GetQuestionByTestAndOrder(testUserObject.TestId, testUserObject.CurrentQuestionOrder);
                 if (returnValue != null) {
                     testUserObject.CurrentQuestionId = returnValue.Id;
+                    returnValue.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;
                     returnValue.TotalQuestions = testUserObject.TotalQuestions;
                 }
             }
@@ -48,7 +49,7 @@ namespace TqiiLanguageTest.BusinessLogic {
         }
 
         internal Question? GetQuestionByTestAndOrder(int id, int orderBy) => _context?.Questions?
-            .Where(q => q.TestId == id && q.OrderBy <= orderBy)
+            .Where(q => q.TestId == id && q.OrderBy >= orderBy)
             .OrderBy(q => q.OrderBy).ThenBy(q => Guid.NewGuid()).FirstOrDefault();
     }
 }

@@ -5,16 +5,14 @@ namespace TqiiLanguageTest.BusinessLogic {
 
     public class AnswerHandler {
         private readonly LanguageDbContext _context;
-        private readonly QuestionHandler _questionHandler;
         private readonly TestUserHandler _testUserHandler;
 
-        public AnswerHandler(LanguageDbContext context, QuestionHandler questionHandler, TestUserHandler testUserHandler) {
+        public AnswerHandler(LanguageDbContext context, TestUserHandler testUserHandler) {
             _context = context;
-            _questionHandler = questionHandler;
             _testUserHandler = testUserHandler;
         }
 
-        public async Task<Guid?> CreateAnswer(Guid testUser) {
+        public async Task<Answer?> GetAnswer(Guid testUser) {
             var testUserObject = _testUserHandler.GetTestUser(testUser);
             if (testUserObject == null) {
                 return null;
@@ -24,14 +22,28 @@ namespace TqiiLanguageTest.BusinessLogic {
             if (question == null) {
                 return null;
             }
-            var answer = new Answer {
-                Question = question,
-                TestUser = testUserObject
-            };
-
-            _context.Add(answer);
+            var answer = _context.Answers?.SingleOrDefault(q => q.TestUserId == testUserObject.Id && q.QuestionId == question.Id);
+            if (answer == null) {
+                answer = new Answer {
+                    ReviewerNotes = "Starting",
+                    Question = question,
+                    TestUser = testUserObject
+                };
+                _context.Add(answer);
+            } else if (answer.ReviewerNotes == "Starting") {
+                return null;
+            } else {
+                answer.ReviewerNotes = "Starting";
+            }
             _ = await _context.SaveChangesAsync();
-            return answer.Guid;
+            answer.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;
+            answer.TotalQuestions = testUserObject.TotalQuestions;
+            answer.AnswerOptions = question.AnswerOptions;
+            answer.QuestionText = question.QuestionText;
+            answer.RecordingText = question.RecordingText;
+            answer.DurationAnswerInSeconds = question.DurationAnswerInSeconds;
+            answer.DurationRecordingInSeconds = question.DurationRecordingInSeconds;
+            return answer;
         }
 
         public async Task<string> SetRecording(Guid answerGuid, byte[] recording) {
@@ -44,6 +56,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             }
             answer.Recording = recording;
             answer.DateTimeEnd = DateTime.Now;
+            answer.ReviewerNotes = "";
             _ = await _context.SaveChangesAsync();
             return string.Empty;
         }
@@ -58,6 +71,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             }
             answer.Text = answerText;
             answer.DateTimeTextAnswered = DateTime.Now;
+            answer.ReviewerNotes = "";
             _ = await _context.SaveChangesAsync();
             return string.Empty;
         }

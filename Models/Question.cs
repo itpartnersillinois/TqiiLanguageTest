@@ -5,6 +5,10 @@ namespace TqiiLanguageTest.Models {
 
     public class Question {
         public string AnswerOptions { get; set; } = string.Empty;
+
+        [NotMapped]
+        public int CurrentQuestionNumber { get; set; }
+
         public int DurationAnswerInSeconds { get; set; } = 10;
         public int DurationRecordingInSeconds { get; set; } = 60;
         public Guid Guid { get; set; } = Guid.NewGuid();
@@ -19,6 +23,7 @@ namespace TqiiLanguageTest.Models {
 
         public byte[] Recording { get; set; } = Array.Empty<byte>();
         public string RecordingText { get; set; } = string.Empty;
+        public string Route => DurationAnswerInSeconds == 0 ? "Recording" : "Answer";
         public Test? Test { get; set; }
         public int TestId { get; set; }
         public string Title { get; set; } = string.Empty;

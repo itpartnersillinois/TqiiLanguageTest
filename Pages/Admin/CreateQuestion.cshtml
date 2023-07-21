@@ -33,6 +33,11 @@
                 <span asp-validation-for="Question.AnswerOptions" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Question.RecordingText" class="control-label"></label>
+                <input asp-for="Question.RecordingText" class="form-control" />
+                <span asp-validation-for="Question.RecordingText" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Question.DurationAnswerInSeconds" class="control-label"></label>
                 <input asp-for="Question.DurationAnswerInSeconds" class="form-control" />
                 <span asp-validation-for="Question.DurationAnswerInSeconds" class="text-danger"></span>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
@@ -19,13 +20,22 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 builder.Services.AddScoped<TestUserHandler>();
 builder.Services.AddScoped<QuestionHandler>();
 builder.Services.AddScoped<AnswerHandler>();
+builder.Services.AddScoped<PermissionsHandler>();
 
 builder.Services.AddRazorPages(options => {
     options.Conventions.AuthorizeFolder("/");
     options.Conventions.AllowAnonymousToFolder("/Account");
 });
 builder.Services.AddControllers();
-
+builder.Services.Configure<FormOptions>(form => {
+    form.ValueLengthLimit = int.MaxValue;
+    form.MultipartBodyLengthLimit = int.MaxValue;
+    form.MemoryBufferThreshold = int.MaxValue;
+});
+builder.Services.Configure<IISServerOptions>(form => {
+    form.MaxRequestBodyBufferSize = int.MaxValue;
+    form.MaxRequestBodySize = int.MaxValue;
+});
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

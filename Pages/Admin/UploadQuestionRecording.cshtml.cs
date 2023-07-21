@@ -11,7 +11,11 @@ namespace TqiiLanguageTest.Pages.Admin {
             _questionHandler = questionHandler;
         }
 
-        public void OnGet() {
+        [BindProperty]
+        public int Id { get; set; }
+
+        public void OnGet(int id) {
+            Id = id;
         }
 
         public async Task<IActionResult> OnPostAsync() {
@@ -20,7 +24,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             var fileBytes = ms.ToArray();
             var id = int.Parse(Request.Form.First().Value);
             var result = await _questionHandler.SaveRecording(id, fileBytes);
-            return RedirectToPage("./Index");
+            return new EmptyResult();
         }
     }
 }

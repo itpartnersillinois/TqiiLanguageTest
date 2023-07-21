@@ -1,0 +1,30 @@
+﻿@page
+@model TqiiLanguageTest.Pages.RecordingModel
+@{
+}
+<h1>Recording your response</h1>
+<div class="hidden" id="display-after-recording">
+    <p>This is now recording. Please speak into the microphone for the duration of the countdown. </p>
+
+    <p>Answering @Model.Answer?.CurrentQuestionNumber of @Model.Answer?.TotalQuestions</p>
+
+    <p>@Model.Answer.RecordingText</p>
+
+    <div class="flexbox buttons">
+        <a class="il-button" id="endrecording">End Recording</a>
+    </div>
+
+    <div>
+        <p id="countdown">@Model.Answer?.DurationRecordingInSeconds</p>
+    </div>
+</div>
+
+<form method="post" class="hidden" id="form">
+    <input id="answerguid" type="hidden" value="@Model.Answer?.Guid" name="answerguid">
+    <input id="file" name="file" type="file" />
+    <input id="id" type="hidden" name="id">
+</form>
+
+@section Scripts {
+    <script src="~/js/recording.js" asp-append-version="true"></script>
+}

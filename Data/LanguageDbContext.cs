@@ -13,6 +13,7 @@ namespace TqiiLanguageTest.Data {
         }
 
         public DbSet<Answer>? Answers { get; set; }
+        public DbSet<Permission>? Permissions { get; set; }
         public DbSet<QuestionRubric>? QuestionRubrics { get; set; }
         public DbSet<Question>? Questions { get; set; }
         public DbSet<Test>? Tests { get; set; }

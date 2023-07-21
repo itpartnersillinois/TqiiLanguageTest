@@ -1,3 +1,8 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
 main {
     margin: auto;
     max-width: 1200px;
@@ -6,10 +11,26 @@ main {
 .buttons {
     display: flex;
     flex: 0 1 50%;
+    row-gap: 20px;
+}
+
+    .buttons .il-button {
+        min-width: 200px;
+        margin: 0 40px;
+    }
+
+h1 {
+    margin-top: 24px;
 }
 
 .il-button.hidden, .hidden {
     display: none;
+}
+
+button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-formatted button[disabled].il-button:hover {
+    background: var(--il-gray-1);
+    color: var(--il-gray-2);
+    border-color: var(--il-gray-2);
 }
 
 #countdown {

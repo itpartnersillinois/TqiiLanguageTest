@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace TqiiLanguageTest.Pages
 {
-    public class SpeakerTestModel : PageModel
+    public class EndingModel : PageModel
     {
         public void OnGet()
         {
