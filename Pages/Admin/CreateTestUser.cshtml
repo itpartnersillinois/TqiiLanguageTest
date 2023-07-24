@@ -2,13 +2,12 @@
 @model TqiiLanguageTest.Pages.Admin.CreateTestUserModel
 
 @{
-    ViewData["Title"] = "CreateTestUser";
+    Layout = "_Admin";
+    ViewData["Title"] = "Create Test User";
 }
 
-<h1>CreateTestUser</h1>
+<h1>Create Test User</h1>
 
-<h4>TestUser</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -24,7 +23,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="TestUser.TestId" class="control-label"></label>
-                <input asp-for="TestUser.TestId" class="form-control" />
+                <select asp-for="TestUser.TestId" class="form-control" asp-items="ViewBag.TestId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

@@ -2,64 +2,57 @@
 @model TqiiLanguageTest.Pages.Admin.CreateQuestionModel
 
 @{
-    ViewData["Title"] = "CreateQuestion";
+    Layout = "_Admin";
+    ViewData["Title"] = "Create Question";
 }
 
-<h1>CreateQuestion</h1>
+<h1>Create Question</h1>
 
-<h4>Question</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Question.TestId" class="control-label"></label>
-                <select asp-for="Question.TestId" class="form-control" asp-items="ViewBag.TestId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Question.Title" class="control-label"></label>
-                <input asp-for="Question.Title" class="form-control" />
-                <span asp-validation-for="Question.Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Question.QuestionText" class="control-label"></label>
-                <input asp-for="Question.QuestionText" class="form-control" />
-                <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Question.AnswerOptions" class="control-label"></label>
-                <input asp-for="Question.AnswerOptions" class="form-control" />
-                <span asp-validation-for="Question.AnswerOptions" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Question.RecordingText" class="control-label"></label>
-                <input asp-for="Question.RecordingText" class="form-control" />
-                <span asp-validation-for="Question.RecordingText" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Question.DurationAnswerInSeconds" class="control-label"></label>
-                <input asp-for="Question.DurationAnswerInSeconds" class="form-control" />
-                <span asp-validation-for="Question.DurationAnswerInSeconds" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Question.DurationRecordingInSeconds" class="control-label"></label>
-                <input asp-for="Question.DurationRecordingInSeconds" class="form-control" />
-                <span asp-validation-for="Question.DurationRecordingInSeconds" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Question.OrderBy" class="control-label"></label>
-                <input asp-for="Question.OrderBy" class="form-control" />
-                <span asp-validation-for="Question.OrderBy" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<form method="post">
+    <div class="form-group ils-input-entry">
+        <input name="Question.TestId" type="hidden" value="@Model.Question.TestId">
+        <input type="hidden" asp-for="Question.Id" class="form-control" />
     </div>
-</div>
-
+    <div class="ils-input-entry form-group">
+        <label for="Question_Title" class="control-label">Question Title</label>
+        <input asp-for="Question.Title" class="form-control" />
+        <span asp-validation-for="Question.Title" class="text-danger"></span>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_OrderBy" class="control-label">Order By (numeric)</label>
+        <input asp-for="Question.OrderBy" class="form-control" />
+        <span asp-validation-for="Question.OrderBy" class="text-danger"></span>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_QuestionText" class="control-label">Question Text</label>
+        <input asp-for="Question.QuestionText" class="ils-input-long form-control" />
+        <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_AnswerOptions" class="control-label">Answers (separate multiple answers by a "|" symbol)</label>
+        <input asp-for="Question.AnswerOptions" class="ils-input-long form-control" />
+        <span asp-validation-for="Question.AnswerOptions" class="text-danger"></span>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_DurationAnswerInSeconds" class="control-label">Duration of Answer in Seconds (numeric)</label>
+        <input asp-for="Question.DurationAnswerInSeconds" class="form-control" />
+        <span asp-validation-for="Question.DurationAnswerInSeconds" class="text-danger"></span>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_RecordingText" class="control-label">Recording Test</label>
+        <input asp-for="Question.RecordingText" class="ils-input-long form-control" />
+        <span asp-validation-for="Question.RecordingText" class="text-danger"></span>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_DurationRecordingInSeconds" class="control-label">Duration of Recording in Seconds (numeric)</label>
+        <input asp-for="Question.DurationRecordingInSeconds" class="form-control" />
+        <span asp-validation-for="Question.DurationRecordingInSeconds" class="text-danger"></span>
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
 <div>
-    <a asp-page="Index">Back to List</a>
+    <a href="/Admin/CreateTest?id=@Model.Question.TestId">Back to Edit Test</a>
 </div>
 

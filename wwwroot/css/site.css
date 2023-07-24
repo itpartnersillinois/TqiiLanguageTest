@@ -11,15 +11,15 @@ main {
 .buttons {
     display: flex;
     flex: 0 1 50%;
-    row-gap: 20px;
+    column-gap: 40px;
 }
 
     .buttons .il-button {
         min-width: 200px;
-        margin: 0 40px;
+        margin: 0;
     }
 
-h1 {
+main.il-formatted h1:first-child {
     margin-top: 24px;
 }
 
@@ -34,15 +34,14 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
 }
 
 #countdown {
-    position: absolute;
     font-weight: 700;
     z-index: 10;
-    left: 0;
-    top: 0;
     padding: 20px;
-    margin: 10px;
+    margin: 30px 10px;
     font-size: 24px;
     border: 2px solid var(--il-blue);
+    background-color: #ffffed;
+    text-align: center;
 }
 
     #countdown.background {

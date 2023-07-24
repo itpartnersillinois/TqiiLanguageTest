@@ -1,0 +1,38 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.ListTestModel
+
+@{
+    ViewData["Title"] = "Tests";
+}
+
+<h1>Tests</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Test Title
+            </th>
+            <th>
+                Number of Questions
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Test) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumberQuestions)
+            </td>
+            <td>
+                <a asp-page="./CreateTest" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./CreateQuestion" asp-route-id="@item.Id">Add Questions</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
 using TqiiLanguageTest.Models;
 
@@ -8,16 +8,25 @@ namespace TqiiLanguageTest.Pages.Admin {
 
     public class CreateQuestionModel : PageModel {
         private readonly LanguageDbContext _context;
+        private readonly PermissionsHandler _permissions;
 
-        public CreateQuestionModel(LanguageDbContext context) {
+        public CreateQuestionModel(LanguageDbContext context, PermissionsHandler permissions) {
             _context = context;
+            _permissions = permissions;
         }
 
         [BindProperty]
         public Question Question { get; set; } = default!;
 
-        public IActionResult OnGet() {
-            ViewData["TestId"] = new SelectList(_context.Tests, "Id", "Id");
+        public IActionResult OnGet(int id, int questionid) {
+            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+                return Unauthorized();
+            }
+            if (questionid == 0) {
+                Question = new Question { TestId = id };
+            } else {
+                Question = _context.Questions?.Find(questionid) ?? new Question();
+            }
             return Page();
         }
 
@@ -25,11 +34,14 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!ModelState.IsValid || _context.Questions == null || Question == null) {
                 return Page();
             }
-
-            _context.Questions.Add(Question);
+            if (Question.Id == 0) {
+                _context.Questions.Add(Question);
+            } else {
+                _context.Questions.Update(Question);
+            }
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./UploadQuestionRecording", new { id = Question.Id });
+            return RedirectToPage("./UploadQuestionRecording", new { id = Question.Id, testid = Question.TestId });
         }
     }
 }

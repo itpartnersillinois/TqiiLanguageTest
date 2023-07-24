@@ -1,16 +1,18 @@
 ﻿@page
 @model TqiiLanguageTest.Pages.Admin.UploadQuestionRecordingModel
 @{
+    Layout = "_Admin";
+    ViewData["Title"] = "Upload Audio Recording";
 }
 
 <form method="post" enctype="multipart/form-data">
     <div>
-    <label for="id">Question ID (integer):</label>
-    <input id="id" name="id" value="@Model.Id"/>
+    <input id="id" name="id" type="hidden" value="@Model.Id"/>
     </div>
     <div>
     <label><span>Choose an audio recording to upload:</span> <input name="file" type="file" /></label>
     </div>
+    <input id="testid" name="testid" type="hidden" value="@Model.TestId" />
     <div class="form-group">
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
