@@ -1,0 +1,45 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.ListTestUserModel
+
+@{
+    ViewData["Title"] = "List Test Users";
+}
+
+<h1>List Test Users</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Email
+            </th>
+            <th>
+                Test
+            </th>
+            <th>Start</th>
+            <th>End</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.TestUser) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Test.Title)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateTimeStart)
+                </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.DateTimeEnd)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <a href="/Admin">Back to Admin Page</a>
+</div>

@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
+using TqiiLanguageTest.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddScoped<TestUserHandler>();
 builder.Services.AddScoped<QuestionHandler>();
 builder.Services.AddScoped<AnswerHandler>();
 builder.Services.AddScoped<PermissionsHandler>();
+builder.Services.AddTransient<IEmailSender, EmailSender>(e => new EmailSender(builder.Configuration.GetValue<string>("SocketLabsApiKey")));
 
 builder.Services.AddRazorPages(options => {
     options.Conventions.AuthorizeFolder("/");

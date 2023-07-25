@@ -49,10 +49,12 @@
         <span asp-validation-for="Question.DurationRecordingInSeconds" class="text-danger"></span>
     </div>
     <div class="ils-input-entry form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
+        <input type="submit" value="Create" class="il-button" />
     </div>
 </form>
 <div>
     <a href="/Admin/CreateTest?id=@Model.Question.TestId">Back to Edit Test</a>
 </div>
-
+<div>
+    <a href="/Admin">Back to Admin Page</a>
+</div>
