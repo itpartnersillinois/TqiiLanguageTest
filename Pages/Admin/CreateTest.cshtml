@@ -25,7 +25,7 @@
             </div>
             <input type="hidden" asp-for="Test.Id" class="form-control" />
             <div class="form-group">
-                <input type="submit" value="Create" class="il-button" />
+                <input type="submit" value="Create / Edit" class="il-button" />
             </div>
         </form>
     </div>
@@ -57,6 +57,10 @@
         }
     </tbody>
 </table>
+
+<div>
+<a class="il-button" style="width: 200px;" asp-page="./CreateQuestion" asp-route-id="@Model.Test.Id">Create a question</a>
+    </div>
 }
 
 

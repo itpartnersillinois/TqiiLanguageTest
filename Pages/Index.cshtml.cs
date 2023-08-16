@@ -1,16 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using TqiiLanguageTest.BusinessLogic;
 
 namespace TqiiLanguageTest.Pages {
-    public class IndexModel : PageModel {
-        private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ILogger<IndexModel> logger) {
-            _logger = logger;
+    public class IndexModel : PageModel {
+        private readonly TestUserHandler _testUserHandler;
+
+        public IndexModel(TestUserHandler testUserHandler) {
+            _testUserHandler = testUserHandler;
         }
 
-        public void OnGet() {
+        public Guid? Guid { get; set; }
 
+        public void OnGet() {
+            Guid = _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "");
         }
     }
 }

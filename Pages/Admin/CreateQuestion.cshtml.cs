@@ -31,9 +31,14 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         public async Task<IActionResult> OnPostAsync() {
-            if (!ModelState.IsValid || _context.Questions == null || Question == null) {
+            if (_context.Questions == null || Question == null) {
                 return Page();
             }
+            Question.InteractiveReadingAnswer = Question.InteractiveReadingAnswer ?? string.Empty;
+            Question.InteractiveReadingOptions = Question.InteractiveReadingOptions ?? string.Empty;
+            Question.QuestionText = Question.QuestionText ?? string.Empty;
+            Question.AnswerOptions = Question.AnswerOptions ?? string.Empty;
+            Question.RecordingText = Question.RecordingText ?? string.Empty;
             if (Question.Id == 0) {
                 _context.Questions.Add(Question);
             } else {

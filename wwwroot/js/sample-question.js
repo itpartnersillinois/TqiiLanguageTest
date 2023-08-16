@@ -7,7 +7,7 @@ function playSample() {
     play.disabled = true;
     let audioPlayer = new Audio();
     audioPlayer.id = "audio";
-    audioPlayer.src = '/ogg/sample-clip.ogg';
+    audioPlayer.src = '/ogg/sample-clip.wav';
     audioPlayer.controls = false;
     audioPlayer.addEventListener("canplaythrough", (event) => {
         audioPlayer.play();

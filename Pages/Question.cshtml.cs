@@ -19,6 +19,9 @@ namespace TqiiLanguageTest.Pages {
             if (Question == null) {
                 return RedirectToPage("./Ending");
             }
+            if (Question.QuestionType == QuestionEnum.InteractiveReading) {
+                return RedirectToPage("./ReadingAnswer", new { id });
+            }
             return Page();
         }
     }

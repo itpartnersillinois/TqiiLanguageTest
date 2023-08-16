@@ -9,6 +9,14 @@
 
     <p>Answering @Model.Answer?.CurrentQuestionNumber of @Model.Answer?.TotalQuestions</p>
 
+    @if (Model.Question.HasIntroductionImage)
+    {
+        <div>
+            <img src="/Image/Introduction/@Model.Question.Guid" alt="">
+        </div>
+    }
+
+
     <p>@Model.Answer.QuestionText</p>
 
     <div class="flexbox buttons">

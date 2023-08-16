@@ -33,6 +33,9 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!ModelState.IsValid || _context.TestUsers == null || TestUser == null) {
                 return Page();
             }
+            var test = _context.Tests?.Find(TestUser.TestId) ?? new Test();
+
+            TestUser.TotalQuestions = test.NumberQuestions;
 
             _context.TestUsers.Add(TestUser);
             await _context.SaveChangesAsync();

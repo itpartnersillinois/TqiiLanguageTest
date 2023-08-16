@@ -3,6 +3,14 @@ using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.BusinessLogic {
 
+    public enum ImageTypeEnum {
+        IntroductionRecording,
+        Introduction,
+        Question,
+        Recording,
+        InteractiveReading
+    }
+
     public class QuestionHandler {
         private readonly LanguageDbContext _context;
         private readonly TestUserHandler _testUserHandler;
@@ -38,12 +46,32 @@ namespace TqiiLanguageTest.BusinessLogic {
             return returnValue;
         }
 
-        public async Task<string> SaveRecording(int id, byte[] recording) {
+        public async Task<string> SaveByteArray(int id, byte[] image, ImageTypeEnum imageType) {
             var question = _context.Questions?.SingleOrDefault(q => q.Id == id);
             if (question == null) {
                 return "question not found";
             }
-            question.Recording = recording;
+            switch (imageType) {
+                case ImageTypeEnum.IntroductionRecording:
+                    question.Recording = image;
+                    break;
+
+                case ImageTypeEnum.Introduction:
+                    question.IntroductionImage = image;
+                    break;
+
+                case ImageTypeEnum.Question:
+                    question.QuestionImage = image;
+                    break;
+
+                case ImageTypeEnum.Recording:
+                    question.RecordingImage = image;
+                    break;
+
+                case ImageTypeEnum.InteractiveReading:
+                    question.InteractiveReadingImage = image;
+                    break;
+            }
             _ = await _context.SaveChangesAsync();
             return string.Empty;
         }

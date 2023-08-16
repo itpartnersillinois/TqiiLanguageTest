@@ -14,7 +14,7 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         public int Id { get; set; }
-
+        public int ImageType { get; set; }
         public int TestId { get; set; }
 
         public IActionResult OnGet(int id, int testid) {
@@ -32,7 +32,8 @@ namespace TqiiLanguageTest.Pages.Admin {
             var fileBytes = ms.ToArray();
             var id = int.Parse(Request.Form.First().Value);
             var testid = Request.Form["testid"];
-            var result = await _questionHandler.SaveRecording(id, fileBytes);
+            var imagetype = int.Parse(Request.Form["imageType"]);
+            var result = await _questionHandler.SaveByteArray(id, fileBytes, (ImageTypeEnum) imagetype);
             return RedirectToPage("./CreateQuestion", new { id = testid });
         }
     }

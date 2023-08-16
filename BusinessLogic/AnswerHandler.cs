@@ -43,6 +43,8 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.RecordingText = question.RecordingText;
             answer.DurationAnswerInSeconds = question.DurationAnswerInSeconds;
             answer.DurationRecordingInSeconds = question.DurationRecordingInSeconds;
+            answer.InteractiveReadingImage = question.InteractiveReadingImage;
+            answer.InteractiveReadingAnswer = InteractiveReadingParser.ConverToHtml(question.InteractiveReadingAnswer, question.InteractiveReadingOptions.Split("|").ToList());
             return answer;
         }
 
@@ -61,7 +63,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             return string.Empty;
         }
 
-        public async Task<string> SetText(Guid answerGuid, string answerText) {
+        public async Task<string> SetText(Guid answerGuid, string answerText, bool finishQuestion = false) {
             var answer = _context.Answers?.SingleOrDefault(a => a.Guid == answerGuid);
             if (answer == null) {
                 return "not found";
@@ -72,6 +74,9 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.Text = answerText;
             answer.DateTimeTextAnswered = DateTime.Now;
             answer.ReviewerNotes = "";
+            if (finishQuestion) {
+                answer.DateTimeEnd = DateTime.Now;
+            }
             _ = await _context.SaveChangesAsync();
             return string.Empty;
         }

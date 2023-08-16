@@ -24,9 +24,20 @@ namespace TqiiLanguageTest.Models {
 
         public Guid Guid { get; set; } = Guid.NewGuid();
 
+        public bool HasInteractiveReadingImage => InteractiveReadingImage != null && InteractiveReadingImage.Length > 0;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
+
+        [NotMapped]
+        public string InteractiveReadingAnswer { get; set; } = string.Empty;
+
+        [NotMapped]
+        public byte[] InteractiveReadingImage { get; set; } = Array.Empty<byte>();
+
+        [NotMapped]
+        public string InteractiveReadingOptions { get; set; } = string.Empty;
 
         public int OrderBy { get; set; }
         public virtual Question? Question { get; set; }

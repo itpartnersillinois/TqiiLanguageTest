@@ -1,0 +1,29 @@
+﻿@page
+@model TqiiLanguageTest.Pages.ReadingAnswerModel
+@{
+}
+
+<h1>Interactive Reading</h1>
+
+<p>Answering @Model.Answer?.CurrentQuestionNumber of @Model.Answer?.TotalQuestions</p>
+
+<p class="interactive" id="display-after-recording">@Html.Raw(Model.Answer?.InteractiveReadingAnswer)</p>
+
+<div id="question" class="hidden">@Model.Answer?.Guid</div>
+
+<div><a class="il-button" id="continue">Continue</a></div>
+
+<div>
+    <p id="countdown">@Model.Answer?.DurationAnswerInSeconds</p>
+</div>
+
+
+<form method="post" class="hidden" id="form">
+    <input id="answer" type="hidden" value="@Model.Answer?.Guid" name="answerguid">
+    <input id="answertext" type="hidden" name="answertext">
+    <input id="id" type="hidden" name="id">
+</form>
+
+@section Scripts {
+    <script src="~/js/readinganswer.js" asp-append-version="true"></script>
+}

@@ -2,7 +2,7 @@
 @model TqiiLanguageTest.Pages.Admin.UploadQuestionRecordingModel
 @{
     Layout = "_Admin";
-    ViewData["Title"] = "Upload Audio Recording";
+    ViewData["Title"] = "Upload Image and Audio Recording";
 }
 
 <form method="post" enctype="multipart/form-data">
@@ -10,7 +10,17 @@
     <input id="id" name="id" type="hidden" value="@Model.Id"/>
     </div>
     <div>
-    <label><span>Choose an audio recording to upload:</span> <input name="file" type="file" /></label>
+        <label><span>File Type Upload:</span> <select value="@Model.ImageType" name="imageType" id="imageType">
+                <option value="0">Audio Recording</option>
+                <option value="1">Image for Introduction</option>
+                <option value="2">Image for Multiple Choice or Reflection</option>
+                <option value="3">Image while Recording an Answer</option>
+                <option value="4">Interactive Reading Image</option>
+            </select>
+        </label>
+    </div>
+    <div>
+    <label><span>Choose an audio recording or image to upload:</span> <input name="file" type="file" /></label>
     </div>
     <input id="testid" name="testid" type="hidden" value="@Model.TestId" />
     <div class="form-group">

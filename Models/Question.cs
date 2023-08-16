@@ -3,6 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TqiiLanguageTest.Models {
 
+    public enum QuestionEnum {
+        None,
+        SentenceRepetition, // Listen to a recording (introduction), optional multiple choice or reflection, record answer
+        IntegratedSpeaking, // Listen to a recording (introduction), optional reflection, record answer
+        InteractiveReading  // Listen to a recording (introduction), type in an answer
+    }
+
     public class Question {
         public string AnswerOptions { get; set; } = string.Empty;
 
@@ -13,17 +20,33 @@ namespace TqiiLanguageTest.Models {
         public int DurationRecordingInSeconds { get; set; } = 60;
         public Guid Guid { get; set; } = Guid.NewGuid();
 
+        public bool HasAudio => Recording != null && Recording.Length > 0;
+        public bool HasIntroductionImage => IntroductionImage != null && IntroductionImage.Length > 0;
+        public bool HasInteractiveReadingImage => InteractiveReadingImage != null && InteractiveReadingImage.Length > 0;
+        public bool HasQuestionImage => QuestionImage != null && QuestionImage.Length > 0;
+        public bool HasRecordingImage => RecordingImage != null && RecordingImage.Length > 0;
+
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public string InteractiveReadingAnswer { get; set; } = string.Empty;
+        public byte[] InteractiveReadingImage { get; set; } = Array.Empty<byte>();
+        public string InteractiveReadingOptions { get; set; } = string.Empty;
+
+        public byte[] IntroductionImage { get; set; } = Array.Empty<byte>();
+        public string IntroductionText { get; set; } = string.Empty;
+
         public int OrderBy { get; set; }
+        public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
         public virtual QuestionRubric? QuestionRubric { get; set; }
         public string QuestionText { get; set; } = string.Empty;
-
+        public QuestionEnum QuestionType { get; set; }
         public byte[] Recording { get; set; } = Array.Empty<byte>();
+        public byte[] RecordingImage { get; set; } = Array.Empty<byte>();
         public string RecordingText { get; set; } = string.Empty;
-        public string Route => DurationAnswerInSeconds == 0 ? "Recording" : "Answer";
+        public string Route => QuestionType == QuestionEnum.InteractiveReading ? "ReadingAnswer" : DurationAnswerInSeconds == 0 ? "Recording" : "Answer";
         public Test? Test { get; set; }
         public int TestId { get; set; }
         public string Title { get; set; } = string.Empty;

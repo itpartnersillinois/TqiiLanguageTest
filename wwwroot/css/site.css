@@ -33,6 +33,10 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
     border-color: var(--il-gray-2);
 }
 
+.il-formatted textarea {
+    height: 240px;
+}
+
 #countdown {
     font-weight: 700;
     z-index: 10;
@@ -46,4 +50,25 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
 
     #countdown.background {
         background-color: #ffaaaa;
+    }
+
+.interactive span {
+    margin-right: 2px;
+    background: var(--il-cloud-1);
+}
+
+.interactive input {
+    width: 10px;
+    border: none;
+    border-bottom: thin solid black;
+    margin: 0 2px;
+    background: var(--il-cloud-1);
+    outline: none;
+}
+
+    .interactive input:hover, .interactive input:focus {
+        border: none;
+        border-bottom: thin solid black;
+        background: white;
+        border-top: thin solid black;
     }

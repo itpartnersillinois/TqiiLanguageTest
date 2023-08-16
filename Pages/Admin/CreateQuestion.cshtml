@@ -9,12 +9,13 @@
 <h1>Create Question</h1>
 
 <form method="post">
+    <h2>General Information</h2>
     <div class="form-group ils-input-entry">
         <input name="Question.TestId" type="hidden" value="@Model.Question.TestId">
         <input type="hidden" asp-for="Question.Id" class="form-control" />
     </div>
     <div class="ils-input-entry form-group">
-        <label for="Question_Title" class="control-label">Question Title</label>
+        <label for="Question_Title" class="control-label">Title (for internal use)</label>
         <input asp-for="Question.Title" class="form-control" />
         <span asp-validation-for="Question.Title" class="text-danger"></span>
     </div>
@@ -24,34 +25,98 @@
         <span asp-validation-for="Question.OrderBy" class="text-danger"></span>
     </div>
     <div class="ils-input-entry form-group">
-        <label for="Question_QuestionText" class="control-label">Question Text</label>
+        <label for="Question_OrderBy" class="control-label">Question Type</label>
+        <select asp-for="Question.QuestionType" class="form-control">
+            <option value="0"></option>
+            <option value="1">Sentence Repetition</option>
+            <option value="2">Integrated Speaking</option>
+            <option value="3">Interactive Reading</option>
+        </select>
+    </div>
+    <h3>Introduction</h3>
+    <p>Used for Sentence Repetition and Integrated Speaking</p>
+    <div class="ils-input-entry form-group">
+        <label for="Question_IntroductionText" class="control-label">Introduction Text</label>
+        <input asp-for="Question.IntroductionText" class="ils-input-long form-control" />
+    </div>
+    @if (Model.Question.HasAudio)
+    {
+    <audio controls>
+        <source src="/Media/@Model.Question.Guid" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+    }
+    @if (Model.Question.HasIntroductionImage)
+    {
+        <div>
+            <img src="/Image/Introduction/@Model.Question.Guid" alt="">
+        </div>
+    }
+    <div>Images and audio clips are handled in the upload section</div>
+    <h3>Multiple Choice and/or Reflection</h3>
+    <p>Used for Sentence Repetition and Integrated Speaking</p>
+    <div class="ils-input-entry form-group">
+        <label for="Question_QuestionText" class="control-label">Question or Reflection Text</label>
         <input asp-for="Question.QuestionText" class="ils-input-long form-control" />
-        <span asp-validation-for="Question.QuestionText" class="text-danger"></span>
     </div>
     <div class="ils-input-entry form-group">
         <label for="Question_AnswerOptions" class="control-label">Answers (separate multiple answers by a "|" symbol)</label>
         <input asp-for="Question.AnswerOptions" class="ils-input-long form-control" />
-        <span asp-validation-for="Question.AnswerOptions" class="text-danger"></span>
     </div>
     <div class="ils-input-entry form-group">
-        <label for="Question_DurationAnswerInSeconds" class="control-label">Duration of Answer in Seconds (numeric)</label>
+        <label for="Question_DurationAnswerInSeconds" class="control-label">Duration of Question or Reflection in Seconds (numeric)</label>
         <input asp-for="Question.DurationAnswerInSeconds" class="form-control" />
-        <span asp-validation-for="Question.DurationAnswerInSeconds" class="text-danger"></span>
     </div>
+    @if (Model.Question.HasQuestionImage)
+    {
+        <div>
+            <img src="/Image/Question/@Model.Question.Guid" alt="">
+        </div>
+    }
+    <div>Image is handled in the upload section</div>
+    <h3>Recording</h3>
+    <p>Used for Sentence Repetition and Integrated Speaking</p>
     <div class="ils-input-entry form-group">
-        <label for="Question_RecordingText" class="control-label">Recording Test</label>
+        <label for="Question_RecordingText" class="control-label">Recording Text</label>
         <input asp-for="Question.RecordingText" class="ils-input-long form-control" />
-        <span asp-validation-for="Question.RecordingText" class="text-danger"></span>
     </div>
     <div class="ils-input-entry form-group">
         <label for="Question_DurationRecordingInSeconds" class="control-label">Duration of Recording in Seconds (numeric)</label>
         <input asp-for="Question.DurationRecordingInSeconds" class="form-control" />
-        <span asp-validation-for="Question.DurationRecordingInSeconds" class="text-danger"></span>
     </div>
+    @if (Model.Question.HasRecordingImage)
+    {
+        <div>
+            <img src="/Image/Recording/@Model.Question.Guid" alt="">
+        </div>
+    }
+
+    <div>Image is handled in the upload section</div>
+    <h3>Interactive Reading Section</h3>
+    <div class="ils-input-entry form-group">
+        <label for="Question_InteractiveReadingAnswer" class="control-label">Interactive Reading Text (use multiple "*" to show where the student should enter text, and "^" to show multiple choice entries)</label>
+        <textarea asp-for="Question.InteractiveReadingAnswer" class="ils-input-long form-control"></textarea>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_InteractiveReadingOptions" class="control-label">Answers for Multiple Choice (separate multiple answers by a "|" symbol)</label>
+        <input asp-for="Question.InteractiveReadingOptions" class="ils-input-long form-control" />
+    </div>
+    @if (Model.Question.HasInteractiveReadingImage)
+    {
+        <div>
+            <img src="/Image/InteractiveReading/@Model.Question.Guid" alt="">
+        </div>
+    }
+
+    <div>Image is handled in the upload section. Time is set to 240 seconds unless overriden in the <strong>Multiple Choice and/or Reflection</strong> section.</div>
     <div class="ils-input-entry form-group">
         <input type="submit" value="Create" class="il-button" />
     </div>
 </form>
+
+<div>
+    <a href="/Admin/UploadQuestionRecording?id=@Model.Question.Id&testid=@Model.Question.TestId">Upload Recording or Image</a>
+</div>
 <div>
     <a href="/Admin/CreateTest?id=@Model.Question.TestId">Back to Edit Test</a>
 </div>

@@ -9,6 +9,15 @@
 
 <p>Recording @Model.Question?.CurrentQuestionNumber of @Model.Question?.TotalQuestions</p>
 
+<p>@Model.Question.IntroductionText</p>
+
+@if (Model.Question.HasIntroductionImage)
+{
+    <div>
+        <img src="/Image/Introduction/@Model.Question.Guid" alt="">
+    </div>
+}
+
 <div>
     <button id="play" class="il-button">Play Clip</button>
 </div>
