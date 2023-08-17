@@ -10,7 +10,7 @@ namespace TqiiLanguageTest.Models {
 
         public List<string> ButtonAnswers => string.IsNullOrWhiteSpace(AnswerOptions) ? new List<string>() : AnswerOptions.Split("|").Select(i => i.Trim()).ToList();
 
-        public List<string> ButtonInteractiveReadingAnswers => string.IsNullOrWhiteSpace(InteractiveReadingAnswer) ? new List<string>() : InteractiveReadingAnswer.Split("|").Select(i => i.Trim()).ToList();
+        public List<string> ButtonInteractiveReadingOptions => string.IsNullOrWhiteSpace(InteractiveReadingOptions) ? new List<string>() : InteractiveReadingOptions.Split("|").Select(i => i.Trim()).ToList();
 
         [NotMapped]
         public int CurrentQuestionNumber { get; set; }

@@ -19,7 +19,7 @@
 <div id="question" class="hidden">@Model.Answer?.Guid</div>
 
 <div class="flexbox buttons">
-    @foreach (var a in Model.Answer.ButtonInteractiveReadingAnswers)
+    @foreach (var a in Model.Answer.ButtonInteractiveReadingOptions)
     {
         <a class="il-button">@a</a>
     }

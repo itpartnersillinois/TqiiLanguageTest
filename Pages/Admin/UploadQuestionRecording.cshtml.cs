@@ -34,7 +34,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             var testid = Request.Form["testid"];
             var imagetype = int.Parse(Request.Form["imageType"]);
             var result = await _questionHandler.SaveByteArray(id, fileBytes, (ImageTypeEnum) imagetype);
-            return RedirectToPage("./CreateQuestion", new { id = testid });
+            return RedirectToPage("./CreateTest", new { id = testid });
         }
     }
 }
