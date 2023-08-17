@@ -8,6 +8,10 @@ namespace TqiiLanguageTest.Models {
         [NotMapped]
         public string AnswerOptions { get; set; } = string.Empty;
 
+        public List<string> ButtonAnswers => string.IsNullOrWhiteSpace(AnswerOptions) ? new List<string>() : AnswerOptions.Split("|").Select(i => i.Trim()).ToList();
+
+        public List<string> ButtonInteractiveReadingAnswers => string.IsNullOrWhiteSpace(InteractiveReadingAnswer) ? new List<string>() : InteractiveReadingAnswer.Split("|").Select(i => i.Trim()).ToList();
+
         [NotMapped]
         public int CurrentQuestionNumber { get; set; }
 

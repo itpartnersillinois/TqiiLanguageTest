@@ -1,5 +1,5 @@
 ﻿@page
-@model TqiiLanguageTest.Pages.ReadingAnswerModel
+@model TqiiLanguageTest.Pages.BasicAnswerModel
 @{
 }
 
@@ -18,7 +18,12 @@
 
 <div id="question" class="hidden">@Model.Answer?.Guid</div>
 
-<div><a class="il-button" id="continue">Continue</a></div>
+<div class="flexbox buttons">
+    @foreach (var a in Model.Answer.ButtonInteractiveReadingAnswers)
+    {
+        <a class="il-button">@a</a>
+    }
+</div>
 
 <div>
     <p id="countdown">@Model.Answer?.DurationAnswerInSeconds</p>
@@ -32,5 +37,5 @@
 </form>
 
 @section Scripts {
-    <script src="~/js/readinganswer.js" asp-append-version="true"></script>
+    <script src="~/js/basicanswer.js" asp-append-version="true"></script>
 }

@@ -34,6 +34,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (_context.Questions == null || Question == null) {
                 return Page();
             }
+            Question.IntroductionText = Question.IntroductionText ?? string.Empty;
             Question.InteractiveReadingAnswer = Question.InteractiveReadingAnswer ?? string.Empty;
             Question.InteractiveReadingOptions = Question.InteractiveReadingOptions ?? string.Empty;
             Question.QuestionText = Question.QuestionText ?? string.Empty;

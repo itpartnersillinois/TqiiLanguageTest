@@ -7,7 +7,8 @@ namespace TqiiLanguageTest.Models {
         None,
         SentenceRepetition, // Listen to a recording (introduction), optional multiple choice or reflection, record answer
         IntegratedSpeaking, // Listen to a recording (introduction), optional reflection, record answer
-        InteractiveReading  // Listen to a recording (introduction), type in an answer
+        InteractiveReading, // Type in text to complete information or choose from a drop-down
+        BasicQuestions      // Choose a answer
     }
 
     public class Question {
@@ -21,11 +22,10 @@ namespace TqiiLanguageTest.Models {
         public Guid Guid { get; set; } = Guid.NewGuid();
 
         public bool HasAudio => Recording != null && Recording.Length > 0;
-        public bool HasIntroductionImage => IntroductionImage != null && IntroductionImage.Length > 0;
         public bool HasInteractiveReadingImage => InteractiveReadingImage != null && InteractiveReadingImage.Length > 0;
+        public bool HasIntroductionImage => IntroductionImage != null && IntroductionImage.Length > 0;
         public bool HasQuestionImage => QuestionImage != null && QuestionImage.Length > 0;
         public bool HasRecordingImage => RecordingImage != null && RecordingImage.Length > 0;
-
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

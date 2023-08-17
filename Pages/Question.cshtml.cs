@@ -22,6 +22,9 @@ namespace TqiiLanguageTest.Pages {
             if (Question.QuestionType == QuestionEnum.InteractiveReading) {
                 return RedirectToPage("./ReadingAnswer", new { id });
             }
+            if (Question.QuestionType == QuestionEnum.BasicQuestions) {
+                return RedirectToPage("./BasicAnswer", new { id });
+            }
             return Page();
         }
     }

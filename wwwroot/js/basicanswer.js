@@ -42,33 +42,10 @@ window.addEventListener("DOMContentLoaded", (event) => {
         };
     }, 1000);
 
-    document.getElementById('continue').addEventListener('click', event => {
-        displayAfterRecording.classList.add('hidden');
-        document.querySelectorAll('.interactive span').forEach(s => {
-            s.querySelectorAll('input').forEach(i => {
-                s.appendChild(document.createTextNode(i.value));
-            });
-            s.querySelectorAll('select').forEach(i => {
-                s.innerHTML = i.value;
-            });
-        });
-
-        answerText.value = displayAfterRecording.innerText;
-        document.forms[0].submit();
-    });
-
-    document.querySelectorAll('.interactive input').forEach(i => {
-        i.addEventListener('keydown', keyPress)
+    document.querySelectorAll('.buttons a').forEach(b => {
+        b.addEventListener('click', event => {
+            answerText.value = event.target.innerText;
+            document.forms[0].submit();
+        })
     });
 });
-
-function keyPress(event) {
-    if (event.code.startsWith('Key')) {
-        this.value = event.key;
-        let nextItem = this.nextElementSibling;
-        if (nextItem != null) {
-            nextItem.focus();
-        }
-        event.preventDefault();
-    }
-}

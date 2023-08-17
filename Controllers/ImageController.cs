@@ -17,7 +17,7 @@ namespace TqiiLanguageTest.Controllers {
 
         [HttpGet("interactivereading/{id}")]
         public void InteractiveReading(string id) {
-            var storage = _context?.Questions?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
+            var storage = _context?.Answers?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
             if (storage == null || storage.Recording == null) {
                 Response.StatusCode = 404;
                 return;

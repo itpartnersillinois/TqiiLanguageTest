@@ -5,10 +5,10 @@ using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.Pages {
 
-    public class AnswerModel : PageModel {
+    public class BasicAnswerModel : PageModel {
         private readonly AnswerHandler _answerHandler;
 
-        public AnswerModel(AnswerHandler answerHandler) {
+        public BasicAnswerModel(AnswerHandler answerHandler) {
             _answerHandler = answerHandler;
         }
 
@@ -16,8 +16,8 @@ namespace TqiiLanguageTest.Pages {
 
         public async Task<IActionResult> OnGetAsync(Guid id) {
             Answer = await _answerHandler.GetAnswer(id);
-            if (Answer == null) {
-                return RedirectToPage("./Recording", new { id });
+            if (Answer != null && Answer.DurationAnswerInSeconds < 60) {
+                Answer.DurationAnswerInSeconds = 240;
             }
             return Page();
         }
@@ -26,8 +26,8 @@ namespace TqiiLanguageTest.Pages {
             var guid = Guid.Parse(Request.Form["answerguid"]);
             var answerText = Request.Form["answertext"];
             var id = Request.Form["id"];
-            _ = await _answerHandler.SetText(guid, answerText);
-            return RedirectToPage("./Recording", new { id });
+            _ = await _answerHandler.SetText(guid, answerText, true);
+            return RedirectToPage("./Question", new { id });
         }
     }
 }
