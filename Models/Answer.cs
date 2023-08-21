@@ -8,6 +8,21 @@ namespace TqiiLanguageTest.Models {
         [NotMapped]
         public string AnswerOptions { get; set; } = string.Empty;
 
+        public string BasicAnswers1 { get; set; } = string.Empty;
+
+        public string BasicAnswers2 { get; set; } = string.Empty;
+
+        public string BasicAnswers3 { get; set; } = string.Empty;
+
+        [NotMapped]
+        public string BasicQuestion1 { get; set; } = string.Empty;
+
+        [NotMapped]
+        public string BasicQuestion2 { get; set; } = string.Empty;
+
+        [NotMapped]
+        public string BasicQuestion3 { get; set; } = string.Empty;
+
         public List<string> ButtonAnswers => string.IsNullOrWhiteSpace(AnswerOptions) ? new List<string>() : AnswerOptions.Split("|").Select(i => i.Trim()).ToList();
 
         public List<string> ButtonInteractiveReadingOptions => string.IsNullOrWhiteSpace(InteractiveReadingOptions) ? new List<string>() : InteractiveReadingOptions.Split("|").Select(i => i.Trim()).ToList();

@@ -46,6 +46,12 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.InteractiveReadingImage = question.InteractiveReadingImage;
             answer.InteractiveReadingOptions = question.InteractiveReadingOptions;
             answer.InteractiveReadingAnswer = InteractiveReadingParser.ConverToHtml(question.InteractiveReadingAnswer, answer.ButtonInteractiveReadingOptions);
+            answer.BasicQuestion1 = question.BasicQuestion1;
+            answer.BasicQuestion2 = question.BasicQuestion2;
+            answer.BasicQuestion3 = question.BasicQuestion3;
+            answer.BasicAnswers1 = question.BasicAnswers1;
+            answer.BasicAnswers2 = question.BasicAnswers2;
+            answer.BasicAnswers3 = question.BasicAnswers3;
             return answer;
         }
 

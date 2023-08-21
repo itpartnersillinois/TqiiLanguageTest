@@ -14,6 +14,13 @@ namespace TqiiLanguageTest.Models {
     public class Question {
         public string AnswerOptions { get; set; } = string.Empty;
 
+        public string BasicAnswers1 { get; set; } = string.Empty;
+        public string BasicAnswers2 { get; set; } = string.Empty;
+        public string BasicAnswers3 { get; set; } = string.Empty;
+        public string BasicQuestion1 { get; set; } = string.Empty;
+        public string BasicQuestion2 { get; set; } = string.Empty;
+        public string BasicQuestion3 { get; set; } = string.Empty;
+
         [NotMapped]
         public int CurrentQuestionNumber { get; set; }
 

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TqiiLanguageTest.Migrations
 {
-    public partial class InitialLanguage : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -45,7 +45,12 @@ namespace TqiiLanguageTest.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Conclusion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConclusionLink = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConclusionRecording = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Introduction = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IntroductionRecording = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     NumberQuestions = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -61,13 +66,27 @@ namespace TqiiLanguageTest.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AnswerOptions = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicAnswers1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicAnswers2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicAnswers3 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicQuestion1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicQuestion2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicQuestion3 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DurationAnswerInSeconds = table.Column<int>(type: "int", nullable: false),
                     DurationRecordingInSeconds = table.Column<int>(type: "int", nullable: false),
                     Guid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    InteractiveReadingAnswer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InteractiveReadingImage = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    InteractiveReadingOptions = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IntroductionImage = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    IntroductionText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     OrderBy = table.Column<int>(type: "int", nullable: false),
+                    QuestionImage = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     QuestionRubricId = table.Column<int>(type: "int", nullable: true),
                     QuestionText = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    QuestionType = table.Column<int>(type: "int", nullable: false),
                     Recording = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    RecordingImage = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
                     RecordingText = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TestId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -123,6 +142,9 @@ namespace TqiiLanguageTest.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    BasicAnswers1 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicAnswers2 = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BasicAnswers3 = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DateTimeEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateTimeStart = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DateTimeTextAnswered = table.Column<DateTime>(type: "datetime2", nullable: true),
