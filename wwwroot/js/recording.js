@@ -28,6 +28,14 @@ window.addEventListener("DOMContentLoaded", (event) => {
             timerElement.innerText = minutes + ':' + seconds;
             displayAfterRecording.classList.remove('hidden');
 
+            let audioPlayer = new Audio();
+            audioPlayer.id = "audio";
+            audioPlayer.src = '/ogg/beep.wav';
+            audioPlayer.controls = false;
+            audioPlayer.addEventListener("canplaythrough", (event) => {
+                audioPlayer.play();
+            });
+
             mediaRecorder.ondataavailable = (e) => {
                 chunks.push(e.data);
             };

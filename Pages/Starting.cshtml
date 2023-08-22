@@ -1,0 +1,15 @@
+﻿@page
+@model TqiiLanguageTest.Pages.StartingModel
+@{
+}
+
+<h1>Introduction</h1>
+
+<audio controls>
+    <source src="/TestMedia/Introduction/@Model?.Test?.Guid" type="audio/ogg">
+    Your browser does not support the audio element.
+</audio>
+
+<p>@Html.Raw(Model?.Test?.Introduction)</p>
+
+<p><a href="/Question?id=@Model?.Guid" class="il-button">Start Test</a></p>

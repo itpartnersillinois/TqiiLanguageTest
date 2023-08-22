@@ -38,6 +38,9 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (_context.Tests == null || Test == null) {
                 return Page();
             }
+            Test.Introduction = Test.Introduction ?? string.Empty;
+            Test.Conclusion = Test.Conclusion ?? string.Empty;
+            Test.ConclusionLink = Test.ConclusionLink ?? string.Empty;
 
             if (Test.Id == 0) {
                 _context.Tests.Add(Test);

@@ -5,4 +5,11 @@
 
 <h1>Test Ended</h1>
 
-<p>Congratulations. The test has ended. Please <a href="/">go back to the start</a> to take any additional tests. </p>
+<audio controls>
+    <source src="/TestMedia/Conclusion/@Model?.Test?.Guid" type="audio/ogg">
+    Your browser does not support the audio element.
+</audio>
+
+<p>@Html.Raw(Model?.Test?.Conclusion)</p>
+
+<p><a href="@Model?.Test?.ConclusionLink" target="_blank" rel="noopener noreferrer">Answer the questionnaire</a></p>

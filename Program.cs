@@ -19,6 +19,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+builder.Services.AddScoped<TestHandler>();
 builder.Services.AddScoped<TestUserHandler>();
 builder.Services.AddScoped<QuestionHandler>();
 builder.Services.AddScoped<AnswerHandler>();

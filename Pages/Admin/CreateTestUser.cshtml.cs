@@ -25,6 +25,8 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
 
             ViewData["TestId"] = new SelectList(_context.Tests, "Id", "Title");
+            TestUser = new TestUser();
+            TestUser.OrderBy = 1;
             return Page();
         }
 

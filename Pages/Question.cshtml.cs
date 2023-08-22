@@ -17,7 +17,7 @@ namespace TqiiLanguageTest.Pages {
         public async Task<IActionResult> OnGetAsync(Guid id) {
             Question = await _questionHandler.GetQuestion(id);
             if (Question == null) {
-                return RedirectToPage("./Ending");
+                return RedirectToPage("./Ending", new { id });
             }
             if (Question.QuestionType == QuestionEnum.InteractiveReading) {
                 return RedirectToPage("./ReadingAnswer", new { id });

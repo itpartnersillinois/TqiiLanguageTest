@@ -6,25 +6,23 @@ namespace TqiiLanguageTest.Pages.Admin {
 
     [DisableRequestSizeLimit]
     [RequestFormLimits(MultipartBodyLengthLimit = 1073741824)]
-    public class UploadQuestionRecordingModel : PageModel {
+    public class UploadTestRecordingModel : PageModel {
         private readonly PermissionsHandler _permissions;
-        private readonly QuestionHandler _questionHandler;
+        private readonly TestHandler _testHandler;
 
-        public UploadQuestionRecordingModel(QuestionHandler questionHandler, PermissionsHandler permissions) {
-            _questionHandler = questionHandler;
+        public UploadTestRecordingModel(TestHandler testHandler, PermissionsHandler permissions) {
+            _testHandler = testHandler;
             _permissions = permissions;
         }
 
-        public int Id { get; set; }
-        public int ImageType { get; set; }
+        public int AudioType { get; set; }
         public int TestId { get; set; }
 
-        public IActionResult OnGet(int id, int testid) {
+        public IActionResult OnGet(int id) {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-            Id = id;
-            TestId = testid;
+            TestId = id;
             return Page();
         }
 
@@ -32,10 +30,9 @@ namespace TqiiLanguageTest.Pages.Admin {
             using var ms = new MemoryStream();
             Request.Form.Files.First().CopyTo(ms);
             var fileBytes = ms.ToArray();
-            var id = int.Parse(Request.Form.First().Value);
-            var testid = Request.Form["testid"];
-            var imagetype = int.Parse(Request.Form["imageType"]);
-            var result = await _questionHandler.SaveByteArray(id, fileBytes, (ImageTypeEnum) imagetype);
+            var testid = int.Parse(Request.Form["id"]);
+            var audioType = int.Parse(Request.Form["audioType"]);
+            var result = await _testHandler.SaveByteArray(testid, fileBytes, audioType);
             return RedirectToPage("./CreateTest", new { id = testid });
         }
     }

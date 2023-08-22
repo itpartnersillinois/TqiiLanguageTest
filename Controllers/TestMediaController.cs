@@ -3,11 +3,11 @@ using TqiiLanguageTest.Data;
 
 namespace TqiiLanguageTest.Controllers {
 
-    [Route("media")]
-    public class MediaController : Controller {
+    [Route("testmedia")]
+    public class TestMediaController : Controller {
         private readonly LanguageDbContext _context;
 
-        public MediaController(LanguageDbContext context) {
+        public TestMediaController(LanguageDbContext context) {
             _context = context;
         }
 
@@ -24,23 +24,6 @@ namespace TqiiLanguageTest.Controllers {
             stream.CopyToAsync(Response.Body);
         }
 
-        public IActionResult Index() {
-            return View();
-        }
-
-        [HttpGet("{id}")]
-        public void Index(string id) {
-            var storage = _context?.Questions?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
-            if (storage == null || storage.Recording == null) {
-                Response.StatusCode = 404;
-                return;
-            }
-            Response.StatusCode = 200;
-            Response.ContentType = "audio/ogg; codecs=opus";
-            var stream = new MemoryStream(storage.Recording);
-            stream.CopyToAsync(Response.Body);
-        }
-
         [HttpGet("introduction/{id}")]
         public void Introduction(string id) {
             var storage = _context?.Tests?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
@@ -52,11 +35,6 @@ namespace TqiiLanguageTest.Controllers {
             Response.ContentType = "audio/ogg; codecs=opus";
             var stream = new MemoryStream(storage.IntroductionRecording);
             stream.CopyToAsync(Response.Body);
-        }
-
-        [HttpGet("test")]
-        public string Test() {
-            return "return value";
         }
     }
 }

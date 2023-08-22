@@ -10,7 +10,14 @@
     <a href="/TestSpeaker" class="il-button" id="continue">Check your speakers and microphone</a>
 </div>
 
-<p>If you want to, you may skip the hardware check / sample questions and start the test immediately.</p>
-<div>
-    <a href="/Question?id=@Model.Guid" class="il-button" id="continue">Start test</a>
-</div>
+@if (Model.Guid == null || Model.Guid == Guid.Empty)
+{
+    <p>You do not have any tests available at this time.</p>
+
+} else {
+    <p>If you want to, you may skip the hardware check / sample questions and start the test immediately.</p>
+    <div>
+        <a href="/Starting?id=@Model.Guid" class="il-button" id="continue">Start test</a>
+    </div>
+
+}

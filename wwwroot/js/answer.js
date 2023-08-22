@@ -45,7 +45,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     document.querySelectorAll('.buttons a').forEach(b => {
         b.addEventListener('click', event => {
-            answerText.value = event.target.innerText;
+            if (event.target.alt != null && event.target.alt != '') {
+                answerText.value = event.target.alt;
+            } else {
+                answerText.value = event.target.innerHTML;
+            }
             document.forms[0].submit();
         })
     });

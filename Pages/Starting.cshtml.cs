@@ -5,10 +5,10 @@ using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.Pages {
 
-    public class EndingModel : PageModel {
+    public class StartingModel : PageModel {
         private readonly TestHandler _testHandler;
 
-        public EndingModel(TestHandler testHandler) {
+        public StartingModel(TestHandler testHandler) {
             _testHandler = testHandler;
         }
 

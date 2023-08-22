@@ -6,10 +6,9 @@
     ViewData["Title"] = "Create Test";
 }
 
-<h1>Create Test</h1>
+<h1>Create and Edit Test</h1>
 
-<h4>Test</h4>
-<hr />
+<h2>Test Information</h2>
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -23,23 +22,35 @@
                 <input asp-for="Test.NumberQuestions" class="form-control" />
                 <span asp-validation-for="Test.NumberQuestions" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="Test.Id" class="form-control" />
+            <div class="ils-input-entry form-group">
+                <label for="Question_Introduction" class="control-label">Introduction Text</label>
+                <textarea asp-for="Test.Introduction" class="ils-input-long form-control"></textarea>
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="Question_Conclusion" class="control-label">Conclusion Text</label>
+                <textarea asp-for="Test.Conclusion" class="ils-input-long form-control"></textarea>
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="Test_ConclusionLink" class="control-label">Conclusion Questionnaire Link</label>
+                <input asp-for="Test.ConclusionLink" class="form-control" />
+            </div>
+             <input type="hidden" asp-for="Test.Id" class="form-control" />
             <div class="form-group">
-                <input type="submit" value="Create / Edit" class="il-button" />
+                <input type="submit" value="@(Model?.Test?.Id > 0 ? "Edit" : "Create")" class="il-button" />
             </div>
         </form>
     </div>
 </div>
 
-@if (Model.Questions.Count > 0)
+@if (Model?.Questions?.Count > 0)
 {
-<table class="table" style="margin-top: 50px;">
+    <h2>Current Questions</h2>
+    <table class="table" style="margin-top: 50px;">
     <thead>
         <tr>
-            <th>
-                Question Title
-            </th>
-            <th></th>
+            <th>Question Title</th>
+            <th>Question Order</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -49,7 +60,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
-                <td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderBy)
+                    </td>
+                    <td>
                         <a asp-page="./CreateQuestion" asp-route-id="@Model.Test.Id" asp-route-questionid="@item.Id">Edit</a> |
                         <a asp-page="./UploadQuestionRecording" asp-route-id="@item.Id" asp-route-testid="@Model.Test.Id">Upload Recording</a>
                 </td>
@@ -58,12 +72,40 @@
     </tbody>
 </table>
 
-<div>
-<a class="il-button" style="width: 200px;" asp-page="./CreateQuestion" asp-route-id="@Model.Test.Id">Create a question</a>
+
+}
+@if (Model?.Test?.Id > 0)
+{
+    <h2>New Questions</h2>
+
+    <div>
+        <a class="il-button" asp-page="./CreateQuestion" asp-route-id="@Model.Test.Id">Create a question</a>
+    </div>
+    <hr />
+
+    <h2>Introduction and Conclusion Audio</h2>
+
+    <div>
+        <p>Introduction audio</p>
+        <audio controls>
+            <source src="/TestMedia/Introduction/@Model.Test.Guid" type="audio/ogg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <div>
+        <p>Conclusion audio</p>
+        <audio controls>
+            <source src="/TestMedia/Conclusion/@Model.Test.Guid" type="audio/ogg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
+    <div>
+    <a class="il-button" asp-page="./UploadTestRecording" asp-route-id="@Model.Test.Id">Upload Introduction / Conclusion Recording</a>
     </div>
 }
 
 
+<hr />
 <div>
     <a href="/Admin/ListTest">Back to List</a>
 </div>

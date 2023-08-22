@@ -19,14 +19,20 @@ namespace TqiiLanguageTest.Pages {
             if (Answer != null && Answer.DurationAnswerInSeconds < 60) {
                 Answer.DurationAnswerInSeconds = 240;
             }
+            if (Answer != null && Answer.InteractiveReadingOptions == "") {
+                Answer.InteractiveReadingOptions = "Continue";
+            }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync() {
             var guid = Guid.Parse(Request.Form["answerguid"]);
             var answerText = Request.Form["answertext"];
+            var a1 = Request.Form["answertext1"].ToString() ?? "";
+            var a2 = Request.Form["answertext2"].ToString() ?? "";
+            var a3 = Request.Form["answertext3"].ToString() ?? "";
             var id = Request.Form["id"];
-            _ = await _answerHandler.SetText(guid, answerText, true);
+            _ = await _answerHandler.SetBasicQuestion(guid, answerText, a1, a2, a3);
             return RedirectToPage("./Question", new { id });
         }
     }

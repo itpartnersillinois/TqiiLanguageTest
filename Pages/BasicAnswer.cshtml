@@ -5,34 +5,69 @@
 
 <h1>Interactive Reading</h1>
 
-<p>Answering @Model.Answer?.CurrentQuestionNumber of @Model.Answer?.TotalQuestions</p>
+<p>Answering @Model?.Answer?.CurrentQuestionNumber of @Model?.Answer?.TotalQuestions</p>
 
-@if (Model.Answer.HasInteractiveReadingImage)
+@if (Model != null && Model.Answer != null && Model.Answer.HasInteractiveReadingImage)
 {
     <div>
         <img src="/Image/InteractiveReading/@Model.Answer.Guid" alt="">
     </div>
 }
 
-<p class="interactive" id="display-after-recording">@Html.Raw(Model.Answer?.InteractiveReadingAnswer)</p>
+<div id="display-after-recording">
+<p class="interactive">@Html.Raw(Model?.Answer?.InteractiveReadingAnswer)</p>
 
-<div id="question" class="hidden">@Model.Answer?.Guid</div>
+<div id="question" class="hidden">@Model?.Answer?.Guid</div>
+
+<div class="basic-questions">
+<h2>Questions</h2>
+@if (Model?.Answer?.BasicQuestion1 != "")
+{
+    <p>@Model?.Answer?.BasicQuestion1</p>
+            @foreach (var a in Model?.Answer?.BasicOptions1 ?? new List<string>())
+    {
+        <label><input type="radio" name="a1" value="@a"> @a</label>
+    }
+}
+
+        @if (Model?.Answer?.BasicQuestion2 != "")
+{
+    <p>@Model?.Answer?.BasicQuestion2</p>
+            @foreach (var a in Model?.Answer?.BasicOptions2 ?? new List<string>())
+    {
+        <label><input type="radio" name="a2" value="@a"> @a</label>
+    }
+}
+
+        @if (Model?.Answer?.BasicQuestion3 != "")
+{
+            <p>@Model?.Answer?.BasicQuestion3</p>
+            @foreach (var a in Model?.Answer?.BasicOptions3 ?? new List<string>())
+    {
+        <label><input type="radio" name="a3" value="@a"> @a</label>
+    }
+}
+</div>
+</div>
 
 <div class="flexbox buttons">
-    @foreach (var a in Model.Answer.ButtonInteractiveReadingOptions)
+    @foreach (var a in Model?.Answer?.ButtonInteractiveReadingOptions ?? new List<string>())
     {
-        <a class="il-button">@a</a>
+        <a class="il-button">@Html.Raw(a)</a>
     }
 </div>
 
 <div>
-    <p id="countdown">@Model.Answer?.DurationAnswerInSeconds</p>
+    <p id="countdown">@Model?.Answer?.DurationAnswerInSeconds</p>
 </div>
 
 
 <form method="post" class="hidden" id="form">
-    <input id="answer" type="hidden" value="@Model.Answer?.Guid" name="answerguid">
+    <input id="answer" type="hidden" value="@Model?.Answer?.Guid" name="answerguid">
     <input id="answertext" type="hidden" name="answertext">
+    <input id="answertext1" type="hidden" name="answertext1">
+    <input id="answertext2" type="hidden" name="answertext2">
+    <input id="answertext3" type="hidden" name="answertext3">
     <input id="id" type="hidden" name="id">
 </form>
 

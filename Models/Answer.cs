@@ -9,10 +9,11 @@ namespace TqiiLanguageTest.Models {
         public string AnswerOptions { get; set; } = string.Empty;
 
         public string BasicAnswers1 { get; set; } = string.Empty;
-
         public string BasicAnswers2 { get; set; } = string.Empty;
-
         public string BasicAnswers3 { get; set; } = string.Empty;
+        public List<string> BasicOptions1 => string.IsNullOrWhiteSpace(BasicAnswers1) ? new List<string>() : BasicAnswers1.Split("|").Select(i => i.Trim()).ToList();
+        public List<string> BasicOptions2 => string.IsNullOrWhiteSpace(BasicAnswers2) ? new List<string>() : BasicAnswers2.Split("|").Select(i => i.Trim()).ToList();
+        public List<string> BasicOptions3 => string.IsNullOrWhiteSpace(BasicAnswers3) ? new List<string>() : BasicAnswers3.Split("|").Select(i => i.Trim()).ToList();
 
         [NotMapped]
         public string BasicQuestion1 { get; set; } = string.Empty;

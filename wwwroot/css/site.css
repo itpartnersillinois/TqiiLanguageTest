@@ -72,3 +72,25 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         background: white;
         border-top: thin solid black;
     }
+
+.basic-questions {
+    margin: 30px;
+}
+
+    .basic-questions label {
+        display: block;
+    }
+
+.answer-bank {
+    padding: 10px;
+    background: var(--il-cloud-1);
+    margin: 40px 0;
+}
+
+    .answer-bank span {
+        padding: 10px;
+        border: thin solid var(--il-orange);
+        margin: 5px 20px;
+        display: inline-block;
+        background: white;
+    }

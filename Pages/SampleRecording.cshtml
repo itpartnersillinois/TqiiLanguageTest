@@ -15,8 +15,15 @@
 </div>
 
 <div class="hidden" id="information">
-    <p>The recording has stopped. You may continue to the next question at any time.</p>
-    <p><a href="/Question?id=@Model.Guid" class="il-button">Start Test</a></p>
+    @if (Model.Guid == null || Model.Guid == Guid.Empty)
+    {
+        <p>The recording has stopped. You do not have any tests available at this time. </p>
+    } else {
+        <p>The recording has stopped. You may continue to the next question at any time. </p>
+        <div>
+            <a href="/Starting?id=@Model.Guid" class="il-button" id="continue">Start test</a>
+        </div>
+    }
 </div>
 
 @section Scripts {

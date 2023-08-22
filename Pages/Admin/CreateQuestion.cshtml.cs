@@ -40,6 +40,12 @@ namespace TqiiLanguageTest.Pages.Admin {
             Question.QuestionText = Question.QuestionText ?? string.Empty;
             Question.AnswerOptions = Question.AnswerOptions ?? string.Empty;
             Question.RecordingText = Question.RecordingText ?? string.Empty;
+            Question.BasicAnswers1 = Question.BasicAnswers1 ?? string.Empty;
+            Question.BasicAnswers2 = Question.BasicAnswers2 ?? string.Empty;
+            Question.BasicAnswers3 = Question.BasicAnswers3 ?? string.Empty;
+            Question.BasicQuestion1 = Question.BasicQuestion1 ?? string.Empty;
+            Question.BasicQuestion2 = Question.BasicQuestion2 ?? string.Empty;
+            Question.BasicQuestion3 = Question.BasicQuestion3 ?? string.Empty;
             if (Question.Id == 0) {
                 _context.Questions.Add(Question);
             } else {

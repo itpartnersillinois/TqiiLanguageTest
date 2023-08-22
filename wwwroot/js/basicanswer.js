@@ -1,6 +1,9 @@
 ﻿const timerElement = document.getElementById('countdown');
 const testUserId = document.getElementById('id');
 const answerText = document.getElementById('answertext');
+const answerText1 = document.getElementById('answertext1');
+const answerText2 = document.getElementById('answertext2');
+const answerText3 = document.getElementById('answertext3');
 const params = new URLSearchParams(window.location.search);
 const displayAfterRecording = document.getElementById('display-after-recording');
 
@@ -39,12 +42,26 @@ window.addEventListener("DOMContentLoaded", (event) => {
         if (minutes == 0 && seconds == 0) {
             clearInterval(myInterval);
             displayAfterRecording.classList.add('hidden');
+            displayAfterRecording.classList.add('hidden');
         };
     }, 1000);
 
     document.querySelectorAll('.buttons a').forEach(b => {
         b.addEventListener('click', event => {
-            answerText.value = event.target.innerText;
+            if (event.target.alt != null && event.target.alt != '') {
+                answerText.value = event.target.alt;
+            } else {
+                answerText.value = event.target.innerHTML;
+            }
+            if (document.getElementsByName('a1').length > 0) {
+                answerText1.value = document.querySelector('input[name="a1"]:checked').value;
+            }
+            if (document.getElementsByName('a2').length > 0) {
+                answerText2.value = document.querySelector('input[name="a2"]:checked').value;
+            }
+            if (document.getElementsByName('a3').length > 0) {
+                answerText3.value = document.querySelector('input[name="a3"]:checked').value;
+            }
             document.forms[0].submit();
         })
     });

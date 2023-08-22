@@ -39,6 +39,9 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;
             answer.TotalQuestions = testUserObject.TotalQuestions;
             answer.AnswerOptions = question.AnswerOptions;
+            if (string.IsNullOrEmpty(answer.AnswerOptions)) {
+                answer.AnswerOptions = "Continue";
+            }
             answer.QuestionText = question.QuestionText;
             answer.RecordingText = question.RecordingText;
             answer.DurationAnswerInSeconds = question.DurationAnswerInSeconds;
@@ -53,6 +56,25 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.BasicAnswers2 = question.BasicAnswers2;
             answer.BasicAnswers3 = question.BasicAnswers3;
             return answer;
+        }
+
+        public async Task<string> SetBasicQuestion(Guid answerGuid, string answerText, string a1, string a2, string a3) {
+            var answer = _context.Answers?.SingleOrDefault(a => a.Guid == answerGuid);
+            if (answer == null) {
+                return "not found";
+            }
+            if (!string.IsNullOrWhiteSpace(answer.Text)) {
+                return "already answered";
+            }
+            answer.Text = answerText;
+            answer.BasicAnswers1 = a1;
+            answer.BasicAnswers2 = a2;
+            answer.BasicAnswers3 = a3;
+            answer.DateTimeTextAnswered = DateTime.Now;
+            answer.ReviewerNotes = "";
+            answer.DateTimeEnd = DateTime.Now;
+            _ = await _context.SaveChangesAsync();
+            return string.Empty;
         }
 
         public async Task<string> SetRecording(Guid answerGuid, byte[] recording) {
