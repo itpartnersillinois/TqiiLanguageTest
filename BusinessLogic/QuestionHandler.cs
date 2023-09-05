@@ -28,19 +28,17 @@ namespace TqiiLanguageTest.BusinessLogic {
             if (testUserObject == null) {
                 return returnValue;
             }
+            testUserObject.CurrentQuestionOrder++;
+            returnValue = GetQuestionByTestAndOrder(testUserObject.TestId, testUserObject.Id, testUserObject.CurrentQuestionOrder);
+            if (returnValue != null) {
+                testUserObject.CurrentQuestionId = returnValue.Id;
+                returnValue.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;
+                returnValue.TotalQuestions = testUserObject.TotalQuestions;
+            } else {
+                testUserObject.DateTimeEnd = DateTime.Now;
+            }
             if (testUserObject.DateTimeStart == null) {
                 testUserObject.DateTimeStart = DateTime.Now;
-            }
-            if (testUserObject.CurrentQuestionOrder == testUserObject.TotalQuestions) {
-                testUserObject.DateTimeEnd = DateTime.Now;
-            } else {
-                testUserObject.CurrentQuestionOrder++;
-                returnValue = GetQuestionByTestAndOrder(testUserObject.TestId, testUserObject.CurrentQuestionOrder);
-                if (returnValue != null) {
-                    testUserObject.CurrentQuestionId = returnValue.Id;
-                    returnValue.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;
-                    returnValue.TotalQuestions = testUserObject.TotalQuestions;
-                }
             }
             _ = await _context.SaveChangesAsync();
             return returnValue;
@@ -76,8 +74,11 @@ namespace TqiiLanguageTest.BusinessLogic {
             return string.Empty;
         }
 
-        internal Question? GetQuestionByTestAndOrder(int id, int orderBy) => _context?.Questions?
-            .Where(q => q.TestId == id && q.OrderBy >= orderBy)
-            .OrderBy(q => q.OrderBy).ThenBy(q => Guid.NewGuid()).FirstOrDefault();
+        internal Question? GetQuestionByTestAndOrder(int id, int testUserId, int orderBy) {
+            var questionsAlreadyAsked = _context?.Answers?.Where(a => a.TestUserId == testUserId).Select(a => a.QuestionId).ToList() ?? new List<int?>();
+            return _context?.Questions?
+                .Where(q => q.TestId == id && q.OrderBy >= orderBy && !questionsAlreadyAsked.Contains(q.Id))
+                .OrderBy(q => q.OrderBy).ThenBy(q => Guid.NewGuid()).FirstOrDefault();
+        }
     }
 }

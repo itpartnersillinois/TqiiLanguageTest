@@ -55,6 +55,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.BasicAnswers1 = question.BasicAnswers1;
             answer.BasicAnswers2 = question.BasicAnswers2;
             answer.BasicAnswers3 = question.BasicAnswers3;
+            answer.QuestionGuid = question.Guid;
             return answer;
         }
 

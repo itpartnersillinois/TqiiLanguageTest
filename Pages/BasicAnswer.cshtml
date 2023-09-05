@@ -10,7 +10,7 @@
 @if (Model != null && Model.Answer != null && Model.Answer.HasInteractiveReadingImage)
 {
     <div>
-        <img src="/Image/InteractiveReading/@Model.Answer.Guid" alt="">
+        <img src="/Image/InteractiveReading/@Model?.Answer?.QuestionGuid" alt="">
     </div>
 }
 

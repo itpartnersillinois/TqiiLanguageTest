@@ -61,6 +61,10 @@ namespace TqiiLanguageTest.Models {
 
         public int OrderBy { get; set; }
         public virtual Question? Question { get; set; }
+
+        [NotMapped]
+        public Guid QuestionGuid { get; set; }
+
         public int? QuestionId { get; set; }
         public virtual QuestionRubric? QuestionRubric { get; set; }
 
