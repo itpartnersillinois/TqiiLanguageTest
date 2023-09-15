@@ -18,9 +18,21 @@
     </div>
 }
 
-<div>
-    <button id="play" class="il-button">Play Clip</button>
-</div>
+
+@if (Model.Question.HasAudio)
+{
+    <div>
+        <button id="play" class="il-button">Play Clip</button>
+        <a id="manual_link" style="display: none;">Go to next page</a>
+    </div>
+}
+else
+{
+    <button id="play" style="display: none;">No Audio</button>
+    <p>
+        No audio available. <a id="manual_link" class="il-button">Go to next page</a>
+    </p>
+}
 
 <div id="question" class="hidden">@Model.Question?.Guid</div>
 <div id="route" class="hidden">@Model.Question?.Route</div>

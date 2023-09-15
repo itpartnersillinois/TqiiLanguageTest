@@ -18,6 +18,8 @@
             </th>
             <th>Start</th>
             <th>End</th>
+            <th>On Question</th>
+            <th>Download</th>
         </tr>
     </thead>
     <tbody>
@@ -29,11 +31,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Test.Title)
             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateTimeStart)
-                </td>
-                <td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateTimeStart)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.DateTimeEnd)
+            </td>
+            <td>
+                @item.CurrentQuestionOrder
+            </td>
+            <td>
+                    <a href="/audioanswerdownload/@item.Id">Download Data</a>
             </td>
         </tr>
 }

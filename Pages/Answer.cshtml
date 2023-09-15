@@ -11,6 +11,13 @@
 
     <p>@Model.Answer.QuestionText</p>
 
+    @if (Model != null && Model.Answer != null && Model.Answer.HasInteractiveReadingImage)
+    {
+        <div>
+            <img src="/Image/InteractiveReading/@Model?.Answer?.QuestionGuid" alt="">
+        </div>
+    }
+
     <div class="flexbox buttons">
         @foreach (var a in Model.Answer.ButtonAnswers)
         {

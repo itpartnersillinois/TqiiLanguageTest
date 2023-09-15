@@ -28,17 +28,17 @@
         <label for="Question_OrderBy" class="control-label">Question Type</label>
         <select asp-for="Question.QuestionType" class="form-control" style="width: 300px;">
             <option value="0"></option>
-            <option value="1">Sentence Repetition</option>
+            <option value="1">Sentence Repetition / Instruction Only</option>
             <option value="2">Integrated Speaking</option>
             <option value="3">Interactive Reading</option>
             <option value="4">Basic Question / Answer</option>
         </select>
     </div>
     <hr />
-    <h3>Introduction (for Sentence Repetition and Integrated Speaking)</h3>
+    <h3>Introduction (for Sentence Repetition, Integrated Speaking, and Instruction Only)</h3>
     <div class="ils-input-entry form-group">
         <label for="Question_IntroductionText" class="control-label">Introduction Text</label>
-        <input asp-for="Question.IntroductionText" class="ils-input-long form-control" />
+        <textarea asp-for="Question.IntroductionText" class="ils-input-long form-control"></textarea>
     </div>
     @if (Model.Question.HasAudio)
     {
