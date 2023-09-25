@@ -20,6 +20,7 @@
             <th>End</th>
             <th>On Question</th>
             <th>Download</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -43,6 +44,9 @@
             <td>
                     <a href="/audioanswerdownload/@item.Id">Download Data</a>
             </td>
+            <td>
+                <a href="#" onclick="deleteTestUser('@item.Id'); return false;">Delete</a>
+            </td>
         </tr>
 }
     </tbody>
@@ -51,3 +55,17 @@
 <div>
     <a href="/Admin">Back to Admin Page</a>
 </div>
+
+@section Scripts {
+    <script>
+        function deleteTestUser(id) {
+            if (confirm("This will delete the user's test. Are you sure?")) {
+                fetch('/deletetestuser/' + id, {
+                    method: 'GET'
+                }).then(function (response) {
+                    location.reload();
+                });
+            }
+        }
+    </script>
+}
