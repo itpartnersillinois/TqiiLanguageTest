@@ -11,6 +11,19 @@ namespace TqiiLanguageTest.Controllers {
             _context = context;
         }
 
+        [HttpGet("answer/{id}")]
+        public void Answer(string id) {
+            var storage = _context?.Questions?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
+            if (storage == null || storage.Recording == null) {
+                Response.StatusCode = 404;
+                return;
+            }
+            Response.StatusCode = 200;
+            Response.ContentType = "image";
+            var stream = new MemoryStream(storage.RecordingImage);
+            stream.CopyToAsync(Response.Body);
+        }
+
         public IActionResult Index() {
             return View();
         }

@@ -56,7 +56,6 @@ window.addEventListener("DOMContentLoaded", (event) => {
         answerText.value = displayAfterRecording.innerText;
         document.forms[0].submit();
     });
-
     document.querySelectorAll('.interactive input').forEach(i => {
         i.addEventListener('keydown', keyPress)
     });
@@ -68,6 +67,14 @@ function keyPress(event) {
         let nextItem = this.nextElementSibling;
         if (nextItem != null) {
             nextItem.focus();
+        }
+        event.preventDefault();
+    } else if (event.code == 'Backspace' || event.code == 'ArrowLeft') {
+        this.value = '';
+        let previousItem = this.previousElementSibling;
+        if (previousItem != null) {
+            previousItem.focus();
+            previousItem.value = '';
         }
         event.preventDefault();
     }

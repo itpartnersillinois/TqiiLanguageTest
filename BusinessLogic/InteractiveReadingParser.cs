@@ -6,36 +6,60 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public static string ConverToHtml(string s, IEnumerable<string> options) {
             var returnValue = new StringBuilder();
+            var paragraph = new StringBuilder();
             var isInInputString = false;
+            var isEmphasized = false;
             var inputInStringCount = 0;
             var inputCount = 0;
+            var hasInputValues = false;
+            var noInputValues = !s.Contains('*') && !s.Contains('^');
             foreach (var c in s) {
                 if (c == '\r') {
-                    returnValue.Append("<br>");
-                } else if (c == '^') {
-                    inputCount++;
-                    returnValue.Append($"<span><select id='info_select_{inputCount}'><option value=''></option>");
-                    foreach (var option in options) {
-                        returnValue.Append($"<option value='{option}'>{option}</option>");
+                    if (hasInputValues || noInputValues) {
+                        returnValue.Append(paragraph.ToString());
+                    } else {
+                        returnValue.Append("<span class='faded'>");
+                        returnValue.Append(paragraph.ToString());
+                        returnValue.Append("</span>");
                     }
-                    returnValue.Append("</select></span>");
+                    returnValue.Append("<br>");
+                    paragraph.Clear();
+                    hasInputValues = false;
+                } else if (c == '^') {
+                    hasInputValues = true;
+                    inputCount++;
+                    paragraph.Append($"<span class='question'><select id='info_select_{inputCount}'><option value=''></option>");
+                    foreach (var option in options) {
+                        paragraph.Append($"<option value='{option}'>{option}</option>");
+                    }
+                    paragraph.Append("</select></span>");
                 } else if (c == '*') {
+                    hasInputValues = true;
                     if (!isInInputString) {
-                        returnValue.Append($"<span>");
+                        paragraph.Append($"<span class='question'>");
                         inputCount++;
                         isInInputString = true;
                     }
                     inputInStringCount++;
-                    returnValue.Append($"<input type='text' id='info_{inputCount}_{inputInStringCount}'>");
+                    paragraph.Append($"<input type='text' id='info_{inputCount}_{inputInStringCount}'>");
+                } else if (c == '_') {
+                    if (isEmphasized) {
+                        isEmphasized = false;
+                        paragraph.Append($"</em>");
+                    } else {
+                        isEmphasized = true;
+                        paragraph.Append("<em>");
+                    }
                 } else if (c != '\n') {
                     if (isInInputString) {
-                        returnValue.Append($"</span>");
+                        paragraph.Append($"</span>");
                         isInInputString = false;
                         inputInStringCount = 0;
                     }
-                    returnValue.Append(c);
+                    paragraph.Append(c);
                 }
             }
+            returnValue.Append(paragraph.ToString());
             return returnValue.ToString();
         }
     }

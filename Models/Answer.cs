@@ -46,6 +46,10 @@ namespace TqiiLanguageTest.Models {
 
         public bool HasInteractiveReadingImage => InteractiveReadingImage != null && InteractiveReadingImage.Length > 0;
 
+        public bool HasQuestionImage => QuestionImage != null && QuestionImage.Length > 0;
+
+        public bool HasRecordingImage => RecordingImage != null && RecordingImage.Length > 0;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -66,12 +70,19 @@ namespace TqiiLanguageTest.Models {
         public Guid QuestionGuid { get; set; }
 
         public int? QuestionId { get; set; }
+
+        [NotMapped]
+        public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
+
         public virtual QuestionRubric? QuestionRubric { get; set; }
 
         [NotMapped]
         public string QuestionText { get; set; } = string.Empty;
 
         public byte[] Recording { get; set; } = Array.Empty<byte>();
+
+        [NotMapped]
+        public byte[] RecordingImage { get; set; } = Array.Empty<byte>();
 
         [NotMapped]
         public string RecordingText { get; set; } = string.Empty;

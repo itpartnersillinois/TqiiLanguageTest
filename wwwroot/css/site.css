@@ -4,8 +4,8 @@ body {
 }
 
 main {
-    margin: auto;
     max-width: 1200px;
+    margin: 10px 20px;
 }
 
 .buttons {
@@ -39,39 +39,51 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
 
 #countdown {
     font-weight: 700;
-    z-index: 10;
+    z-index: 20;
     padding: 20px;
     margin: 30px 10px;
     font-size: 24px;
     border: 2px solid var(--il-blue);
     background-color: #ffffed;
     text-align: center;
+    position: fixed;
+    top: 100px;
+    left: calc(100% - 140px);
+    width: 100px;
 }
 
     #countdown.background {
         background-color: #ffaaaa;
     }
 
-.interactive span {
-    margin-right: 2px;
-    background: var(--il-cloud-1);
+.interactive {
+    width: 80%;
 }
 
-.interactive input {
-    width: 10px;
-    border: none;
-    border-bottom: thin solid black;
-    margin: 0 2px;
-    background: var(--il-cloud-1);
-    outline: none;
-}
+    .interactive span.question {
+        margin-right: 2px;
+        background: var(--il-cloud-1);
+    }
 
-    .interactive input:hover, .interactive input:focus {
+    .interactive span.faded {
+        color: #707070;
+    }
+
+    .interactive input {
+        width: 10px;
         border: none;
         border-bottom: thin solid black;
-        background: white;
-        border-top: thin solid black;
+        margin: 0 2px;
+        background: var(--il-cloud-1);
+        outline: none;
     }
+
+        .interactive input:hover, .interactive input:focus {
+            border: none;
+            border-bottom: thin solid black;
+            background: white;
+            border-top: thin solid black;
+        }
 
 .basic-questions {
     margin: 30px;
@@ -85,6 +97,12 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
     padding: 10px;
     background: var(--il-cloud-1);
     margin: 40px 0;
+    z-index: 10;
+    position: fixed;
+    top: 180px;
+    left: 80%;
+    overflow-y: scroll;
+    height: calc(100% - 250px);
 }
 
     .answer-bank span {

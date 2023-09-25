@@ -53,4 +53,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
             document.forms[0].submit();
         })
     });
+
+    let audioPlayer = new Audio();
+    audioPlayer.id = "audio";
+    audioPlayer.src = '/ogg/beep.wav';
+    audioPlayer.controls = false;
+    audioPlayer.addEventListener("canplaythrough", (event) => {
+        audioPlayer.play();
+    });
 });

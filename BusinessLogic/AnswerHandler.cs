@@ -40,10 +40,11 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.TotalQuestions = testUserObject.TotalQuestions;
             answer.AnswerOptions = question.AnswerOptions;
             if (string.IsNullOrEmpty(answer.AnswerOptions)) {
-                answer.AnswerOptions = "Continue";
+                answer.AnswerOptions = "I'm ready, move on to recording my response";
             }
             answer.QuestionText = question.QuestionText;
             answer.RecordingText = question.RecordingText;
+            answer.RecordingImage = question.RecordingImage;
             answer.DurationAnswerInSeconds = question.DurationAnswerInSeconds;
             answer.DurationRecordingInSeconds = question.DurationRecordingInSeconds;
             answer.InteractiveReadingImage = question.InteractiveReadingImage;

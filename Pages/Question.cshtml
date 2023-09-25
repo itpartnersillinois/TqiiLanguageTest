@@ -7,8 +7,6 @@
 
 <p>Please listen to the clip. When it is done, it will direct you to the next page. Do not press refresh during this time, as this will prevent you from answering this question.</p>
 
-<p>Recording @Model.Question?.CurrentQuestionNumber of @Model.Question?.TotalQuestions</p>
-
 <p>@Model.Question.IntroductionText</p>
 
 @if (Model.Question.HasIntroductionImage)
@@ -22,13 +20,11 @@
 @if (Model.Question.HasAudio)
 {
     <div>
-        <button id="play" class="il-button">Play Clip</button>
         <a id="manual_link" style="display: none;">Go to next page</a>
     </div>
 }
 else
 {
-    <button id="play" style="display: none;">No Audio</button>
     <p>
         No audio available. <a id="manual_link" class="il-button">Go to next page</a>
     </p>

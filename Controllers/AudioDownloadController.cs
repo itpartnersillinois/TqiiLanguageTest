@@ -3,7 +3,6 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
-using TqiiLanguageTest.FileManager;
 using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.Controllers {
@@ -13,7 +12,7 @@ namespace TqiiLanguageTest.Controllers {
         private readonly LanguageDbContext _context;
         private readonly PermissionsHandler _permissions;
 
-        public AudioDownloadController(PermissionsHandler permissions, PackageHelper packageHelper, LanguageDbContext context) {
+        public AudioDownloadController(PermissionsHandler permissions, LanguageDbContext context) {
             _permissions = permissions;
             _context = context;
         }

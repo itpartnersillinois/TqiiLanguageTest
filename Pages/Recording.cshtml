@@ -10,8 +10,16 @@
 
     <p>@Model.Answer.RecordingText</p>
 
+    @if (Model != null && Model.Answer != null && Model.Answer.HasRecordingImage)
+    {
+        <div>
+            <img src="/Image/Answer/@Model?.Answer?.QuestionGuid" alt="">
+        </div>
+    }
+
+
     <div class="flexbox buttons">
-        <a class="il-button" id="endrecording">End Recording</a>
+        <a class="il-button" id="endrecording">I've finished, move to next</a>
     </div>
 
     <div>
