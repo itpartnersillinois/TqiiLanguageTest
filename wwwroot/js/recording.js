@@ -17,6 +17,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
             mediaRecorder.start();
             let timer = timerElement.innerText;
+            if (isNaN(timer)) {
+                timer = 0;
+            }
             if (timer < 20) {
                 timerElement.classList.add('background');
             }

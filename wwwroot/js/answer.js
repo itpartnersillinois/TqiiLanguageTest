@@ -8,6 +8,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
     testUserId.value = params.get('id');
 
     let timer = timerElement.innerText;
+    if (isNaN(timer)) {
+        timer = 0;
+    }
     if (timer < 20) {
         timerElement.classList.add('background');
     }

@@ -7,6 +7,9 @@ const displayAfterRecording = document.getElementById('display-after-recording')
 window.addEventListener("DOMContentLoaded", (event) => {
     testUserId.value = params.get('id');
     let timer = timerElement.innerText;
+    if (isNaN(timer)) {
+        timer = 0;
+    }
     if (timer < 20) {
         timerElement.classList.add('background');
     }
@@ -70,11 +73,14 @@ function keyPress(event) {
         }
         event.preventDefault();
     } else if (event.code == 'Backspace' || event.code == 'ArrowLeft') {
-        this.value = '';
-        let previousItem = this.previousElementSibling;
-        if (previousItem != null) {
-            previousItem.focus();
-            previousItem.value = '';
+        if (this.value != '') {
+            this.value = '';
+        } else {
+            let previousItem = this.previousElementSibling;
+            if (previousItem != null) {
+                previousItem.focus();
+                previousItem.value = '';
+            }
         }
         event.preventDefault();
     }

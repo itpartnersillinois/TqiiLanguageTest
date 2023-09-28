@@ -14,6 +14,16 @@
     </div>
 }
 
+@if (Model?.Answer?.ButtonInteractiveReadingOptions != null && Model?.Answer?.ButtonInteractiveReadingOptions.Count > 0)
+{
+    <div class="answer-bank">
+        @foreach (var a in Model?.Answer?.ButtonInteractiveReadingOptions)
+        {
+            <span>@Html.Raw(a)</span>
+        }
+    </div>
+}
+
 <div id="display-after-recording">
 <p class="interactive" >@Html.Raw(Model.Answer?.InteractiveReadingAnswer)</p>
 

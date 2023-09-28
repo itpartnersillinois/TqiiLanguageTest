@@ -31,7 +31,7 @@ namespace TqiiLanguageTest.Controllers {
         [HttpGet("interactivereading/{id}")]
         public void InteractiveReading(string id) {
             var storage = _context?.Questions?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
-            if (storage == null || storage.Recording == null) {
+            if (storage == null || storage.InteractiveReadingImage == null) {
                 Response.StatusCode = 404;
                 return;
             }
@@ -44,7 +44,7 @@ namespace TqiiLanguageTest.Controllers {
         [HttpGet("introduction/{id}")]
         public void Introduction(string id) {
             var storage = _context?.Questions?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
-            if (storage == null || storage.Recording == null) {
+            if (storage == null || storage.IntroductionImage == null) {
                 Response.StatusCode = 404;
                 return;
             }
@@ -57,7 +57,7 @@ namespace TqiiLanguageTest.Controllers {
         [HttpGet("question/{id}")]
         public void Question(string id) {
             var storage = _context?.Questions?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
-            if (storage == null || storage.Recording == null) {
+            if (storage == null || storage.QuestionImage == null) {
                 Response.StatusCode = 404;
                 return;
             }
