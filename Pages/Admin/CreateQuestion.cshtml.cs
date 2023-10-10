@@ -34,6 +34,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (_context.Questions == null || Question == null) {
                 return Page();
             }
+            var testid = Question.TestId;
             Question.IntroductionText = Question.IntroductionText ?? string.Empty;
             Question.InteractiveReadingAnswer = Question.InteractiveReadingAnswer ?? string.Empty;
             Question.InteractiveReadingOptions = Question.InteractiveReadingOptions ?? string.Empty;
@@ -46,6 +47,10 @@ namespace TqiiLanguageTest.Pages.Admin {
             Question.BasicQuestion1 = Question.BasicQuestion1 ?? string.Empty;
             Question.BasicQuestion2 = Question.BasicQuestion2 ?? string.Empty;
             Question.BasicQuestion3 = Question.BasicQuestion3 ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(Question.Title)) {
+                Question.OrderBy = -1;
+                Question.Title = "Deleted question on " + DateTime.Now.ToShortDateString();
+            }
             if (Question.Id == 0) {
                 _context.Questions.Add(Question);
             } else {
@@ -53,7 +58,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./UploadQuestionRecording", new { id = Question.Id, testid = Question.TestId });
+            return RedirectToPage("./CreateTest", new { id = testid });
         }
     }
 }

@@ -50,6 +50,10 @@ namespace TqiiLanguageTest.BusinessLogic {
                         isEmphasized = true;
                         paragraph.Append("<em>");
                     }
+                } else if (c == '[') {
+                    paragraph.Append("<span class='nobreak'>");
+                } else if (c == ']') {
+                    paragraph.Append("</span>");
                 } else if (c != '\n') {
                     if (isInInputString) {
                         paragraph.Append($"</span>");

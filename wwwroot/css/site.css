@@ -5,7 +5,8 @@ body {
 
 main {
     max-width: 1200px;
-    margin: 10px 20px;
+    margin: 10px auto;
+    padding: 0 20px;
 }
 
 .buttons {
@@ -37,6 +38,12 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
     height: 240px;
 }
 
+.instruction {
+    padding: 5px !important;
+    margin-bottom: 15px !important;
+    border: thin solid black;
+}
+
 #countdown {
     font-weight: 700;
     z-index: 20;
@@ -65,8 +72,13 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         background: var(--il-cloud-1);
     }
 
+    .interactive span.nowrap {
+        white-space: nowrap;
+    }
+
     .interactive span.faded {
-        color: #707070;
+        background: var(--il-cloud-1);
+        display: block;
     }
 
     .interactive input {

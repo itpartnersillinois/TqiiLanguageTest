@@ -26,6 +26,8 @@ namespace TqiiLanguageTest.Controllers {
             if (testUser == null) {
                 return NotFound();
             }
+            var test = _context?.Tests?.Single(t => t.Id == testUser.TestId);
+            var testTitle = test?.Title;
 
             var questions = _context?.Questions?.Where(q => q.TestId == testUser.TestId).ToList();
 
@@ -34,46 +36,47 @@ namespace TqiiLanguageTest.Controllers {
             using (var memoryStream = new MemoryStream()) {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true)) {
                     foreach (var answer in answers) {
+                        var question = questions?.SingleOrDefault(q => q.Id == answer.QuestionId);
+                        var prefix = $"tqii_{testTitle}_{question?.Title}_{answer.OrderBy}_{answer.Id}";
                         if (answer.Recording.Count() > 0) {
-                            var file = archive.CreateEntry("tqii_" + answer.Id + "_answer.wav");
+                            var file = archive.CreateEntry($"{prefix}_answer.wav");
                             using (var stream = file.Open()) {
                                 stream.Write(answer.Recording, 0, answer.Recording.Length);
                             }
                         }
-                        var question = questions?.SingleOrDefault(q => q.Id == answer.QuestionId);
                         if (question != null) {
                             if (question.Recording.Count() > 0) {
-                                var file = archive.CreateEntry("tqii_" + answer.Id + "_question.wav");
+                                var file = archive.CreateEntry($"{prefix}_question.wav");
                                 using (var stream = file.Open()) {
                                     stream.Write(question.Recording, 0, question.Recording.Length);
                                 }
                             }
                             var sb = new StringBuilder();
-                            AddString(ref sb, "ID " + answer.Id);
-                            AddString(ref sb, question.Title);
-                            AddString(ref sb, "Started at " + answer.DateTimeStart?.ToString("G"));
-                            AddString(ref sb, "Ended at " + answer.DateTimeEnd?.ToString("G"));
-                            AddString(ref sb, "Duration: " + (answer.DateTimeEnd - answer.DateTimeStart)?.ToString("c"));
-                            AddString(ref sb, question.IntroductionText);
+                            AddString(ref sb, "ID " + answer.Id, false);
+                            AddString(ref sb, question.Title, false);
+                            AddString(ref sb, "Started at " + answer.DateTimeStart?.ToString("G"), false);
+                            AddString(ref sb, "Ended at " + answer.DateTimeEnd?.ToString("G"), false);
+                            AddString(ref sb, "Duration: " + (answer.DateTimeEnd - answer.DateTimeStart)?.ToString("c"), false);
+                            AddString(ref sb, question.IntroductionText, true);
                             if (question.QuestionType == QuestionEnum.SentenceRepetition ||
                                 question.QuestionType == QuestionEnum.IntegratedSpeaking) {
-                                AddString(ref sb, question.QuestionText);
-                                AddString(ref sb, answer.Text);
-                                AddString(ref sb, question.RecordingText);
+                                AddString(ref sb, question.QuestionText, true);
+                                AddString(ref sb, answer.Text, true);
+                                AddString(ref sb, question.RecordingText, false);
                             }
                             if (question.QuestionType == QuestionEnum.InteractiveReading ||
                                 question.QuestionType == QuestionEnum.BasicQuestions) {
-                                AddString(ref sb, question.InteractiveReadingAnswer);
-                                AddString(ref sb, answer.InteractiveReadingAnswer);
-                                AddString(ref sb, question.BasicQuestion1);
-                                AddString(ref sb, answer.BasicAnswers1);
-                                AddString(ref sb, question.BasicQuestion2);
-                                AddString(ref sb, answer.BasicAnswers2);
-                                AddString(ref sb, question.BasicQuestion3);
-                                AddString(ref sb, answer.BasicAnswers3);
+                                AddString(ref sb, question.InteractiveReadingAnswer, true);
+                                AddString(ref sb, answer.InteractiveReadingAnswer, true);
+                                AddString(ref sb, question.BasicQuestion1, true);
+                                AddString(ref sb, answer.BasicAnswers1, true);
+                                AddString(ref sb, question.BasicQuestion2, true);
+                                AddString(ref sb, answer.BasicAnswers2, true);
+                                AddString(ref sb, question.BasicQuestion3, true);
+                                AddString(ref sb, answer.BasicAnswers3, false);
                             }
-                            AddString(ref sb, "------------------------");
-                            var answerKey = archive.CreateEntry("tqii_" + answer.Id + "_details.txt");
+                            AddString(ref sb, "------------------------", false);
+                            var answerKey = archive.CreateEntry($"{prefix}_details.txt");
                             var questionList = Encoding.UTF8.GetBytes(sb.ToString());
                             using (var stream = answerKey.Open()) {
                                 stream.Write(questionList, 0, questionList.Length);
@@ -86,9 +89,12 @@ namespace TqiiLanguageTest.Controllers {
             };
         }
 
-        private void AddString(ref StringBuilder sb, string value) {
+        private void AddString(ref StringBuilder sb, string value, bool lineBreak) {
             if (!string.IsNullOrWhiteSpace(value)) {
                 _ = sb.AppendLine(value);
+                if (lineBreak) {
+                    _ = sb.AppendLine("---------");
+                }
             }
         }
     }

@@ -4,10 +4,6 @@
 }
 <h1>Recording your response</h1>
 <div class="hidden" id="display-after-recording">
-    <p>This is recording after the beep. Please speak into the microphone for the duration of the countdown. </p>
-
-    <p>Answering @Model.Answer?.CurrentQuestionNumber of @Model.Answer?.TotalQuestions</p>
-
     <p>@Model.Answer.RecordingText</p>
 
     @if (Model != null && Model.Answer != null && Model.Answer.HasRecordingImage)

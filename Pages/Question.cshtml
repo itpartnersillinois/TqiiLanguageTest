@@ -5,9 +5,7 @@
 
 <h1>Listen to the Recording</h1>
 
-<p>Please listen to the clip. When it is done, it will direct you to the next page. Do not press refresh during this time, as this will prevent you from answering this question.</p>
-
-<p>@Model.Question.IntroductionText</p>
+<p class="instruction">@Model.Question.IntroductionText</p>
 
 @if (Model.Question.HasIntroductionImage)
 {

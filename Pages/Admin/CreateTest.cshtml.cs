@@ -44,6 +44,16 @@ namespace TqiiLanguageTest.Pages.Admin {
 
             if (Test.Id == 0) {
                 _context.Tests.Add(Test);
+            } else if (string.IsNullOrWhiteSpace(Test.Title)) {
+                if (_context?.TestUsers.Any(tu => tu.TestId == Test.Id) ?? true) {
+                    Test.Title = "Deleted Test on " + DateTime.Now.ToShortDateString() + " (" + _context?.TestUsers.Count(tu => tu.TestId == Test.Id) + ")";
+                    _context.Tests.Update(Test);
+                } else {
+                    foreach (var question in _context?.Questions.Where(q => q.TestId == Test.Id).ToList()) {
+                        _context.Questions.Remove(question);
+                    }
+                    _context.Tests.Remove(Test);
+                }
             } else {
                 _context.Tests.Update(Test);
             }

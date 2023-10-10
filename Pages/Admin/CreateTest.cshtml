@@ -13,7 +13,7 @@
     <div class="col-md-4">
         <form method="post">
             <div class="ils-input-entry form-group">
-                <label for="Test_Title" class="control-label">Title</label>
+                <label for="Test_Title" class="control-label">Title (for internal use, leave blank to delete test if no test users are assigned to it)</label>
                 <input asp-for="Test.Title" class="form-control" />
                 <span asp-validation-for="Test.Title" class="text-danger"></span>
             </div>
@@ -54,7 +54,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Questions)
+        @foreach (var item in Model.Questions.Where(q => q.OrderBy >= 0))
         {
             <tr>
                 <td>

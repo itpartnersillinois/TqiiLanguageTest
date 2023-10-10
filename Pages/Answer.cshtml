@@ -5,16 +5,12 @@
 <h1>Preparing Your Answer</h1>
 <div class="hidden" id="display-after-recording">
 
-    <p>Please answer the following. When you are done or when time runs out, it will direct you to the next page</p>
+    <p class="instruction">@Model.Answer.QuestionText</p>
 
-    <p>Answering @Model.Answer?.CurrentQuestionNumber of @Model.Answer?.TotalQuestions</p>
-
-    <p>@Model.Answer.QuestionText</p>
-
-    @if (Model != null && Model.Answer != null && Model.Answer.HasInteractiveReadingImage)
+    @if (Model != null && Model.Answer != null && Model.Answer.HasQuestionImage)
     {
         <div>
-            <img src="/Image/InteractiveReading/@Model?.Answer?.QuestionGuid" alt="">
+            <img src="/Image/Question/@Model?.Answer?.QuestionGuid" alt="">
         </div>
     }
 

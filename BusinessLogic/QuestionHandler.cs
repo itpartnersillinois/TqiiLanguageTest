@@ -75,6 +75,9 @@ namespace TqiiLanguageTest.BusinessLogic {
         }
 
         internal Question? GetQuestionByTestAndOrder(int id, int testUserId, int orderBy) {
+            if (orderBy < 0) {
+                orderBy = 0;
+            }
             var questionsAlreadyAsked = _context?.Answers?.Where(a => a.TestUserId == testUserId).Select(a => a.QuestionId).ToList() ?? new List<int?>();
             return _context?.Questions?
                 .Where(q => q.TestId == id && q.OrderBy >= orderBy && !questionsAlreadyAsked.Contains(q.Id))

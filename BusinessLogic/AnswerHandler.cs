@@ -47,6 +47,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.RecordingImage = question.RecordingImage;
             answer.DurationAnswerInSeconds = question.DurationAnswerInSeconds;
             answer.DurationRecordingInSeconds = question.DurationRecordingInSeconds;
+            answer.QuestionImage = question.QuestionImage;
             answer.InteractiveReadingImage = question.InteractiveReadingImage;
             answer.InteractiveReadingOptions = question.InteractiveReadingOptions;
             answer.InteractiveReadingAnswer = InteractiveReadingParser.ConverToHtml(question.InteractiveReadingAnswer, answer.ButtonInteractiveReadingOptions);
