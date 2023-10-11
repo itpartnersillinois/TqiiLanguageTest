@@ -26,7 +26,6 @@ jobs:
       
     - name: Build
       run: |
-        cd TqiiLanguageTest
         dotnet build --configuration Release --no-restore
         dotnet publish -c Release -o ../dotnet-webapp -r linux-x64 --self-contained true /p:UseAppHost=true
       
