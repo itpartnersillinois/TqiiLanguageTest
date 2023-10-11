@@ -51,8 +51,8 @@ namespace TqiiLanguageTest.BusinessLogic {
                         paragraph.Append("<em>");
                     }
                 } else if (c == '[') {
-                    paragraph.Append("<span class='nobreak'>");
-                } else if (c == ']') {
+                    paragraph.Append("<span class='nowrap'>");
+                } else if (c == ']') { // note that this may close the 'question' span; that's OK
                     paragraph.Append("</span>");
                 } else if (c != '\n') {
                     if (isInInputString) {
