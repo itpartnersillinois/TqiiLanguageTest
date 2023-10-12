@@ -53,28 +53,22 @@ namespace TqiiLanguageTest.Controllers {
                             }
                             var sb = new StringBuilder();
                             AddString(ref sb, "ID " + answer.Id, false);
-                            AddString(ref sb, question.Title, false);
+                            AddString(ref sb, "Title: " + question.Title, false);
                             AddString(ref sb, "Started at " + answer.DateTimeStart?.ToString("G"), false);
                             AddString(ref sb, "Ended at " + answer.DateTimeEnd?.ToString("G"), false);
                             AddString(ref sb, "Duration: " + (answer.DateTimeEnd - answer.DateTimeStart)?.ToString("c"), false);
                             AddString(ref sb, question.IntroductionText, true);
-                            if (question.QuestionType == QuestionEnum.SentenceRepetition ||
-                                question.QuestionType == QuestionEnum.IntegratedSpeaking) {
-                                AddString(ref sb, question.QuestionText, true);
-                                AddString(ref sb, answer.Text, true);
-                                AddString(ref sb, question.RecordingText, false);
-                            }
-                            if (question.QuestionType == QuestionEnum.InteractiveReading ||
-                                question.QuestionType == QuestionEnum.BasicQuestions) {
-                                AddString(ref sb, question.InteractiveReadingAnswer, true);
-                                AddString(ref sb, answer.InteractiveReadingAnswer, true);
-                                AddString(ref sb, question.BasicQuestion1, true);
-                                AddString(ref sb, answer.BasicAnswers1, true);
-                                AddString(ref sb, question.BasicQuestion2, true);
-                                AddString(ref sb, answer.BasicAnswers2, true);
-                                AddString(ref sb, question.BasicQuestion3, true);
-                                AddString(ref sb, answer.BasicAnswers3, false);
-                            }
+                            AddString(ref sb, question.QuestionText, true);
+                            AddString(ref sb, answer.Text, true);
+                            AddString(ref sb, question.RecordingText, true);
+                            AddString(ref sb, question.InteractiveReadingAnswer, true);
+                            AddString(ref sb, answer.InteractiveReadingAnswer, true);
+                            AddString(ref sb, question.BasicQuestion1, true);
+                            AddString(ref sb, answer.BasicAnswers1, true);
+                            AddString(ref sb, question.BasicQuestion2, true);
+                            AddString(ref sb, answer.BasicAnswers2, true);
+                            AddString(ref sb, question.BasicQuestion3, true);
+                            AddString(ref sb, answer.BasicAnswers3, false);
                             AddString(ref sb, "------------------------", false);
                             var answerKey = archive.CreateEntry($"{prefix}_details.txt");
                             var questionList = Encoding.UTF8.GetBytes(sb.ToString());

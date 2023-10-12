@@ -54,7 +54,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Questions.Where(q => q.OrderBy >= 0))
+        @foreach (var item in Model.Questions.Where(q => q.OrderBy >= 0).OrderBy(q => q.OrderBy).ThenBy(q => q.Title))
         {
             <tr>
                 <td>
