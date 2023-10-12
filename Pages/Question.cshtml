@@ -5,6 +5,11 @@
 
 <h1>Listen to the Recording</h1>
 
+@if (!Model.Question.IsIntroduction && Model.Question.QuestionType == Models.QuestionEnum.SentenceRepetition)
+{
+    <p>On Question @Model.Question?.CurrentQuestionNumber of @Model.Question?.TotalQuestions</p>
+}
+
 <p class="instruction">@Model.Question.IntroductionText</p>
 
 @if (Model.Question.HasIntroductionImage)

@@ -39,11 +39,17 @@ namespace TqiiLanguageTest.Models {
         public int Id { get; set; }
 
         public string InteractiveReadingAnswer { get; set; } = string.Empty;
+
         public byte[] InteractiveReadingImage { get; set; } = Array.Empty<byte>();
+
         public string InteractiveReadingOptions { get; set; } = string.Empty;
 
         public byte[] IntroductionImage { get; set; } = Array.Empty<byte>();
+
         public string IntroductionText { get; set; } = string.Empty;
+
+        [NotMapped]
+        public bool IsIntroduction => QuestionType == QuestionEnum.SentenceRepetition && DurationRecordingInSeconds == 0;
 
         public int OrderBy { get; set; }
         public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
