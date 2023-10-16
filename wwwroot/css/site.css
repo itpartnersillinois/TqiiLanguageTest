@@ -126,3 +126,18 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
 .answer-bank-space {
     height: 200px;
 }
+
+.il-formatted .ils-input-entry-radio {
+    column-gap: 10px;
+    row-gap: 5px;
+    align-items: start;
+}
+
+.ratings label {
+    font-weight: 700;
+}
+
+    .ratings label span {
+        display: block;
+        font-weight: 400;
+    }
