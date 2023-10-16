@@ -19,7 +19,7 @@ namespace TqiiLanguageTest.Controllers {
 
         [HttpGet("{id}")]
         public IActionResult Index(int id) {
-            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+            if (!_permissions.IsReviewer(User.Identity?.Name ?? "") && !_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
             var testUser = _context?.TestUsers?.SingleOrDefault(tu => tu.Id == id);

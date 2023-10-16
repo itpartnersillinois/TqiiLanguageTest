@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Pages\Reviewer\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
