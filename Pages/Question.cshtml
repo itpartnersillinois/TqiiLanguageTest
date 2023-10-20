@@ -3,11 +3,11 @@
 @{
 }
 
-<h1>Listen to the Recording</h1>
+<h1>@Model.Question.QuestionTitle</h1>
 
 @if (!Model.Question.IsIntroduction && Model.Question.QuestionType == Models.QuestionEnum.SentenceRepetition)
 {
-    <p>On Question @Model.Question?.CurrentQuestionNumber of @Model.Question?.TotalQuestions</p>
+    <p>On Question @(Model.Question?.CurrentQuestionNumber - 1) of @Model.Question?.TotalQuestions</p>
 }
 
 <p class="instruction">@Model.Question.IntroductionText</p>
@@ -39,5 +39,5 @@ else
 
 
 @section Scripts {
-    <script src="~/js/question.js" asp-append-version="true"></script>
+    <script src="~/js/question.js?cache=4" asp-append-version="true"></script>
 }

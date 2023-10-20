@@ -3,10 +3,17 @@ const testUserId = document.getElementById('id');
 const fileObject = document.getElementById('file');
 const displayAfterRecording = document.getElementById('display-after-recording');
 const params = new URLSearchParams(window.location.search);
+const beforeUnloadHandler = (event) => {
+    event.preventDefault();
+    event.returnValue = "not available";
+    return "not available";
+};
 
 window.addEventListener("DOMContentLoaded", (event) => {
     if (navigator.mediaDevices.getUserMedia) {
+        debugger;
         testUserId.value = params.get('id');
+        window.addEventListener("beforeunload", beforeUnloadHandler);
         console.log('getUserMedia supported.');
 
         let chunks = [];
@@ -58,6 +65,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     method: 'POST',
                     body: fd
                 }).then(function (response) {
+                    window.removeEventListener("beforeunload", beforeUnloadHandler);
                     window.location.href = "/Question?id=" + params.get('id');
                 });
             }

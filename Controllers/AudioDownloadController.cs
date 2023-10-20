@@ -27,17 +27,16 @@ namespace TqiiLanguageTest.Controllers {
                 return NotFound();
             }
             var test = _context?.Tests?.Single(t => t.Id == testUser.TestId);
-            var testTitle = test?.Title;
-
+            if (test == null) {
+                return NotFound();
+            }
             var questions = _context?.Questions?.Where(q => q.TestId == testUser.TestId).ToList();
-
             var answers = _context?.Answers?.Where(a => a.TestUserId == id).OrderBy(a => a.DateTimeStart).ToList() ?? new List<Answer>();
-
             using (var memoryStream = new MemoryStream()) {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true)) {
                     foreach (var answer in answers) {
                         var question = questions?.SingleOrDefault(q => q.Id == answer.QuestionId);
-                        var prefix = $"tqii_{testTitle}_{question?.Title}_{answer.OrderBy}_{answer.Id}";
+                        var prefix = GeneratePrefix(test, testUser, question, answer);
                         if (answer.Recording.Count() > 0) {
                             var file = archive.CreateEntry($"{prefix}_answer.wav");
                             using (var stream = file.Open()) {
@@ -79,7 +78,7 @@ namespace TqiiLanguageTest.Controllers {
                     }
                 }
 
-                return File(memoryStream.ToArray(), "application/zip", "test_user_id_" + id + ".zip");
+                return File(memoryStream.ToArray(), "application/zip", GenerateTitle(test, testUser));
             };
         }
 
@@ -90,6 +89,14 @@ namespace TqiiLanguageTest.Controllers {
                     _ = sb.AppendLine("---------");
                 }
             }
+        }
+
+        private string GeneratePrefix(Test test, TestUser testUser, Question? question, Answer answer) {
+            return $"{test.Title}-{(testUser.DateTimeStart.HasValue ? testUser.DateTimeStart.Value.ToString("yyyyMMdd") : "")}-{testUser.UserIdentification}-{question?.Title}-{answer.Id}";
+        }
+
+        private string GenerateTitle(Test test, TestUser testUser) {
+            return $"{test.Title}-{(testUser.DateTimeStart.HasValue ? testUser.DateTimeStart.Value.ToString("yyyyMMdd") : "")}-{testUser.UserIdentification}-{testUser.Id}.zip";
         }
     }
 }

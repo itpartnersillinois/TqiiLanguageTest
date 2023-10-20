@@ -25,5 +25,6 @@ namespace TqiiLanguageTest.Models {
         public virtual Test? Test { get; set; }
         public int TestId { get; set; }
         public int TotalQuestions { get; set; }
+        public string UserIdentification { get; set; }
     }
 }

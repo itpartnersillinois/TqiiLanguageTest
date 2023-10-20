@@ -3,8 +3,15 @@ const testUserId = document.getElementById('id');
 const answerText = document.getElementById('answertext');
 const params = new URLSearchParams(window.location.search);
 const displayAfterRecording = document.getElementById('display-after-recording');
+const beforeUnloadHandler = (event) => {
+    event.preventDefault();
+    event.returnValue = "not available";
+    return "not available";
+};
 
 window.addEventListener("DOMContentLoaded", (event) => {
+    debugger;
+    window.addEventListener("beforeunload", beforeUnloadHandler);
     testUserId.value = params.get('id');
     let timer = timerElement.innerText;
     if (isNaN(timer)) {
@@ -46,10 +53,13 @@ window.addEventListener("DOMContentLoaded", (event) => {
     }, 1000);
 
     document.getElementById('continue').addEventListener('click', event => {
+        window.removeEventListener("beforeunload", beforeUnloadHandler);
         displayAfterRecording.classList.add('hidden');
         document.querySelectorAll('.interactive span').forEach(s => {
             s.querySelectorAll('input').forEach(i => {
-                s.appendChild(document.createTextNode(i.value));
+                if (s.id != 'answer') {
+                    s.appendChild(document.createTextNode(i.value));
+                }
             });
             s.querySelectorAll('select').forEach(i => {
                 s.innerHTML = i.value;

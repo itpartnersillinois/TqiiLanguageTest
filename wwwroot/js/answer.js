@@ -3,9 +3,16 @@ const testUserId = document.getElementById('id');
 const answerText = document.getElementById('answertext');
 const params = new URLSearchParams(window.location.search);
 const displayAfterRecording = document.getElementById('display-after-recording');
+const beforeUnloadHandler = (event) => {
+    event.preventDefault();
+    event.returnValue = "not available";
+    return "not available";
+};
 
 window.addEventListener("DOMContentLoaded", (event) => {
     testUserId.value = params.get('id');
+    debugger;
+    window.addEventListener("beforeunload", beforeUnloadHandler);
 
     let timer = timerElement.innerText;
     if (isNaN(timer)) {
@@ -42,6 +49,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         if (minutes == 0 && seconds == 0) {
             clearInterval(myInterval);
+            window.addEventListener("beforeunload", beforeUnloadHandler);
             document.forms[0].submit();
         };
     }, 1000);
@@ -53,6 +61,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
             } else {
                 answerText.value = event.target.innerHTML;
             }
+            window.removeEventListener("beforeunload", beforeUnloadHandler);
             document.forms[0].submit();
         })
     });

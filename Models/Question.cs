@@ -12,6 +12,15 @@ namespace TqiiLanguageTest.Models {
     }
 
     public class Question {
+
+        private readonly Dictionary<QuestionEnum, string> Titles = new Dictionary<QuestionEnum, string>() {
+            { QuestionEnum.None, "Listen to the Recording" },
+            { QuestionEnum.SentenceRepetition, "Sentence Repetition" },
+            { QuestionEnum.IntegratedSpeaking, "Integrated Speaking" },
+            { QuestionEnum.InteractiveReading, "Interactive Reading" },
+            { QuestionEnum.BasicQuestions, "Question" }
+        };
+
         public string AnswerOptions { get; set; } = string.Empty;
 
         public string BasicAnswers1 { get; set; } = string.Empty;
@@ -55,6 +64,7 @@ namespace TqiiLanguageTest.Models {
         public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
         public virtual QuestionRubric? QuestionRubric { get; set; }
         public string QuestionText { get; set; } = string.Empty;
+        public string QuestionTitle => Titles[QuestionType];
         public QuestionEnum QuestionType { get; set; }
         public byte[] Recording { get; set; } = Array.Empty<byte>();
         public byte[] RecordingImage { get; set; } = Array.Empty<byte>();

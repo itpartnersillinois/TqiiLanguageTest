@@ -4,7 +4,9 @@
 }
 <h1>Recording your response</h1>
 <div class="hidden" id="display-after-recording">
-    <p>@Model.Answer.RecordingText</p>
+    <p class="instruction">@Model.Answer.RecordingText</p>
+    <img src="/img/microphone.png" alt="Icon of microphone" />
+
 
     @if (Model != null && Model.Answer != null && Model.Answer.HasRecordingImage)
     {
@@ -30,5 +32,5 @@
 </form>
 
 @section Scripts {
-    <script src="~/js/recording.js" asp-append-version="true"></script>
+    <script src="~/js/recording.js?cache=4" asp-append-version="true"></script>
 }
