@@ -10,6 +10,6 @@
     Your browser does not support the audio element.
 </audio>
 
-<p>@Html.Raw(Model?.Test?.Conclusion)</p>
+<p class="instruction">@Html.Raw(Model?.Test?.Conclusion)</p>
 
-<p><a href="@Model?.Test?.ConclusionLink" target="_blank" rel="noopener noreferrer">Answer the questionnaire</a></p>
+<p><a href="@Html.Raw(Model?.Test?.ConclusionLink + "&id=" + Model?.TestUser?.UserIdentification)" target="_blank" rel="noopener noreferrer">Answer the questionnaire</a></p>

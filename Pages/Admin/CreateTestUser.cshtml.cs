@@ -10,10 +10,12 @@ namespace TqiiLanguageTest.Pages.Admin {
     public class CreateTestUserModel : PageModel {
         private readonly LanguageDbContext _context;
         private readonly PermissionsHandler _permissions;
+        private readonly TestUserHandler _testUserHandler;
 
-        public CreateTestUserModel(LanguageDbContext context, PermissionsHandler permissions) {
+        public CreateTestUserModel(LanguageDbContext context, PermissionsHandler permissions, TestUserHandler testUserHandler) {
             _context = context;
             _permissions = permissions;
+            _testUserHandler = testUserHandler;
         }
 
         [BindProperty]
@@ -32,15 +34,10 @@ namespace TqiiLanguageTest.Pages.Admin {
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync() {
-            if (!ModelState.IsValid || _context.TestUsers == null || TestUser == null) {
+            if (_context.TestUsers == null || TestUser == null) {
                 return Page();
             }
-            var test = _context.Tests?.Find(TestUser.TestId) ?? new Test();
-
-            TestUser.TotalQuestions = test.NumberQuestions;
-
-            _context.TestUsers.Add(TestUser);
-            await _context.SaveChangesAsync();
+            _ = await _testUserHandler.AddTestUser(TestUser);
 
             return RedirectToPage("./Index");
         }

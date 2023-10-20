@@ -10,6 +10,21 @@ namespace TqiiLanguageTest.BusinessLogic {
             _context = context;
         }
 
+        public async Task<int> AddTestUser(TestUser user) {
+            var existingUser = _context.TestUsers?.FirstOrDefault(tu => tu.Email == user.Email);
+            if (existingUser != null && !string.IsNullOrEmpty(existingUser.UserIdentification)) {
+                user.UserIdentification = existingUser.UserIdentification;
+            } else {
+                var newUser = _context.TestUsers?.OrderBy(tu => tu.UserIdentification).First();
+                user.UserIdentification = string.IsNullOrWhiteSpace(newUser?.UserIdentification) ? "0000000001" : int.Parse(newUser.UserIdentification) + 1.ToString("0000000000");
+            }
+            var test = _context.Tests?.Find(user.TestId) ?? new Test();
+            user.TotalQuestions = test.NumberQuestions;
+
+            _context?.TestUsers?.Add(user);
+            return await _context.SaveChangesAsync();
+        }
+
         public TestUser? GetTestUser(Guid guid) => _context.TestUsers?.SingleOrDefault(tu => tu.Guid == guid);
 
         public Guid? GetTestUserGuid(string email) {
