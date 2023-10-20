@@ -2,9 +2,20 @@
 const question = document.getElementById('question');
 const route = document.getElementById('route');
 const params = new URLSearchParams(window.location.search);
+const beforeUnloadHandler = (event) => {
+    event.preventDefault();
+    event.returnValue = "not available";
+    return "not available";
+};
 
 window.addEventListener("DOMContentLoaded", (event) => {
+    debugger;
+    window.addEventListener("beforeunload", beforeUnloadHandler);
     document.getElementById('manual_link').setAttribute('href', `/${route.innerText}?id=${params.get('id')}`);
+    document.getElementById('manual_link').addEventListener('click', event => {
+        window.removeEventListener("beforeunload", beforeUnloadHandler);
+    });
+
     if (manual_link.style.display == 'none') {
         playSample();
     }
@@ -20,6 +31,7 @@ function playSample() {
     });
     audioPlayer.addEventListener("ended", (event) => {
         console.debug('item ended');
+        window.removeEventListener("beforeunload", beforeUnloadHandler);
         window.location.href = `/${route.innerText}?id=${params.get('id')}`;
     });
     document.body.appendChild(audioPlayer);
