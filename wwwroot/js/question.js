@@ -9,11 +9,17 @@ const beforeUnloadHandler = (event) => {
 };
 
 window.addEventListener("DOMContentLoaded", (event) => {
-    debugger;
     window.addEventListener("beforeunload", beforeUnloadHandler);
+    window.addEventListener("pagehide", beforeUnloadHandler);
     document.getElementById('manual_link').setAttribute('href', `/${route.innerText}?id=${params.get('id')}`);
     document.getElementById('manual_link').addEventListener('click', event => {
         window.removeEventListener("beforeunload", beforeUnloadHandler);
+        window.removeEventListener("pagehide", beforeUnloadHandler);
+    });
+    document.getElementById('continue_link').setAttribute('href', `/${route.innerText}?id=${params.get('id')}`);
+    document.getElementById('continue_link').addEventListener('click', event => {
+        window.removeEventListener("beforeunload", beforeUnloadHandler);
+        window.removeEventListener("pagehide", beforeUnloadHandler);
     });
 
     if (manual_link.style.display == 'none') {
@@ -31,8 +37,11 @@ function playSample() {
     });
     audioPlayer.addEventListener("ended", (event) => {
         console.debug('item ended');
-        window.removeEventListener("beforeunload", beforeUnloadHandler);
-        window.location.href = `/${route.innerText}?id=${params.get('id')}`;
+        if (document.getElementById('continue_link').style.visibility == 'hidden') {
+            window.removeEventListener("beforeunload", beforeUnloadHandler);
+            window.removeEventListener("pagehide", beforeUnloadHandler);
+            window.location.href = `/${route.innerText}?id=${params.get('id')}`;
+        }
     });
     document.body.appendChild(audioPlayer);
 }

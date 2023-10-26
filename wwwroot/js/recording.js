@@ -11,9 +11,9 @@ const beforeUnloadHandler = (event) => {
 
 window.addEventListener("DOMContentLoaded", (event) => {
     if (navigator.mediaDevices.getUserMedia) {
-        debugger;
         testUserId.value = params.get('id');
         window.addEventListener("beforeunload", beforeUnloadHandler);
+        window.addEventListener("pagehide", beforeUnloadHandler);
         console.log('getUserMedia supported.');
 
         let chunks = [];
@@ -55,6 +55,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
             });
 
             mediaRecorder.onstop = (e) => {
+                window.removeEventListener("beforeunload", beforeUnloadHandler);
+                window.removeEventListener("pagehide", beforeUnloadHandler);
                 const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
                 console.debug('item ended');
                 var fd = new FormData();

@@ -6,9 +6,16 @@ const answerText2 = document.getElementById('answertext2');
 const answerText3 = document.getElementById('answertext3');
 const params = new URLSearchParams(window.location.search);
 const displayAfterRecording = document.getElementById('display-after-recording');
+const beforeUnloadHandler = (event) => {
+    event.preventDefault();
+    event.returnValue = "not available";
+    return "not available";
+};
 
 window.addEventListener("DOMContentLoaded", (event) => {
     testUserId.value = params.get('id');
+    window.addEventListener("beforeunload", beforeUnloadHandler);
+    window.addEventListener("pagehide", beforeUnloadHandler);
     let timer = timerElement.innerText;
     if (isNaN(timer)) {
         timer = 0;
@@ -51,6 +58,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     document.querySelectorAll('.buttons a').forEach(b => {
         b.addEventListener('click', event => {
+            window.removeEventListener("beforeunload", beforeUnloadHandler);
+            window.removeEventListener("pagehide", beforeUnloadHandler);
+
             if (event.target.alt != null && event.target.alt != '') {
                 answerText.value = event.target.alt;
             } else {
