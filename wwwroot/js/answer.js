@@ -11,8 +11,8 @@ const beforeUnloadHandler = (event) => {
 
 window.addEventListener("DOMContentLoaded", (event) => {
     testUserId.value = params.get('id');
-    debugger;
     window.addEventListener("beforeunload", beforeUnloadHandler);
+    window.addEventListener("pagehide", beforeUnloadHandler);
 
     let timer = timerElement.innerText;
     if (isNaN(timer)) {
@@ -49,7 +49,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
         if (minutes == 0 && seconds == 0) {
             clearInterval(myInterval);
-            window.addEventListener("beforeunload", beforeUnloadHandler);
+            window.removeEventListener("beforeunload", beforeUnloadHandler);
+            window.removeEventListener("pagehide", beforeUnloadHandler);
             document.forms[0].submit();
         };
     }, 1000);
@@ -62,6 +63,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
                 answerText.value = event.target.innerHTML;
             }
             window.removeEventListener("beforeunload", beforeUnloadHandler);
+            window.removeEventListener("pagehide", beforeUnloadHandler);
             document.forms[0].submit();
         })
     });

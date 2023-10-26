@@ -9,6 +9,10 @@ main {
     padding: 0 20px;
 }
 
+    main.il-formatted {
+        font-size: 1.4em;
+    }
+
 .buttons {
     display: flex;
     flex: 0 1 50%;
@@ -19,6 +23,11 @@ main {
         min-width: 200px;
         margin: 0;
     }
+
+main.il-formatted .il-button {
+    font-size: 1.4em;
+    line-height: 1.6em;
+}
 
 main.il-formatted h1:first-child {
     margin-top: 24px;
@@ -124,7 +133,7 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
     }
 
 .answer-bank-space {
-    height: 200px;
+    height: 400px;
 }
 
 .il-formatted .ils-input-entry-radio {

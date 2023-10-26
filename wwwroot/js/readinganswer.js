@@ -12,6 +12,7 @@ const beforeUnloadHandler = (event) => {
 window.addEventListener("DOMContentLoaded", (event) => {
     debugger;
     window.addEventListener("beforeunload", beforeUnloadHandler);
+    window.addEventListener("pagehide", beforeUnloadHandler);
     testUserId.value = params.get('id');
     let timer = timerElement.innerText;
     if (isNaN(timer)) {
@@ -54,6 +55,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     document.getElementById('continue').addEventListener('click', event => {
         window.removeEventListener("beforeunload", beforeUnloadHandler);
+        window.removeEventListener("pagehide", beforeUnloadHandler);
         displayAfterRecording.classList.add('hidden');
         document.querySelectorAll('.interactive span').forEach(s => {
             s.querySelectorAll('input').forEach(i => {
@@ -76,10 +78,12 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
 function keyPress(event) {
     if (event.code.startsWith('Key')) {
-        this.value = event.key;
         let nextItem = this.nextElementSibling;
         if (nextItem != null) {
+            this.value = event.key;
             nextItem.focus();
+        } else if (this.value == '' || this.value == ' ') {
+            this.value = event.key;
         }
         event.preventDefault();
     } else if (event.code == 'Backspace' || event.code == 'ArrowLeft') {
