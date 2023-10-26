@@ -11,7 +11,7 @@
     <thead>
         <tr>
             <th>
-                Email
+                Test User
             </th>
             <th>
                 Test
@@ -27,8 +27,8 @@
 @foreach (var item in Model.TestUser) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
+                @Html.DisplayFor(modelItem => item.UserIdentification) (@Html.DisplayFor(modelItem => item.Email))
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Test.Title)
             </td>

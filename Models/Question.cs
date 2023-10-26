@@ -8,7 +8,8 @@ namespace TqiiLanguageTest.Models {
         SentenceRepetition, // Listen to a recording (introduction), optional multiple choice or reflection, record answer
         IntegratedSpeaking, // Listen to a recording (introduction), optional reflection, record answer
         InteractiveReading, // Type in text to complete information or choose from a drop-down
-        BasicQuestions      // Choose a answer
+        BasicQuestions,     // Choose a answer
+        Instructions        // Basic instructions
     }
 
     public class Question {
@@ -18,7 +19,8 @@ namespace TqiiLanguageTest.Models {
             { QuestionEnum.SentenceRepetition, "Sentence Repetition" },
             { QuestionEnum.IntegratedSpeaking, "Integrated Speaking" },
             { QuestionEnum.InteractiveReading, "Interactive Reading" },
-            { QuestionEnum.BasicQuestions, "Question" }
+            { QuestionEnum.BasicQuestions, "Question" },
+            { QuestionEnum.Instructions, "Instructions" }
         };
 
         public string AnswerOptions { get; set; } = string.Empty;
@@ -58,7 +60,7 @@ namespace TqiiLanguageTest.Models {
         public string IntroductionText { get; set; } = string.Empty;
 
         [NotMapped]
-        public bool IsIntroduction => QuestionType == QuestionEnum.SentenceRepetition && DurationRecordingInSeconds == 0;
+        public bool IsIntroduction => QuestionType == QuestionEnum.Instructions || (QuestionType == QuestionEnum.SentenceRepetition && DurationRecordingInSeconds == 0);
 
         public int OrderBy { get; set; }
         public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
@@ -69,7 +71,7 @@ namespace TqiiLanguageTest.Models {
         public byte[] Recording { get; set; } = Array.Empty<byte>();
         public byte[] RecordingImage { get; set; } = Array.Empty<byte>();
         public string RecordingText { get; set; } = string.Empty;
-        public string Route => (DurationAnswerInSeconds == 0 && DurationRecordingInSeconds == 0) ? "MarkComplete" : DurationAnswerInSeconds == 0 ? "Recording" : "Answer";
+        public string Route => (QuestionType == QuestionEnum.Instructions || (DurationAnswerInSeconds == 0 && DurationRecordingInSeconds == 0)) ? "MarkComplete" : DurationAnswerInSeconds == 0 ? "Recording" : "Answer";
         public Test? Test { get; set; }
         public int TestId { get; set; }
         public string Title { get; set; } = string.Empty;

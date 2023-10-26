@@ -37,7 +37,15 @@ else
 <div id="question" class="hidden">@Model.Question?.Guid</div>
 <div id="route" class="hidden">@Model.Question?.Route</div>
 
+@if (Model.Question.IsIntroduction)
+{
+    <p><a class="il-button" id="continue_link">Continue</a></p>
+}
+else
+{
+    <a style="display: none;" id="continue_link">Continue</a>
+}
 
 @section Scripts {
-    <script src="~/js/question.js?cache=4" asp-append-version="true"></script>
+    <script src="~/js/question.js?cache=5" asp-append-version="true"></script>
 }
