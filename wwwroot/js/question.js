@@ -37,7 +37,7 @@ function playSample() {
     });
     audioPlayer.addEventListener("ended", (event) => {
         console.debug('item ended');
-        if (document.getElementById('continue_link').style.visibility == 'hidden') {
+        if (document.getElementById('continue_link').style.display == 'none') {
             window.removeEventListener("beforeunload", beforeUnloadHandler);
             window.removeEventListener("pagehide", beforeUnloadHandler);
             window.location.href = `/${route.innerText}?id=${params.get('id')}`;
