@@ -21,11 +21,23 @@
 @if (Model.Guid == null || Model.Guid == Guid.Empty)
 {
     <p>You do not have any tests available at this time.</p>
-
-} else {
-    <p>If you want to, you may skip the hardware check / sample questions and start the test immediately.</p>
     <div>
-        <a onclick="window.open('/Starting?id=@Model.Guid', '_blank', 'popup=true'); return false;" href="#" class="il-button" id="start">Start test</a>
+        <a href="#" class="il-button" id="refresh">Refresh your screen to get new tests</a>
+    </div>
+} else {
+    <p>If you want to, you may skip the hardware check / sample questions and start the test immediately. This will open a new window.</p>
+    <div>
+        <a data-href="/Starting?id=@Model.Guid" href="#" class="il-button" id="start">Start test</a>
     </div>
 
+    <div id="hidden-continue" style="display: none;">
+    <p>Once you have started the test, please complete the test in the new window before starting the next section.</p>
+    <div>
+        <a href="#" class="il-button" id="refresh">Refresh your screen to get new tests</a>
+    </div>
+    </div>
+
+}
+@section Scripts {
+    <script src="~/js/index.js?cache=6" asp-append-version="true"></script>
 }
