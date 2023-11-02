@@ -11,7 +11,7 @@ namespace TqiiLanguageTest.BusinessLogic {
         }
 
         public async Task<int> AddTestUser(TestUser user) {
-            var existingUser = _context.TestUsers?.FirstOrDefault(tu => tu.Email == user.Email);
+            var existingUser = _context.TestUsers?.Where(tu => tu.UserIdentification != null && tu.UserIdentification != "").FirstOrDefault(tu => tu.Email == user.Email);
             if (existingUser != null && !string.IsNullOrEmpty(existingUser.UserIdentification)) {
                 user.UserIdentification = existingUser.UserIdentification;
             } else {
