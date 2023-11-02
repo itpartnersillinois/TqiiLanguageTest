@@ -15,8 +15,8 @@ namespace TqiiLanguageTest.BusinessLogic {
             if (existingUser != null && !string.IsNullOrEmpty(existingUser.UserIdentification)) {
                 user.UserIdentification = existingUser.UserIdentification;
             } else {
-                var newUser = _context.TestUsers?.OrderBy(tu => tu.UserIdentification).FirstOrDefault();
-                user.UserIdentification = string.IsNullOrWhiteSpace(newUser?.UserIdentification) ? "0000000001" : int.Parse(newUser.UserIdentification) + 1.ToString("0000000000");
+                var newUser = _context.TestUsers?.Where(tu => tu.UserIdentification != null && tu.UserIdentification != "").OrderByDescending(tu => tu.UserIdentification).FirstOrDefault();
+                user.UserIdentification = string.IsNullOrWhiteSpace(newUser?.UserIdentification) ? "0000000001" : (int.Parse(newUser.UserIdentification) + 1).ToString("0000000000");
             }
             var test = _context.Tests?.Find(user.TestId) ?? new Test();
             user.TotalQuestions = test.NumberQuestions;
