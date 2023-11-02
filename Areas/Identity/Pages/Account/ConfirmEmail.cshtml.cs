@@ -44,8 +44,7 @@ namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
             // TODO send follow up email
 
             if (result.Succeeded) {
-                await _emailSender.SendEmailAsync(userId, "TQII Instructions",
-        $"");
+                await _emailSender.SendEmailAsync(user.Email, "TQII Instructions", $"Test email instructions");
             }
 
             return Page();
