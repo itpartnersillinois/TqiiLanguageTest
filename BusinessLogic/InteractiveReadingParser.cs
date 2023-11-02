@@ -9,6 +9,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             var paragraph = new StringBuilder();
             var isInInputString = false;
             var isEmphasized = false;
+            var isStrong = false;
             var inputInStringCount = 0;
             var inputCount = 0;
             var hasInputValues = false;
@@ -49,6 +50,14 @@ namespace TqiiLanguageTest.BusinessLogic {
                     } else {
                         isEmphasized = true;
                         paragraph.Append("<em>");
+                    }
+                } else if (c == '~') {
+                    if (isStrong) {
+                        isStrong = false;
+                        paragraph.Append($"</strong>");
+                    } else {
+                        isStrong = true;
+                        paragraph.Append("<strong>");
                     }
                 } else if (c == '[') {
                     paragraph.Append("<span class='nowrap'>");
