@@ -3,10 +3,10 @@ using TqiiLanguageTest.BusinessLogic;
 
 namespace TqiiLanguageTest.Pages {
 
-    public class SampleRecordingModel : PageModel {
+    public class TestHomepageModel : PageModel {
         private readonly TestUserHandler _testUserHandler;
 
-        public SampleRecordingModel(TestUserHandler testUserHandler) {
+        public TestHomepageModel(TestUserHandler testUserHandler) {
             _testUserHandler = testUserHandler;
         }
 
