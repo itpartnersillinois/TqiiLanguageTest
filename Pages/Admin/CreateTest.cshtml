@@ -23,6 +23,14 @@
                 <span asp-validation-for="Test.NumberQuestions" class="text-danger"></span>
             </div>
             <div class="ils-input-entry form-group">
+                <label for="Test_IsPractice" class="control-label">Is This a Practice Test?</label>
+                <input asp-for="Test.IsPractice" class="form-control" />
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="Test_PracticeOrder" class="control-label">Practice Order</label>
+                <input asp-for="Test.PracticeOrder" class="form-control" />
+            </div>
+            <div class="ils-input-entry form-group">
                 <label for="Question_Introduction" class="control-label">Introduction Text</label>
                 <textarea asp-for="Test.Introduction" class="ils-input-long form-control"></textarea>
             </div>

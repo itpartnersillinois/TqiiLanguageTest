@@ -15,7 +15,9 @@ namespace TqiiLanguageTest.Models {
 
         public string Introduction { get; set; } = string.Empty;
         public byte[] IntroductionRecording { get; set; } = Array.Empty<byte>();
+        public bool IsPractice { get; set; }
         public int NumberQuestions { get; set; }
+        public int PracticeOrder { get; set; }
         public virtual ICollection<Question>? Questions { get; set; }
         public string? Title { get; set; }
     }
