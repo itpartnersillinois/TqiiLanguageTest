@@ -5,8 +5,11 @@
 <h1>Recording your response</h1>
 <div class="hidden" id="display-after-recording">
     <p class="instruction">@Model.Answer.RecordingText</p>
-    <img src="/img/microphone.png" alt="Icon of microphone" />
 
+    @if (Model.Answer.QuestionType != Models.QuestionEnum.IntegratedSpeaking)
+    {
+        <img src="/img/microphone.png" alt="Icon of microphone" />
+    }
 
     @if (Model != null && Model.Answer != null && Model.Answer.HasRecordingImage)
     {

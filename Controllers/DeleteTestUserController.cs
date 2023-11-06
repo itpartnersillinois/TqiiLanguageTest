@@ -30,5 +30,19 @@ namespace TqiiLanguageTest.Controllers {
             _context?.SaveChanges();
             return Ok();
         }
+
+        [HttpGet("rewind/{id}")]
+        public IActionResult Rewind(int id) {
+            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+                return Unauthorized();
+            }
+            var testUser = _context?.TestUsers?.SingleOrDefault(tu => tu.Id == id);
+            if (testUser == null) {
+                return NotFound();
+            }
+            testUser.CurrentQuestionOrder = testUser.CurrentQuestionOrder == 0 ? 0 : testUser.CurrentQuestionOrder - 1;
+            _context?.SaveChanges();
+            return Ok();
+        }
     }
 }

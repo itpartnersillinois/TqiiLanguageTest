@@ -22,6 +22,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddScoped<TestHandler>();
 builder.Services.AddScoped<TestUserHandler>();
+builder.Services.AddScoped<PracticeTestHandler>();
 builder.Services.AddScoped<QuestionHandler>();
 builder.Services.AddScoped<AnswerHandler>();
 builder.Services.AddScoped<PermissionsHandler>();
