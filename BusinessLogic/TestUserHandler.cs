@@ -1,4 +1,5 @@
-﻿using TqiiLanguageTest.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TqiiLanguageTest.Data;
 using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.BusinessLogic {
@@ -20,7 +21,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             }
             var test = _context.Tests?.Find(user.TestId) ?? new Test();
             user.TotalQuestions = test.NumberQuestions;
-
+            test.Guid = Guid.NewGuid();
             _context?.TestUsers?.Add(user);
             return await _context.SaveChangesAsync();
         }
@@ -28,8 +29,8 @@ namespace TqiiLanguageTest.BusinessLogic {
         public TestUser? GetTestUser(Guid guid) => _context.TestUsers?.SingleOrDefault(tu => tu.Guid == guid);
 
         public Guid? GetTestUserGuid(string email) {
-            var returnValue = _context.TestUsers?.Where(tu => tu.Email == email && tu.DateTimeEnd == null && tu.DateTimeStart != null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
-            returnValue ??= _context.TestUsers?.Where(tu => tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
+            var returnValue = _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null && tu.DateTimeStart != null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
+            returnValue ??= _context.TestUsers?.Include(tu => tu.Test).Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
             return returnValue?.Guid;
         }
     }
