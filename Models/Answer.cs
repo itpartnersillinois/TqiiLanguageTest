@@ -79,6 +79,9 @@ namespace TqiiLanguageTest.Models {
         [NotMapped]
         public string QuestionText { get; set; } = string.Empty;
 
+        [NotMapped]
+        public QuestionEnum QuestionType { get; set; }
+
         public byte[] Recording { get; set; } = Array.Empty<byte>();
 
         [NotMapped]

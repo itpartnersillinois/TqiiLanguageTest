@@ -3,7 +3,7 @@
 @{
 }
 
-<h1>Test Ended</h1>
+<h1>Section Ended</h1>
 
 <audio controls>
     <source src="/TestMedia/Conclusion/@Model?.Test?.Guid" type="audio/ogg">
@@ -12,6 +12,16 @@
 
 <p class="instruction">@Html.Raw(Model?.Test?.Conclusion)</p>
 
-<p><a href="@Html.Raw(Model?.Test?.ConclusionLink + "?id=" + Model?.TestUser?.UserIdentification)" target="_blank" rel="noopener noreferrer">Answer the questionnaire</a></p>
+@if (Model != null && Model.NewTestGuid.HasValue)
+{
+    <p><a href="/Starting?id=@Model.NewTestGuid.Value" class="il-button" id="continue">Continue to Next Section</a></p>
+} else if (Model != null && Model.Test?.ConclusionLink != "")
+{
+    <p><a href="@Html.Raw(Model?.Test?.ConclusionLink + "?id=" + Model?.TestUser?.UserIdentification)" target="_blank" rel="noopener noreferrer">Answer the questionnaire</a></p>
 
-<p><a href="/TestHomepage">Back to the Test Homepage</a></p>
+    <p><a href="/TestHomepage">Back to the Test Homepage</a></p>
+} else
+{
+    <p><a href="/TestHomepage">Back to the Test Homepage</a></p>
+}
+

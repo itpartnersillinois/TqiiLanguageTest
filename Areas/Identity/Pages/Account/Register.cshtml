@@ -4,12 +4,11 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h1>Create a new account.</h1>
 
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-floating">
@@ -27,7 +26,71 @@
                 <label asp-for="Input.ConfirmPassword"></label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
-            <button id="registerSubmit" type="submit" class="il-button">Register</button>
+
+            <h2>Social Behavior Research Consent Form</h2>
+
+            <p>You are being asked to participate in a voluntary research study. The purpose of this study is to research the test-taking process of a language proficiency test. Participating in this study will involve completing a set of reading and speaking test items, and your participation will last for 2 hours. To the best of our knowledge, the things you will be doing in this research have no more risk of harm than you would experience in everyday life. Although this study is not designed to benefit you directly, it may be beneficial to other people in the future. The results of the study are expected to provide implications for item development in the field of language assessment.</p>
+
+            <p>Principal Investigator Name and Title: Xun Yan, Associate Professor<br />
+                Department and Institution: Department of Linguistics, University of Illinois at Urbana-Champaign<br />
+                Contact Information: 4080 Foreign Language Building, MC-168 707 S. Mathews Ave., Urbana, IL 61801<br />
+                xunyan@illinois.edu
+            </p>
+
+            <h3>Why am I being asked?</h3>
+
+            <p>You are being asked to be a participant in a research study that examines the test-taking process of a language proficiency test. You have been asked to participate in this research because you are at least 18 years old and have normal or corrected-to-normal vision. Approximately 500 participants will be involved in this research at the University of Illinois at Urbana-Champaign.</p>
+
+            <p>Your participation in this research is voluntary. Your decision whether or not to participate will not affect your current or future dealings with the University of Illinois at Urbana-Champaign. If you decide to participate, you are free to withdraw at any time without affecting that relationship.</p>
+
+            <h3>What procedures are involved?</h3>
+
+            <p>This is a one-time study that will last for 2 hours. This research will be performed online. The study procedures involve completing a set of reading and speaking test items and also answering a few questions regarding the test-taking process. A follow-up interview will be conducted online at a separate time if you agree to participate.</p>
+
+            <h3>What are the potential risks and discomforts?</h3>
+
+            <p>To the best of our knowledge, the things you will be doing in this research have no more risk of harm than you would experience in everyday life. While you might need to maintain the same seated posture and look at a monitor for one to two hours, you are allowed to take short breaks between research activities.</p>
+
+            <h3>Are there benefits to participating in the research?</h3>
+
+            <p>Although this study is not designed to benefit you directly, it may be beneficial to other people in the future. The results of the study are expected to help increase our understanding of language test development and also the cognitive process involved in test-taking.</p>
+
+            <h3>What other options are there?</h3>
+
+            <p>You have the option to not participate in this study.</p>
+
+            <h3>Will my study-related information be kept confidential?</h3>
+
+            <p>Faculty, staff, students, and others with permission or authority to see your study information will maintain its confidentiality to the extent permitted and required by laws and university policies. The names or personal identifiers of participants will not be published or presented.</p>
+
+            <h3>Will I be reimbursed for any expenses or paid for my participation in this research?</h3>
+
+            <p>Upon completion of the study, you will receive $30 USD at the end of the research session. You will receive an additional $10 USD if you participate in the follow-up interview.</p>
+
+            <h3>Can I withdraw or be removed from the study?</h3>
+
+            <p>If you decide to participate, you are free to withdraw your consent and discontinue participation at any time. The researchers also have the right to stop your participation in this study without your consent if they believe it is in your best interests, you were to object to any future changes that may be made in the study plan, and/or you do not meet the requirements outlined in the recruitment material.</p>
+
+            <h3>Will data collected from me be used for any other research?</h3>
+
+            <p>Your information will not be used or distributed for future use, even if identifiers are removed.</p>
+
+            <h3>Who should I contact if I have questions?</h3>
+
+            <p>Contact Xun Yan at xunyan@illinois.edu if you have any questions about this study or your part in it or if you have concerns or complaints about the research.</p>
+
+            <h3>What are my rights as a research subject?</h3>
+
+            <p>If you have any questions about your rights as a research subject, including concerns, complaints, or to offer input, you may call the Office for the Protection of Research Subjects (OPRS) at 217-333-2670 or e-mail OPRS at irb@illinois.edu. If you would like to complete a brief survey to provide OPRS feedback about your experiences as a research participant, please follow the link here or through a link on the OPRS website: https://oprs.research.illinois.edu/. You will have the option to provide feedback or concerns anonymously, or you may provide your name and contact information for follow-up purposes.</p>
+
+            <div class="ils-input-disclaimer">
+                <label for="disclaimer">
+                    I have read the above information. I have been given an opportunity to ask questions, and my questions have been answered to my satisfaction. I agree to participate in this research.
+                </label>
+                <input id="disclaimer" type="checkbox" onclick="document.getElementById('registerSubmit').disabled = !this.checked;">
+            </div>
+
+            <button id="registerSubmit" type="submit" class="il-button" disabled>Register</button>
         </form>
     </div>
 </div>

@@ -150,3 +150,22 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         display: block;
         font-weight: 400;
     }
+
+.il-formatted .ils-input-disclaimer {
+    padding: 20px;
+    margin: 20px auto;
+    border: thin solid var(--il-orange);
+    display: flex;
+    align-items: center;
+}
+
+    .il-formatted .ils-input-disclaimer label {
+        width: initial;
+        margin: 0 15px 0 0;
+        text-align: left;
+    }
+
+    .il-formatted .ils-input-disclaimer input {
+        width: 50px;
+        flex: 0 0 50px;
+    }
