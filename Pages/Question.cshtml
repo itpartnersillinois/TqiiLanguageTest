@@ -7,7 +7,7 @@
 
 @if (!Model.Question.IsIntroduction && Model.Question.QuestionType == Models.QuestionEnum.SentenceRepetition)
 {
-    <p>On Question @(Model.Question?.CurrentQuestionNumber - 1) of @Model.Question?.TotalQuestions</p>
+    <p>On Question @Model.Question?.CurrentQuestionNumber of @Model.Question?.TotalQuestions</p>
 }
 
 <p class="instruction">@Model.Question.IntroductionText</p>
