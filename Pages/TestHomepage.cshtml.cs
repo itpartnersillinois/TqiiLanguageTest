@@ -16,7 +16,9 @@ namespace TqiiLanguageTest.Pages {
         public Guid? PracticeGuid { get; set; }
 
         public void OnGet() {
-            Guid = _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "");
+            Guid = _testUserHandler.DidUserCompleteAnyTests(User.Identity?.Name ?? "")
+                ? _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "")
+                : null;
             PracticeGuid = _practiceTestHandler.GetTestUserGuid(User.Identity?.Name ?? "", true);
         }
     }
