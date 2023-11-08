@@ -37,7 +37,18 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (_context.TestUsers == null || TestUser == null) {
                 return Page();
             }
-            _ = await _testUserHandler.AddTestUser(TestUser);
+            if (TestUser.Email.Contains(',')) {
+                var emailArray = TestUser.Email.Split(',');
+                foreach (var email in emailArray) {
+                    _ = await _testUserHandler.AddTestUser(new TestUser {
+                        Email = email.Trim(),
+                        OrderBy = TestUser.OrderBy,
+                        TestId = TestUser.TestId
+                    });
+                }
+            } else {
+                _ = await _testUserHandler.AddTestUser(TestUser);
+            }
 
             return RedirectToPage("./Index");
         }

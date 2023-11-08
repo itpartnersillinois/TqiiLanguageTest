@@ -97,6 +97,7 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         margin: 0 2px;
         background: var(--il-cloud-1);
         outline: none;
+        font-size: 1em;
     }
 
         .interactive input:hover, .interactive input:focus {
@@ -105,6 +106,10 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
             background: white;
             border-top: thin solid black;
         }
+
+    .interactive select {
+        font-size: 1em;
+    }
 
 .basic-questions {
     margin: 30px;

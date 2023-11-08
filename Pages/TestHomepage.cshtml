@@ -10,18 +10,18 @@
 
 <p>For each module, you will see content with various topics related to Individualized Education Program (IEP) meetings. IEP meetings are parts of special education services used to lay out the special education instructions, supports, and services a student needs to thrive in school. You might also encounter some conditions that will qualify a student for an IEP. These conditions include but are not limited to ADHD (Attention-deficit/hyperactivity disorder, where the patient exhibits an ongoing pattern of inattention and/or hyperactivity-impulsivity that interferes with functioning or development), reading disability (difficulties reading individual words and can lead to problems understanding text), etc.</p>
 
-<p>We understand that some aspects of the TQII English Proficiency Test may be new to you. To ensure you are fully prepared, we offer a practice session to acquaint you with the test format. This session will include a comprehensive overview and guided exploration of the tasks you will encounter. It is an excellent opportunity for you to become comfortable with the test structure, enabling you to approach the actual test with confidence. Following the completion of your practice session, you will be promptly directed to the graded test.</p>
+<p>We understand that some aspects of the TQII English Proficiency Test may be new to you. To ensure you are fully prepared, we offer a practice session to acquaint you with the test format. This session will include a comprehensive overview and guided exploration of the tasks you will encounter. It is an excellent opportunity for you to become comfortable with the test structure, enabling you to approach the TQII Language Proficiency Test with confidence. Following the completion of your practice session, you will be promptly directed to the TQII Language Proficiency Test.</p>
 
-<p>Now, please click “Practice Test” to start your practice session. Or, if you have already finished the practice session, you can click “Graded Test” to start your actual TQII English Proficiency test.</p>
+<p>Now, please click “Start Practice TQII Language Proficiency Test” to start your practice session. Or, if you have already finished the practice session, you can click “Start TQII Language Proficiency Test” to start your actual TQII English Proficiency test.</p>
 
-<h2>Practice Test</h2>
+<h2>Practice TQII Language Proficiency Test</h2>
 
 <div>
-    <a href="/Starting?id=@Model.PracticeGuid" class="il-button" id="continue">Start Practice Test</a>
+    <a href="/Starting?id=@Model.PracticeGuid" class="il-button" id="continue">Start Practice TQII Language Proficiency Test</a>
 </div>
 
 
-<h2>Graded Test</h2>
+<h2>TQII Language Proficiency Test</h2>
 @if (Model.Guid == null || Model.Guid == Guid.Empty)
 {
     <p>You do not have any tests available at this time. </p>
@@ -29,6 +29,6 @@
 else
 {
     <div>
-        <a href="/Starting?id=@Model.Guid" class="il-button" id="continue">Start Graded Test</a>
+        <a href="/Starting?id=@Model.Guid" class="il-button" id="continue">Start TQII Language Proficiency Test</a>
     </div>
 }
