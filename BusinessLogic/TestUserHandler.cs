@@ -26,6 +26,9 @@ namespace TqiiLanguageTest.BusinessLogic {
             return await _context.SaveChangesAsync();
         }
 
+        public bool DidUserCompleteAnyTests(string email) =>
+            _context.TestUsers != null && _context.TestUsers.Any(tu => tu.Email == email && tu.DateTimeEnd != null);
+
         public TestUser? GetTestUser(Guid guid) => _context.TestUsers?.SingleOrDefault(tu => tu.Guid == guid);
 
         public Guid? GetTestUserGuid(string email) {

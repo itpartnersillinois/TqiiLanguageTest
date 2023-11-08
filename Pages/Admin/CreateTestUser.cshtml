@@ -8,12 +8,13 @@
 
 <h1>Create Test User</h1>
 
+<p>For email, you may add multiple emails separated by a comma (",").</p>
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div class="ils-input-entry form-group">
                 <label asp-for="TestUser.Email" class="control-label"></label>
-                <input asp-for="TestUser.Email" class="form-control" />
+                <input asp-for="TestUser.Email" class="form-control" style="width: 100%;" />
                 <span asp-validation-for="TestUser.Email" class="text-danger"></span>
             </div>
             <div class="ils-input-entry form-group">
