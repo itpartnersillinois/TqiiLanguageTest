@@ -91,7 +91,7 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
     }
 
     .interactive input {
-        width: 10px;
+        width: 15px;
         border: none;
         border-bottom: thin solid black;
         margin: 0 2px;

@@ -10,7 +10,6 @@ const beforeUnloadHandler = (event) => {
 };
 
 window.addEventListener("DOMContentLoaded", (event) => {
-    debugger;
     window.addEventListener("beforeunload", beforeUnloadHandler);
     window.addEventListener("pagehide", beforeUnloadHandler);
     testUserId.value = params.get('id');
@@ -57,14 +56,16 @@ window.addEventListener("DOMContentLoaded", (event) => {
         window.removeEventListener("beforeunload", beforeUnloadHandler);
         window.removeEventListener("pagehide", beforeUnloadHandler);
         displayAfterRecording.classList.add('hidden');
-        document.querySelectorAll('.interactive span').forEach(s => {
+        document.querySelectorAll('.interactive span.question').forEach(s => {
+            s.appendChild(document.createTextNode('['));
             s.querySelectorAll('input').forEach(i => {
                 if (s.id != 'answer') {
                     s.appendChild(document.createTextNode(i.value));
                 }
             });
+            s.appendChild(document.createTextNode(']'));
             s.querySelectorAll('select').forEach(i => {
-                s.innerHTML = i.value;
+                s.innerHTML = '[' + i.value + ']';
             });
         });
 

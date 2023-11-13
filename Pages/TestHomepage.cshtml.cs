@@ -16,9 +16,12 @@ namespace TqiiLanguageTest.Pages {
         public Guid? PracticeGuid { get; set; }
 
         public void OnGet() {
-            Guid = _testUserHandler.DidUserCompleteAnyTests(User.Identity?.Name ?? "")
-                ? _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "")
-                : null;
+            // TODO Asked to temporarily remove the "must take practice test" -- need to re-add this later
+            // Guid = _testUserHandler.DidUserCompleteAnyTests(User.Identity?.Name ?? "")
+            //     ? _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "")
+            //     : null;
+
+            Guid = _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "");
             PracticeGuid = _practiceTestHandler.GetTestUserGuid(User.Identity?.Name ?? "", true);
         }
     }
