@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
             let audioPlayer = new Audio();
             audioPlayer.id = "audio";
-            audioPlayer.src = '/ogg/beep.wav';
+            audioPlayer.src = '/ogg/beep.flac';
             audioPlayer.controls = false;
             audioPlayer.addEventListener("canplaythrough", (event) => {
                 audioPlayer.play();

@@ -23,7 +23,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
 
             if (_context.Tests != null) {
-                Test = await _context.Tests.ToListAsync();
+                Test = await _context.Tests.OrderBy(t => t.Title).Select(t => new Test { Id = t.Id, Title = t.Title, NumberQuestions = t.NumberQuestions }).ToListAsync();
             }
         }
     }

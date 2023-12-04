@@ -19,6 +19,15 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         [BindProperty]
+        public int? TestId2 { get; set; } = default!;
+
+        [BindProperty]
+        public int? TestId3 { get; set; } = default!;
+
+        [BindProperty]
+        public int? TestId4 { get; set; } = default!;
+
+        [BindProperty]
         public TestUser TestUser { get; set; } = default!;
 
         public IActionResult OnGet() {
@@ -26,7 +35,8 @@ namespace TqiiLanguageTest.Pages.Admin {
                 return Unauthorized();
             }
 
-            ViewData["TestId"] = new SelectList(_context.Tests, "Id", "Title");
+            ViewData["TestId"] = new SelectList(_context.Tests.OrderBy(t => t.Title), "Id", "Title");
+            ViewData["TestIdOptional"] = new SelectList(_context.Tests.ToList().Union(new List<Test> { new Test { Id = 0, Title = "" } }).OrderBy(t => t.Title), "Id", "Title");
             TestUser = new TestUser();
             TestUser.OrderBy = 1;
             return Page();
@@ -43,14 +53,33 @@ namespace TqiiLanguageTest.Pages.Admin {
                     _ = await _testUserHandler.AddTestUser(new TestUser {
                         Email = email.Trim(),
                         OrderBy = TestUser.OrderBy,
+                        DateTimeScheduled = TestUser.DateTimeScheduled,
                         TestId = TestUser.TestId
                     });
                 }
             } else {
                 _ = await _testUserHandler.AddTestUser(TestUser);
             }
-
+            _ = await RunTest(TestId2, 1);
+            _ = await RunTest(TestId3, 2);
+            _ = await RunTest(TestId4, 3);
             return RedirectToPage("./Index");
+        }
+
+        public async Task<bool> RunTest(int? testId, int orderByIncrease) {
+            if (testId.HasValue && testId != 0) {
+                var emailArray = TestUser.Email.Split(',');
+                foreach (var email in emailArray) {
+                    _ = await _testUserHandler.AddTestUser(new TestUser {
+                        Email = email.Trim(),
+                        DateTimeScheduled = TestUser.DateTimeScheduled,
+                        OrderBy = TestUser.OrderBy + orderByIncrease,
+                        TestId = testId.Value
+                    });
+                }
+                return true;
+            }
+            return false;
         }
     }
 }

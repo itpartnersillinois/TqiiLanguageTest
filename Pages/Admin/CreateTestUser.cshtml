@@ -13,18 +13,34 @@
     <div class="col-md-4">
         <form method="post">
             <div class="ils-input-entry form-group">
-                <label asp-for="TestUser.Email" class="control-label"></label>
+                <label for="TestUser_Email" class="control-label">Email List</label>
                 <input asp-for="TestUser.Email" class="form-control" style="width: 100%;" />
                 <span asp-validation-for="TestUser.Email" class="text-danger"></span>
             </div>
             <div class="ils-input-entry form-group">
-                <label asp-for="TestUser.OrderBy" class="control-label"></label>
+                <label for="TestUser_OrderBy" class="control-label">Order Number</label>
                 <input asp-for="TestUser.OrderBy" class="form-control" />
                 <span asp-validation-for="TestUser.OrderBy" class="text-danger"></span>
             </div>
             <div class="ils-input-entry form-group">
-                <label asp-for="TestUser.TestId" class="control-label"></label>
+                <label for="TestUser_DateTimeScheduled" class="control-label">Scheduled For: </label>
+                <input asp-for="TestUser.DateTimeScheduled" class="form-control" />
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="TestUser_TestId" class="control-label">Test (required):</label>
                 <select asp-for="TestUser.TestId" class="form-control" asp-items="ViewBag.TestId"></select>
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="TestId2" class="control-label">Second Test (optional): </label>
+                <select asp-for="TestId2" class="form-control" asp-items="ViewBag.TestIdOptional"></select>
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="TestId3" class="control-label">Third Test (optional): </label>
+                <select asp-for="TestId3" class="form-control" asp-items="ViewBag.TestIdOptional"></select>
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="TestId4" class="control-label">Fourth Test (optional): </label>
+                <select asp-for="TestId4" class="form-control" asp-items="ViewBag.TestIdOptional"></select>
             </div>
             <div class="ils-input-entry form-group">
                 <input type="submit" value="Create" class="il-button" />
