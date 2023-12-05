@@ -104,6 +104,10 @@
         <label for="Question_InteractiveReadingOptions" class="control-label">Answer Bank (separate multiple answers by a "|" symbol)</label>
         <input asp-for="Question.InteractiveReadingOptions" class="ils-input-long form-control" />
     </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_InteractiveReadingOptions" class="control-label">Drop Down Answers(separate multiple answers by a "|" symbol)</label>
+        <input asp-for="Question.InteractiveReadingOptionsDropDown" class="ils-input-long form-control" />
+    </div>
     @if (Model.Question.HasInteractiveReadingImage)
     {
         <div>

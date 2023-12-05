@@ -8,6 +8,21 @@
 
 <h1>List Test Users</h1>
 
+<div class="ils-input-entry form-group">
+<label for="take">Number of Items</label>
+<select id="take" onchange="">
+    <option value="50">50</option>
+    <option value="100">100</option>
+    <option value="200">200</option>
+</select>
+</div>
+
+<div class="ils-input-entry form-group">
+    <label for="search">Search: </label>
+    <input id="search" type="text" value="@(Request.Query["search"])" />
+</div>
+<button class="il-button" onclick="refresh(); return false;">Refresh</button>
+
 <table class="table">
     <thead>
         <tr>
@@ -56,6 +71,20 @@
 }
     </tbody>
 </table>
+<hr />
+<button class="il-button" onclick="previous(); return false;">Previous</button>
+<button class="il-button" onclick="next(); return false;">Next</button>
+<label for="page">Page</label>
+<input id="page" onchange="changePageNumber" type="text" value="@(Request.Query["skip"])" />
+<input id="pagenumber" type="hidden" value="@(Request.Query["skip"])"/>
+
+@if (Request.Query["search"] != "")
+{
+    <div>
+        <a class="il-button" href="/audioanswerdownload/multiple/@Model.TestUserIds">Download All User Data</a>
+    </div>
+
+}
 
 <div>
     <a href="/Admin">Back to Admin Page</a>
@@ -82,5 +111,34 @@
                 });
             }
         }
+
+        function refresh() {
+            document.getElementById('pagenumber').value = '1';
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}`;
+        }
+
+        function next() {
+            if (document.getElementById('pagenumber').value == '') {
+                document.getElementById('pagenumber').value = '2';
+            } else {
+                document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) + 1;
+            }
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
+        }
+
+        function previous() {
+            if (document.getElementById('pagenumber').value == '') {
+                document.getElementById('pagenumber').value = '1';
+            } else {
+                document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) - 1;
+            }
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
+        }
+
+        function changePageNumber() {
+            document.getElementById('pagenumber').value = parseInt(document.getElementById('page').value);
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
+        }
+
     </script>
 }

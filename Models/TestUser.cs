@@ -8,6 +8,7 @@ namespace TqiiLanguageTest.Models {
         public int CurrentQuestionOrder { get; set; }
         public DateTime? DateTimeEnd { get; set; }
 
+        public DateTime? DateTimeScheduled { get; set; }
         public DateTime? DateTimeStart { get; set; }
 
         public string Email { get; set; } = string.Empty;
@@ -25,6 +26,6 @@ namespace TqiiLanguageTest.Models {
         public virtual Test? Test { get; set; }
         public int TestId { get; set; }
         public int TotalQuestions { get; set; }
-        public string UserIdentification { get; set; }
+        public string? UserIdentification { get; set; }
     }
 }

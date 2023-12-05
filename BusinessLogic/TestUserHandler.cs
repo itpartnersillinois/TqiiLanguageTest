@@ -31,10 +31,10 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public TestUser? GetTestUser(Guid guid) => _context.TestUsers?.SingleOrDefault(tu => tu.Guid == guid);
 
-        public Guid? GetTestUserGuid(string email) {
+        public Tuple<Guid?, DateTime?> GetTestUserGuid(string email) {
             var returnValue = _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null && tu.DateTimeStart != null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
             returnValue ??= _context.TestUsers?.Include(tu => tu.Test).Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
-            return returnValue?.Guid;
+            return new Tuple<Guid?, DateTime?>(returnValue?.Guid, returnValue?.DateTimeScheduled);
         }
     }
 }

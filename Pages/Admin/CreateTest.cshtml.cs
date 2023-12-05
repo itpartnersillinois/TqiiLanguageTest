@@ -26,7 +26,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
             if (id != 0) {
                 Test = _context.Tests?.Find(id) ?? new Test();
-                Questions = _context.Questions?.Where(q => q.TestId == id).ToList() ?? new List<Question>();
+                Questions = _context.Questions?.Where(q => q.TestId == id).Select(q => new Question { Id = q.Id, Title = q.Title, OrderBy = q.OrderBy }).ToList() ?? new List<Question>();
             } else {
                 Questions = new List<Question>();
             }
