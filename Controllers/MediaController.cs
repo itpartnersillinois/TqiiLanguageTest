@@ -13,7 +13,7 @@ namespace TqiiLanguageTest.Controllers {
 
         [HttpGet("conclusion/{id}")]
         public void Conclusion(string id) {
-            var storage = _context?.Tests?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
+            var storage = _context?.Tests?.FirstOrDefault(q => q.Guid == Guid.Parse(id));
             if (storage == null || storage.ConclusionRecording == null) {
                 Response.StatusCode = 404;
                 return;
@@ -30,7 +30,7 @@ namespace TqiiLanguageTest.Controllers {
 
         [HttpGet("{id}")]
         public void Index(string id) {
-            var storage = _context?.Questions?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
+            var storage = _context?.Questions?.FirstOrDefault(q => q.Guid == Guid.Parse(id));
             if (storage == null || storage.Recording == null) {
                 Response.StatusCode = 404;
                 return;
@@ -43,7 +43,7 @@ namespace TqiiLanguageTest.Controllers {
 
         [HttpGet("introduction/{id}")]
         public void Introduction(string id) {
-            var storage = _context?.Tests?.SingleOrDefault(q => q.Guid == Guid.Parse(id));
+            var storage = _context?.Tests?.FirstOrDefault(q => q.Guid == Guid.Parse(id));
             if (storage == null || storage.IntroductionRecording == null) {
                 Response.StatusCode = 404;
                 return;

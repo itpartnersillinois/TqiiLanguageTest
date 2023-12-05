@@ -24,7 +24,6 @@ namespace TqiiLanguageTest.Models {
         };
 
         public string AnswerOptions { get; set; } = string.Empty;
-
         public string BasicAnswers1 { get; set; } = string.Empty;
         public string BasicAnswers2 { get; set; } = string.Empty;
         public string BasicAnswers3 { get; set; } = string.Empty;
@@ -55,6 +54,7 @@ namespace TqiiLanguageTest.Models {
 
         public string InteractiveReadingOptions { get; set; } = string.Empty;
 
+        public string InteractiveReadingOptionsDropDown { get; set; } = string.Empty;
         public byte[] IntroductionImage { get; set; } = Array.Empty<byte>();
 
         public string IntroductionText { get; set; } = string.Empty;

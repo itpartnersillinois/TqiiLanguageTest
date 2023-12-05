@@ -28,6 +28,8 @@ namespace TqiiLanguageTest.Models {
 
         public List<string> ButtonInteractiveReadingOptions => string.IsNullOrWhiteSpace(InteractiveReadingOptions) ? new List<string>() : InteractiveReadingOptions.Split("|").Select(i => i.Trim()).ToList();
 
+        public List<string> ButtonInteractiveReadingOptionsDropDown => string.IsNullOrWhiteSpace(InteractiveReadingOptionsDropDown) ? ButtonInteractiveReadingOptions : InteractiveReadingOptionsDropDown.Split("|").Select(i => i.Trim()).ToList();
+
         [NotMapped]
         public int CurrentQuestionNumber { get; set; }
 
@@ -62,6 +64,9 @@ namespace TqiiLanguageTest.Models {
 
         [NotMapped]
         public string InteractiveReadingOptions { get; set; } = string.Empty;
+
+        [NotMapped]
+        public string InteractiveReadingOptionsDropDown { get; set; } = string.Empty;
 
         public int OrderBy { get; set; }
         public virtual Question? Question { get; set; }

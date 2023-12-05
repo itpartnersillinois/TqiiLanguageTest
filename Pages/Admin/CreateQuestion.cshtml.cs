@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
 using TqiiLanguageTest.Models;
@@ -38,6 +39,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             Question.IntroductionText = Question.IntroductionText ?? string.Empty;
             Question.InteractiveReadingAnswer = Question.InteractiveReadingAnswer ?? string.Empty;
             Question.InteractiveReadingOptions = Question.InteractiveReadingOptions ?? string.Empty;
+            Question.InteractiveReadingOptionsDropDown = Question.InteractiveReadingOptionsDropDown ?? string.Empty;
             Question.QuestionText = Question.QuestionText ?? string.Empty;
             Question.AnswerOptions = Question.AnswerOptions ?? string.Empty;
             Question.RecordingText = Question.RecordingText ?? string.Empty;
@@ -54,6 +56,12 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (Question.Id == 0) {
                 _context.Questions.Add(Question);
             } else {
+                var baseQuestion = _context.Questions.AsNoTracking().First(q => q.Id == Question.Id);
+                Question.InteractiveReadingImage = baseQuestion.InteractiveReadingImage;
+                Question.IntroductionImage = baseQuestion.IntroductionImage;
+                Question.QuestionImage = baseQuestion.QuestionImage;
+                Question.RecordingImage = baseQuestion.RecordingImage;
+                Question.Recording = baseQuestion.Recording;
                 _context.Questions.Update(Question);
             }
             await _context.SaveChangesAsync();

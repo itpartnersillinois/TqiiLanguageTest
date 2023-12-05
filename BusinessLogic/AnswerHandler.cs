@@ -50,7 +50,8 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.QuestionImage = question.QuestionImage;
             answer.InteractiveReadingImage = question.InteractiveReadingImage;
             answer.InteractiveReadingOptions = question.InteractiveReadingOptions;
-            answer.InteractiveReadingAnswer = InteractiveReadingParser.ConverToHtml(question.InteractiveReadingAnswer, answer.ButtonInteractiveReadingOptions);
+            answer.InteractiveReadingOptionsDropDown = question.InteractiveReadingOptionsDropDown;
+            answer.InteractiveReadingAnswer = InteractiveReadingParser.ConverToHtml(question.InteractiveReadingAnswer, answer.ButtonInteractiveReadingOptionsDropDown);
             answer.BasicQuestion1 = question.BasicQuestion1;
             answer.BasicQuestion2 = question.BasicQuestion2;
             answer.BasicQuestion3 = question.BasicQuestion3;

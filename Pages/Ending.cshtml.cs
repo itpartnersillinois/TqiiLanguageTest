@@ -29,7 +29,7 @@ namespace TqiiLanguageTest.Pages {
             TestUser = _testUserHandler.GetTestUser(id);
             NewTestGuid = Test != null && Test.IsPractice
                 ? _practiceTestHandler.GetTestUserGuid(User.Identity?.Name ?? "", false)
-                : _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "");
+                : _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "").Item1;
             return Page();
         }
     }

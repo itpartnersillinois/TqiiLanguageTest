@@ -33,7 +33,7 @@ function playSample() {
     audioPlayer.src = '/Media/' + question.innerText;
     audioPlayer.controls = false;
     audioPlayer.addEventListener("canplaythrough", (event) => {
-        audioPlayer.play();
+        setTimeout(function () { audioPlayer.play(); }, 2000);
     });
     audioPlayer.addEventListener("ended", (event) => {
         console.debug('item ended');
