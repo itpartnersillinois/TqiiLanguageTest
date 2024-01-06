@@ -13,36 +13,22 @@
             <th>
                 Email
             </th>
-            <th>
-                Test
-            </th>
-            <th>Start</th>
-            <th>End</th>
             <th>Review</th>
             <th>Download</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.TestUser)
+        @foreach (var item in Model.RaterTest)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Email)
+                    @Html.DisplayFor(modelItem => item.Test.UserIdentification) (@Html.DisplayFor(modelItem => item.Test.Email))
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Test.Title)
+                    <a href="/reviewer/review?id=@item.Test.Id&raterid=@item.Id">Review</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DateTimeStart)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateTimeEnd)
-                </td>
-                <td>
-                    <a href="/reviewer/testuser?id=@item.Id">Review</a>
-                </td>
-                <td>
-                    <a href="/audioanswerdownload/@item.Id">Download Data</a>
+                    <a href="/audioanswerdownload/@item.Test.Id">Download Data</a>
                 </td>
             </tr>
         }

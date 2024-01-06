@@ -1,0 +1,43 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.CreateRaterTestModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Assign Raters to Test";
+}
+
+<h2>Test Information</h2>
+
+<p>Email: @Model.Email</p>
+<p>User Identification: @Model.UserId</p>
+<p>Test: @Model.TestName</p>
+<p>Date Ended: @Model.DateEnded</p>
+
+
+
+<h2>Current Raters</h2>
+@foreach (var item in Model.AssignedRaters)
+{
+    <ul>
+        <li>
+            @item.Item1 @item.Item2: @item.Item3
+        </li>
+    </ul>
+}
+
+<h2>Assign Raters</h2>
+<form method="post">
+    <ul>
+    @foreach (var item in Model.Raters)
+    {
+        <li>
+            <label for="@item.Id"> @item.Email (@item.NumberOfTests)</label><input type="checkbox" id="@item.Id" value="@item.Id" name="raters" />
+            <label for="@item.Id-second" style="padding-left: 20px;"> Secondary Rater</label><input type="checkbox" id="@item.Id-second" value="@item.Id" name="raters-second" />
+        </li>
+    }
+    </ul>
+    <input type="hidden" value="@Model.IdString" name="id" id="id" />
+    <div class="form-group">
+        <input type="submit" value="Assign Raters" style="width: fit-content" class="il-button" />
+    </div>
+
+</form>

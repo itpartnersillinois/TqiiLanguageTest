@@ -16,38 +16,113 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             _permissions = permissions;
         }
 
-        [BindProperty]
-        public Answer Answer { get; set; } = default!; // this does not have all the properties, so do not use this as a true bindable object
+        public Answer Answer { get; set; } = default!;
 
+        public string AnswerId { get; set; }
+        public IList<Tuple<int, string, int>> Answers { get; set; } = default!;
+
+        public string Id { get; set; }
+
+        public bool IsFinal { get; set; }
+        public string NextAnswerId { get; set; }
+        public string RaterId { get; set; }
+        public string RaterNotes { get; set; }
         public int Rating { get; set; }
 
-        public void OnGet(int id) {
+        public string UrlString { get; set; }
+
+        public async Task OnGetAsync() {
+            Rating = 9;
+            Id = Request.Query["id"];
+            RaterId = Request.Query["raterid"];
+            AnswerId = Request.Query.ContainsKey("answerid") ? Request.Query["answerid"] : "0";
+            NextAnswerId = Request.Query.ContainsKey("nextid") ? Request.Query["nextid"] : "0";
+            IsFinal = Request.Query.ContainsKey("final");
+            UrlString = $"review?id={Id}&raterid={RaterId}";
+            var id = int.Parse(Id);
+            var raterId = int.Parse(RaterId);
+            var answerId = int.Parse(AnswerId);
             if (!_permissions.IsReviewer(User.Identity?.Name ?? "")) {
                 throw new Exception("Unauthorized");
             }
 
+            Answers = new List<Tuple<int, string, int>>();
+
             if (_context.Answers != null) {
-                Answer = _context.Answers.Include(a => a.Question).First(a => a.Id == id);
+                var answerObjects = await _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == id).OrderBy(a => a.DateTimeEnd).Select(a => new { a.Question.Title, a.Id }).ToListAsync();
+                var nextAnswer = 0;
+                for (var i = answerObjects.Count - 1; i >= 0; i--) {
+                    if (nextAnswer == 0) {
+                        Answers.Add(new Tuple<int, string, int>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer));
+                    } else {
+                        Answers.Insert(0, new Tuple<int, string, int>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer));
+                    }
+                    if (answerId == answerObjects[i].Id) {
+                        NextAnswerId = nextAnswer.ToString();
+                    }
+                    nextAnswer = answerObjects[i].Id;
+                }
             }
 
-            if (int.TryParse(Answer.RubricInformation, out int x)) {
-                Rating = x;
-            } else {
-                Rating = 9;
+            if (_context.Answers != null && answerId != 0) {
+                Answer = _context.Answers.Include(a => a.Question).First(a => a.Id == answerId);
+                var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
+                if (raterAnswer != null) {
+                    RaterNotes = raterAnswer.Notes;
+                    Rating = raterAnswer.Score;
+                }
             }
         }
 
         public async Task<IActionResult> OnPostAsync() {
-            if (_context != null && _context.Answers != null) {
-                var answerUpdate = _context.Answers.Include(a => a.Question).First(a => a.Id == Answer.Id);
+            if (_context != null && _context.RaterAnswers != null) {
+                Id = Request.Form["id"];
+                RaterId = Request.Form["raterid"];
+                var raterId = int.Parse(RaterId);
+                // answering a single question
+                if (Request.Form.ContainsKey("answerid")) {
+                    AnswerId = Request.Form["answerid"];
+                    NextAnswerId = Request.Form["nextid"];
 
-                answerUpdate.ReviewerNotes = Answer.ReviewerNotes ?? string.Empty;
-                answerUpdate.RubricInformation = Request.Form["level"].ToString();
-                _context.Answers.Update(answerUpdate);
-                await _context.SaveChangesAsync();
-                return RedirectToPage("./TestUser", new { id = answerUpdate.TestUserId });
+                    var answerId = int.Parse(AnswerId);
+
+                    var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
+                    if (raterAnswer != null) {
+                        raterAnswer.Notes = Request.Form["notes"];
+                        raterAnswer.Score = int.Parse(Request.Form["level"]);
+                        _context.RaterAnswers.Update(raterAnswer);
+                    } else {
+                        _context.RaterAnswers.Add(new RaterAnswer {
+                            AnswerId = answerId,
+                            DateFinished = DateTime.Now,
+                            Notes = Request.Form["notes"],
+                            Score = int.Parse(Request.Form["level"]),
+                            RaterTestId = raterId
+                        });
+                    }
+                    await _context.SaveChangesAsync();
+                    if (NextAnswerId == "0") {
+                        return RedirectToPage("Review", new { id = Id, raterid = RaterId, final = "true" });
+                    }
+                    return RedirectToPage("Review", new { id = Id, raterid = RaterId, answerId = NextAnswerId });
+                } else { //finalizing the test
+                    var rater = _context.RaterTests.Single(rt => rt.Id == raterId);
+                    rater.DateFinished = DateTime.Now;
+                    var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).Sum(ra => ra.Score);
+                    var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId);
+                    rater.FinalScore = (float) raterTotalScore / (float) raterTotalAnswers;
+                    rater.Notes = Request.Form["notes"];
+                    var id = int.Parse(Id);
+                    var test = _context.TestUsers.Single(tu => tu.Id == id);
+                    test.NumberReviewerScores++;
+                    var raterName = _context.RaterNames.Single(rn => rn.Id == rater.RaterNameId);
+                    raterName.NumberOfTests--;
+                    await _context.SaveChangesAsync();
+                }
             }
-            return RedirectToPage("./Index");
+            return RedirectToPage("Index");
         }
+
+        public string UrlInfo(int answerid, int nextid) => answerid == 0 && nextid == 0 ? UrlString + "&final=true" : UrlString + "&answerid=" + answerid + "&nextid=" + nextid;
     }
 }

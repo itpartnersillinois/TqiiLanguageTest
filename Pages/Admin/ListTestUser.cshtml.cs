@@ -30,10 +30,10 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (_context.TestUsers != null) {
                 if (string.IsNullOrEmpty(search)) {
                     TestUser = await _context.TestUsers.OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
-                    .Include(t => t.Test).Select(tu => new TestUser { Id = tu.Id, UserIdentification = tu.UserIdentification, Email = tu.Email, CurrentQuestionOrder = tu.CurrentQuestionOrder, DateTimeStart = tu.DateTimeStart, DateTimeEnd = tu.DateTimeEnd, Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id } }).ToListAsync();
+                    .Include(t => t.Test).Select(tu => new TestUser { Id = tu.Id, UserIdentification = tu.UserIdentification, Email = tu.Email, CurrentQuestionOrder = tu.CurrentQuestionOrder, DateTimeStart = tu.DateTimeStart, DateTimeEnd = tu.DateTimeEnd, NumberReviewers = tu.NumberReviewers, NumberReviewerScores = tu.NumberReviewerScores, Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id } }).ToListAsync();
                 } else {
                     TestUser = await _context.TestUsers.Where(tu => tu.Email.Contains(search) || tu.UserIdentification.Contains(search)).OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
-                    .Include(t => t.Test).Select(tu => new TestUser { Id = tu.Id, UserIdentification = tu.UserIdentification, Email = tu.Email, CurrentQuestionOrder = tu.CurrentQuestionOrder, DateTimeStart = tu.DateTimeStart, DateTimeEnd = tu.DateTimeEnd, Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id } }).ToListAsync();
+                    .Include(t => t.Test).Select(tu => new TestUser { Id = tu.Id, UserIdentification = tu.UserIdentification, Email = tu.Email, CurrentQuestionOrder = tu.CurrentQuestionOrder, DateTimeStart = tu.DateTimeStart, DateTimeEnd = tu.DateTimeEnd, NumberReviewers = tu.NumberReviewers, NumberReviewerScores = tu.NumberReviewerScores, Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id } }).ToListAsync();
                 }
             }
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240105194348_TotalReviewers2")]
+    partial class TotalReviewers2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -319,8 +321,8 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<DateTime?>("DateFinished")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("FinalScore")
-                        .HasColumnType("real");
+                    b.Property<int>("FinalScore")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsExtraScorer")
                         .HasColumnType("bit");
@@ -440,8 +442,8 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<string>("ReviewerNotes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Score")
-                        .HasColumnType("real");
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
 
                     b.Property<int>("TestId")
                         .HasColumnType("int");
