@@ -36,7 +36,6 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             Id = Request.Query["id"];
             RaterId = Request.Query["raterid"];
             AnswerId = Request.Query.ContainsKey("answerid") ? Request.Query["answerid"] : "0";
-            NextAnswerId = Request.Query.ContainsKey("nextid") ? Request.Query["nextid"] : "0";
             IsFinal = Request.Query.ContainsKey("final");
             UrlString = $"review?id={Id}&raterid={RaterId}";
             var id = int.Parse(Id);
@@ -65,7 +64,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             }
 
             if (_context.Answers != null && answerId != 0) {
-                Answer = _context.Answers.Include(a => a.Question).First(a => a.Id == answerId);
+                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, QuestionText = a.Question.QuestionText } }).First(a => a.Id == answerId);
                 var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                 if (raterAnswer != null) {
                     RaterNotes = raterAnswer.Notes;

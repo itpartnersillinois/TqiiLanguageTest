@@ -2,11 +2,12 @@
 @model TqiiLanguageTest.Pages.Reviewer.ReviewModel
 @{
     Layout = "_Admin";
-    ViewData["Title"] = "Review Answer";
+    ViewData["Title"] = "Review Test";
 }
 
-<div style="display: flex;">
-    <div style="flex-basis: 0%; flex-grow: 1;">
+<h1>Review Test</h1>
+<div style="display: flex;margin-top: 10px;column-gap: 10px;">
+    <div style="flex-basis: 0%;flex-grow: 1;background: var(--il-gray-1);">
         <ul>
             @foreach (var item in Model.Answers)
             {
@@ -22,7 +23,7 @@
     <div style="flex-basis: 0%; flex-grow: 3;">
         @if (Model.Answer != null)
         {
-        <p>@Model.Answer.Question.Title</p>
+        <h2>@Model.Answer.Question.Title</h2>
 
         <p>Question Audio</p>
         <p>
@@ -122,6 +123,8 @@
         }
         @if (Model.IsFinal)
         {
+            <h2>Finalize Test</h2>
+            <p>Note that this will lock the test for this reviewer.</p>
             <form method="post">
                 <div class="ils-input-entry form-group">
                 <label for="notes" class="control-label">

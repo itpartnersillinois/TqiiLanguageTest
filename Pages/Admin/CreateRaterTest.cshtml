@@ -24,20 +24,57 @@
     </ul>
 }
 
-<h2>Assign Raters</h2>
-<form method="post">
-    <ul>
-    @foreach (var item in Model.Raters)
-    {
-        <li>
-            <label for="@item.Id"> @item.Email (@item.NumberOfTests)</label><input type="checkbox" id="@item.Id" value="@item.Id" name="raters" />
-            <label for="@item.Id-second" style="padding-left: 20px;"> Secondary Rater</label><input type="checkbox" id="@item.Id-second" value="@item.Id" name="raters-second" />
-        </li>
-    }
-    </ul>
-    <input type="hidden" value="@Model.IdString" name="id" id="id" />
-    <div class="form-group">
-        <input type="submit" value="Assign Raters" style="width: fit-content" class="il-button" />
-    </div>
+@if (Model.IsFinalized)
+{
+    <h2>Finalize Test</h2>
+    <p>Note that this will finalize the test and prevent others from grading it.</p>
+    <form method="post">
+        <input type="hidden" value="@Model.IdString" name="id" id="id" />
+        <input type="hidden" value="true" name="finalize" id="finalize" />
+        <div class="ils-input-entry form-group">
+            <label for="score">Final Score: </label>
+            <input type="text" value="@Model.FinalScore" class="form-control" id="score" name="score" />
+        </div>
+        <div class="ils-input-entry form-group">
+            <label for="passed">Passed: </label>
+            <select class="form-control" id="passed" name="passed">
+                <option value="">-- Choose One --</option>
+                <option value="pass">Passed</option>
+                <option value="fail">Failed</option>
+            </select>
+        </div>
+        <label for="notes" class="control-label">
+            Notes:
+        </label>
+        <textarea class="ils-input-long form-control" id="notes" name="notes"></textarea>
 
-</form>
+        <div class="form-group">
+            <input type="submit" value="Finalize Test" style="width: fit-content" class="il-button" />
+        </div>
+
+    </form>
+
+    <p><a href="/Admin/CreateRaterTest?id=@Model.IdString">Assign More Raters</a></p>
+}
+@if (!Model.IsFinalized)
+{
+    <h2>Assign Raters</h2>
+    <form method="post">
+        <ul>
+            @foreach (var item in Model.Raters)
+            {
+                <li>
+                    <label for="@item.Id"> @item.Email (@item.NumberOfTests)</label><input type="checkbox" id="@item.Id" value="@item.Id" name="raters" />
+                    <label for="@item.Id-second" style="padding-left: 20px;"> Secondary Rater</label><input type="checkbox" id="@item.Id-second" value="@item.Id" name="raters-second" />
+                </li>
+            }
+        </ul>
+        <input type="hidden" value="@Model.IdString" name="id" id="id" />
+        <div class="form-group">
+            <input type="submit" value="Assign Raters" style="width: fit-content" class="il-button" />
+        </div>
+
+    </form>
+
+    <p><a href="/Admin/CreateRaterTest?finalize=true&id=@Model.IdString">Finalize Test</a></p>
+}
