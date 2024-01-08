@@ -19,10 +19,13 @@ namespace TqiiLanguageTest.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public int OrderBy { get; set; }
+        public bool IsPassed { get; set; }
 
+        public int NumberReviewers { get; set; }
+        public int NumberReviewerScores { get; set; }
+        public int OrderBy { get; set; }
         public string? ReviewerNotes { get; set; }
-        public int Score { get; set; }
+        public float Score { get; set; }
         public virtual Test? Test { get; set; }
         public int TestId { get; set; }
         public int TotalQuestions { get; set; }

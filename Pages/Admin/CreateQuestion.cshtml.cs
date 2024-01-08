@@ -39,6 +39,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             Question.IntroductionText = Question.IntroductionText ?? string.Empty;
             Question.InteractiveReadingAnswer = Question.InteractiveReadingAnswer ?? string.Empty;
             Question.InteractiveReadingOptions = Question.InteractiveReadingOptions ?? string.Empty;
+            Question.InteractiveReadingOptionsAnswerKey = Question.InteractiveReadingOptionsAnswerKey ?? string.Empty;
             Question.InteractiveReadingOptionsDropDown = Question.InteractiveReadingOptionsDropDown ?? string.Empty;
             Question.QuestionText = Question.QuestionText ?? string.Empty;
             Question.AnswerOptions = Question.AnswerOptions ?? string.Empty;

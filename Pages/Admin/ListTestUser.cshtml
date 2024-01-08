@@ -38,6 +38,7 @@
             <th>Download</th>
             <th>Delete</th>
             <th>Retake</th>
+            <th>Assign Rater / Score</th>
         </tr>
     </thead>
     <tbody>
@@ -64,8 +65,18 @@
             <td>
                 <a href="#" onclick="deleteTestUser('@item.Id'); return false;">Delete</a>
             </td>
+            <td>
+                <a href="#" onclick="rewindTestUser('@item.Id'); return false;">Retake Question</a>
+            </td>
                 <td>
-                    <a href="#" onclick="rewindTestUser('@item.Id'); return false;">Retake Question</a>
+                    @if (item.Score > 0)
+                    {
+                        <a href="/testdownload/@item.Id">Score: @item.Score</a>
+
+                    } else
+                    {
+                        <a href="/Admin/CreateRaterTest?id=@item.Id" target="_blank">Raters:&nbsp;@item.NumberReviewers Completed:&nbsp;@item.NumberReviewerScores </a>
+                    }
                 </td>
             </tr>
 }

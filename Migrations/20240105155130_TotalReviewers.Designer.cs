@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240105155130_TotalReviewers")]
+    partial class TotalReviewers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,10 +173,6 @@ namespace TqiiLanguageTest.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InteractiveReadingOptionsAnswerKey")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("InteractiveReadingOptionsDropDown")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -301,9 +299,6 @@ namespace TqiiLanguageTest.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("NumberOfTests")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.ToTable("RaterNames");
@@ -323,8 +318,8 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<DateTime?>("DateFinished")
                         .HasColumnType("datetime2");
 
-                    b.Property<float>("FinalScore")
-                        .HasColumnType("real");
+                    b.Property<int>("FinalScore")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsExtraScorer")
                         .HasColumnType("bit");
@@ -429,9 +424,6 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<Guid>("Guid")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsPassed")
-                        .HasColumnType("bit");
-
                     b.Property<int>("NumberReviewerScores")
                         .HasColumnType("int");
 
@@ -444,8 +436,8 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<string>("ReviewerNotes")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Score")
-                        .HasColumnType("real");
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
 
                     b.Property<int>("TestId")
                         .HasColumnType("int");
