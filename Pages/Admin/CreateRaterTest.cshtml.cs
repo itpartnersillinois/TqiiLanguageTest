@@ -61,6 +61,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             var raters = Request.Form.ContainsKey("raters") ? Request.Form["raters"].ToString() : "";
             var ratersSecond = Request.Form.ContainsKey("raters-second") ? Request.Form["raters-second"].ToString() : "";
             var testUser = _context.TestUsers.First(tu => tu.Id == testUserId);
+            var currentDate = DateTime.Now;
             if (Request.Form.ContainsKey("finalize")) {
                 var isPassed = Request.Form["passed"];
                 if (isPassed != "") {
@@ -72,7 +73,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 int totals = 0;
                 if (!string.IsNullOrWhiteSpace(raters)) {
                     foreach (var rater in raters.Split(',').Select(r => int.Parse(r.Trim()))) {
-                        _context.RaterTests.Add(new RaterTest { DateAssigned = DateTime.Now, IsExtraScorer = false, RaterNameId = rater, TestUserId = testUserId });
+                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = false, RaterNameId = rater, TestUserId = testUserId });
                         var rater1 = _context.RaterNames.First(rn => rn.Id == rater);
                         rater1.NumberOfTests++;
                         totals++;
@@ -80,7 +81,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 }
                 if (!string.IsNullOrWhiteSpace(ratersSecond)) {
                     foreach (var rater in ratersSecond.Split(',').Select(r => int.Parse(r.Trim()))) {
-                        _context.RaterTests.Add(new RaterTest { DateAssigned = DateTime.Now, IsExtraScorer = true, RaterNameId = rater, TestUserId = testUserId });
+                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = true, RaterNameId = rater, TestUserId = testUserId });
                         var rater2 = _context.RaterNames.First(rn => rn.Id == rater);
                         rater2.NumberOfTests++;
                         totals++;
@@ -90,6 +91,28 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
 
             _context.SaveChanges();
+
+            var autogradedQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.InteractiveReadingOptionsAnswerKey != "").ToDictionary(q => q.Id, q => q.InteractiveReadingOptionsAnswerKey);
+            if (!Request.Form.ContainsKey("finalize") && autogradedQuestions.Any() && !string.IsNullOrWhiteSpace(raters)) {
+                var autograders = _context.RaterTests.Where(rt => rt.TestUserId == testUserId && rt.DateAssigned == currentDate);
+                var answers = _context.Answers.Where(a => a.TestUserId == testUserId).Select(a => new { a.QuestionId, a.Id, a.Text }).ToList();
+                foreach (var autogradeQuestion in autogradedQuestions) {
+                    var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Key);
+                    if (answer != null) {
+                        foreach (var autograder in autograders) {
+                            _context.RaterAnswers.Add(new RaterAnswer {
+                                Score = answer != null && answer.Text.Contains(autogradeQuestion.Value) ? 1 : 0,
+                                AnswerId = answer.Id,
+                                DateFinished = currentDate,
+                                Notes = "autograded",
+                                RaterTestId = autograder.Id,
+                            });
+                        }
+                    }
+                }
+                _context.SaveChanges();
+            }
+
             return RedirectToPage("CreateRaterTest", new { id = testUserId });
         }
     }

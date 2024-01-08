@@ -83,23 +83,25 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     AnswerId = Request.Form["answerid"];
                     NextAnswerId = Request.Form["nextid"];
 
-                    var answerId = int.Parse(AnswerId);
+                    if (Request.Form.ContainsKey("level")) {
+                        var answerId = int.Parse(AnswerId);
 
-                    var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
-                    if (raterAnswer != null) {
-                        raterAnswer.Notes = Request.Form["notes"];
-                        raterAnswer.Score = int.Parse(Request.Form["level"]);
-                        _context.RaterAnswers.Update(raterAnswer);
-                    } else {
-                        _context.RaterAnswers.Add(new RaterAnswer {
-                            AnswerId = answerId,
-                            DateFinished = DateTime.Now,
-                            Notes = Request.Form["notes"],
-                            Score = int.Parse(Request.Form["level"]),
-                            RaterTestId = raterId
-                        });
+                        var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
+                        if (raterAnswer != null) {
+                            raterAnswer.Notes = Request.Form["notes"];
+                            raterAnswer.Score = int.Parse(Request.Form["level"]);
+                            _context.RaterAnswers.Update(raterAnswer);
+                        } else {
+                            _context.RaterAnswers.Add(new RaterAnswer {
+                                AnswerId = answerId,
+                                DateFinished = DateTime.Now,
+                                Notes = Request.Form["notes"],
+                                Score = int.Parse(Request.Form["level"]),
+                                RaterTestId = raterId
+                            });
+                        }
+                        await _context.SaveChangesAsync();
                     }
-                    await _context.SaveChangesAsync();
                     if (NextAnswerId == "0") {
                         return RedirectToPage("Review", new { id = Id, raterid = RaterId, final = "true" });
                     }
