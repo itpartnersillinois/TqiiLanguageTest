@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
 using TqiiLanguageTest.Models;
@@ -55,6 +56,9 @@ namespace TqiiLanguageTest.Pages.Admin {
                     _context.Tests.Remove(Test);
                 }
             } else {
+                var baseTest = _context.Tests.AsNoTracking().First(t => t.Id == Test.Id);
+                Test.ConclusionRecording = baseTest.ConclusionRecording;
+                Test.IntroductionRecording = baseTest.IntroductionRecording;
                 _context.Tests.Update(Test);
             }
             await _context.SaveChangesAsync();

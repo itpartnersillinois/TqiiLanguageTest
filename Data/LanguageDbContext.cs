@@ -16,6 +16,9 @@ namespace TqiiLanguageTest.Data {
         public DbSet<Permission>? Permissions { get; set; }
         public DbSet<QuestionRubric>? QuestionRubrics { get; set; }
         public DbSet<Question>? Questions { get; set; }
+        public DbSet<RaterAnswer>? RaterAnswers { get; set; }
+        public DbSet<RaterName>? RaterNames { get; set; }
+        public DbSet<RaterTest>? RaterTests { get; set; }
         public DbSet<Test>? Tests { get; set; }
         public DbSet<TestUser>? TestUsers { get; set; }
 

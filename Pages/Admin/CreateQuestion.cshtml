@@ -105,8 +105,12 @@
         <input asp-for="Question.InteractiveReadingOptions" class="ils-input-long form-control" />
     </div>
     <div class="ils-input-entry form-group">
-        <label for="Question_InteractiveReadingOptions" class="control-label">Drop Down Answers(separate multiple answers by a "|" symbol)</label>
+        <label for="Question_InteractiveReadingOptionsDropDown" class="control-label">Drop Down Answers (separate multiple answers by a "|" symbol)</label>
         <input asp-for="Question.InteractiveReadingOptionsDropDown" class="ils-input-long form-control" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_InteractiveReadingOptionsAnswerKey" class="control-label">Answer Key (correct answer)</label>
+        <textarea asp-for="Question.InteractiveReadingOptionsAnswerKey" class="ils-input-long form-control"></textarea>
     </div>
     @if (Model.Question.HasInteractiveReadingImage)
     {

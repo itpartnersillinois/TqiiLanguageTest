@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240105234611_TotalReviewers3")]
+    partial class TotalReviewers3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,10 +170,6 @@ namespace TqiiLanguageTest.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("InteractiveReadingOptions")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InteractiveReadingOptionsAnswerKey")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

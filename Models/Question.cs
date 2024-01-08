@@ -53,6 +53,7 @@ namespace TqiiLanguageTest.Models {
         public byte[] InteractiveReadingImage { get; set; } = Array.Empty<byte>();
 
         public string InteractiveReadingOptions { get; set; } = string.Empty;
+        public string InteractiveReadingOptionsAnswerKey { get; set; } = string.Empty;
 
         public string InteractiveReadingOptionsDropDown { get; set; } = string.Empty;
         public byte[] IntroductionImage { get; set; } = Array.Empty<byte>();

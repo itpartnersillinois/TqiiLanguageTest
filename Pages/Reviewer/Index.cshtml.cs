@@ -15,16 +15,16 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             _permissions = permissions;
         }
 
-        public IList<TestUser> TestUser { get; set; } = default!;
+        public IList<RaterTest> RaterTest { get; set; } = default!;
 
         public async Task OnGetAsync() {
             if (!_permissions.IsReviewer(User.Identity?.Name ?? "")) {
                 throw new Exception("Unauthorized");
             }
 
-            if (_context.TestUsers != null) {
-                TestUser = await _context.TestUsers.Where(tu => tu.DateTimeEnd.HasValue)
-                .Include(t => t.Test).ToListAsync();
+            var email = User.Identity?.Name;
+            if (_context.TestUsers != null && email != "") {
+                RaterTest = await _context.RaterTests.Include(rt => rt.Rater).Include(rt => rt.Test).Where(rt => rt.Rater.Email == email && rt.DateFinished == null).OrderBy(rt => rt.DateAssigned).Select(rt => new RaterTest { Id = rt.Id, Test = new TestUser { Id = rt.Test.Id, UserIdentification = rt.Test.UserIdentification, Email = rt.Test.Email } }).ToListAsync();
             }
         }
     }
