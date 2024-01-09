@@ -48,7 +48,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             Answers = new List<Tuple<int, string, int>>();
 
             if (_context.Answers != null) {
-                var answerObjects = await _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == id).OrderBy(a => a.DateTimeEnd).Select(a => new { a.Question.Title, a.Id }).ToListAsync();
+                var answerObjects = await _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == id && a.Question.QuestionType != QuestionEnum.Instructions).OrderBy(a => a.DateTimeEnd).Select(a => new { a.Question.Title, a.Id }).ToListAsync();
                 var nextAnswer = 0;
                 for (var i = answerObjects.Count - 1; i >= 0; i--) {
                     if (nextAnswer == 0) {
