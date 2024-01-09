@@ -1,0 +1,27 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.ListRatingModel
+
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "List Rating";
+}
+
+<h1>Rating Individual Page</h1>
+
+<h2>Test Information</h2>
+
+<p>Email: @Model.Email</p>
+<p>User Identification: @Model.UserId</p>
+<p>Test: @Model.TestName</p>
+<p>Date Ended: @Model.DateEnded</p>
+
+<h2>Rater Information</h2>
+<p>Rater Email: @Model.RaterEmail</p>
+@foreach (var item in Model.RaterInformation)
+{
+    <ul>
+        <li>
+            @item.Item1: @item.Item2.ToString() @item.Item3
+        </li>
+    </ul>
+}

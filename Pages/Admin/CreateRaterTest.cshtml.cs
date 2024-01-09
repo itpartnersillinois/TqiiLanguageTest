@@ -16,7 +16,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             _permissions = permissions;
         }
 
-        public IList<Tuple<string, string, string>> AssignedRaters { get; set; } = default!;
+        public IList<Tuple<string, string, string, int>> AssignedRaters { get; set; } = default!;
         public string DateEnded { get; set; } = default!;
         public string Email { get; set; } = default!;
         public float FinalScore { get; set; }
@@ -44,9 +44,9 @@ namespace TqiiLanguageTest.Pages.Admin {
                 UserId = testinformation.UserIdentification ?? "";
                 IdString = Id.ToString();
 
-                var assignedRaterInformation = await _context.RaterTests.Include(rt => rt.Rater).Where(rt => rt.TestUserId == Id).Select(rt => new { rt.Rater.Email, rt.IsExtraScorer, rt.FinalScore, rt.DateFinished }).ToListAsync();
+                var assignedRaterInformation = await _context.RaterTests.Include(rt => rt.Rater).Where(rt => rt.TestUserId == Id).Select(rt => new { rt.Id, rt.Rater.Email, rt.IsExtraScorer, rt.FinalScore, rt.DateFinished }).ToListAsync();
 
-                AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore)).OrderBy(s => s.Item1).ToList();
+                AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string, int>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore, rt.Id)).OrderBy(s => s.Item1).ToList();
 
                 if (assignedRaterInformation.Any() && !assignedRaterInformation.Any(a => a.DateFinished == null)) {
                     FinalScore = assignedRaterInformation.Sum(a => a.FinalScore) / assignedRaterInformation.Count();
@@ -63,12 +63,8 @@ namespace TqiiLanguageTest.Pages.Admin {
             var testUser = _context.TestUsers.First(tu => tu.Id == testUserId);
             var currentDate = DateTime.Now;
             if (Request.Form.ContainsKey("finalize")) {
-                var isPassed = Request.Form["passed"];
-                if (isPassed != "") {
-                    testUser.ReviewerNotes = Request.Form["notes"];
-                    testUser.IsPassed = isPassed == "pass";
-                    testUser.Score = float.Parse(Request.Form["score"].ToString());
-                }
+                testUser.ReviewerNotes = Request.Form["notes"];
+                testUser.Score = float.Parse(Request.Form["score"].ToString());
             } else {
                 int totals = 0;
                 if (!string.IsNullOrWhiteSpace(raters)) {
@@ -92,16 +88,49 @@ namespace TqiiLanguageTest.Pages.Admin {
 
             _context.SaveChanges();
 
-            var autogradedQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.InteractiveReadingOptionsAnswerKey != "").ToDictionary(q => q.Id, q => q.InteractiveReadingOptionsAnswerKey);
-            if (!Request.Form.ContainsKey("finalize") && autogradedQuestions.Any() && !string.IsNullOrWhiteSpace(raters)) {
+            // TODO Need to extract information into separate component
+
+            var autogradedQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.InteractiveReadingOptionsAnswerKey != "").Select(q => new { q.Id, q.InteractiveReadingOptionsAnswerKey }).ToList();
+            var autogradedQuestionsBasedOnQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.BasicAnswerKey1 != "").Select(q => new { q.Id, q.BasicAnswerKey1, q.BasicAnswerKey2, q.BasicAnswerKey3 }).ToList();
+            if (!Request.Form.ContainsKey("finalize") && (autogradedQuestions.Any() || autogradedQuestionsBasedOnQuestions.Any()) && !string.IsNullOrWhiteSpace(raters)) {
                 var autograders = _context.RaterTests.Where(rt => rt.TestUserId == testUserId && rt.DateAssigned == currentDate);
-                var answers = _context.Answers.Where(a => a.TestUserId == testUserId).Select(a => new { a.QuestionId, a.Id, a.Text }).ToList();
+                var answers = _context.Answers.Where(a => a.TestUserId == testUserId).Select(a => new { a.QuestionId, a.Id, a.Text, a.BasicAnswers1, a.BasicAnswers2, a.BasicAnswers3 }).ToList();
                 foreach (var autogradeQuestion in autogradedQuestions) {
-                    var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Key);
+                    var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Id);
                     if (answer != null) {
                         foreach (var autograder in autograders) {
                             _context.RaterAnswers.Add(new RaterAnswer {
-                                Score = answer != null && answer.Text.Contains(autogradeQuestion.Value) ? 1 : 0,
+                                Score = answer != null && answer.Text.Contains(autogradeQuestion.InteractiveReadingOptionsAnswerKey) ? 1 : 0,
+                                AnswerId = answer.Id,
+                                DateFinished = currentDate,
+                                Notes = "autograded",
+                                RaterTestId = autograder.Id,
+                            });
+                        }
+                    }
+                }
+
+                foreach (var autogradeQuestion in autogradedQuestionsBasedOnQuestions) {
+                    var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Id);
+                    int total = 0;
+                    int count = 0;
+                    if (autogradeQuestion.BasicAnswerKey1 != "") {
+                        count++;
+                        total = answer != null && answer.BasicAnswers1 == autogradeQuestion.BasicAnswerKey1 ? total + 1 : total;
+                    }
+                    if (autogradeQuestion.BasicAnswerKey2 != "") {
+                        count++;
+                        total = answer != null && answer.BasicAnswers2 == autogradeQuestion.BasicAnswerKey2 ? total + 1 : total;
+                    }
+                    if (autogradeQuestion.BasicAnswerKey3 != "") {
+                        count++;
+                        total = answer != null && answer.BasicAnswers3 == autogradeQuestion.BasicAnswerKey3 ? total + 1 : total + 1;
+                    }
+
+                    if (answer != null) {
+                        foreach (var autograder in autograders) {
+                            _context.RaterAnswers.Add(new RaterAnswer {
+                                Score = total * 100 / count,
                                 AnswerId = answer.Id,
                                 DateFinished = currentDate,
                                 Notes = "autograded",
