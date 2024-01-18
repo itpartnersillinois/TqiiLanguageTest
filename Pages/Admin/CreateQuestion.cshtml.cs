@@ -47,6 +47,9 @@ namespace TqiiLanguageTest.Pages.Admin {
             Question.BasicAnswers1 = Question.BasicAnswers1 ?? string.Empty;
             Question.BasicAnswers2 = Question.BasicAnswers2 ?? string.Empty;
             Question.BasicAnswers3 = Question.BasicAnswers3 ?? string.Empty;
+            Question.BasicAnswerKey1 = Question.BasicAnswerKey1 ?? string.Empty;
+            Question.BasicAnswerKey2 = Question.BasicAnswerKey2 ?? string.Empty;
+            Question.BasicAnswerKey3 = Question.BasicAnswerKey3 ?? string.Empty;
             Question.BasicQuestion1 = Question.BasicQuestion1 ?? string.Empty;
             Question.BasicQuestion2 = Question.BasicQuestion2 ?? string.Empty;
             Question.BasicQuestion3 = Question.BasicQuestion3 ?? string.Empty;

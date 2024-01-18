@@ -5,6 +5,8 @@
     ViewData["Title"] = "Assign Raters to Test";
 }
 
+<h1>Rating Page</h1>
+
 <h2>Test Information</h2>
 
 <p>Email: @Model.Email</p>
@@ -12,14 +14,12 @@
 <p>Test: @Model.TestName</p>
 <p>Date Ended: @Model.DateEnded</p>
 
-
-
 <h2>Current Raters</h2>
 @foreach (var item in Model.AssignedRaters)
 {
     <ul>
         <li>
-            @item.Item1 @item.Item2: @item.Item3
+            <a href="/Admin/ListRating?id=@Model.IdString&ratertestid=@item.Item4" target="_blank">@item.Item1 @item.Item2: @item.Item3</a>
         </li>
     </ul>
 }
@@ -34,14 +34,6 @@
         <div class="ils-input-entry form-group">
             <label for="score">Final Score: </label>
             <input type="text" value="@Model.FinalScore" class="form-control" id="score" name="score" />
-        </div>
-        <div class="ils-input-entry form-group">
-            <label for="passed">Passed: </label>
-            <select class="form-control" id="passed" name="passed">
-                <option value="">-- Choose One --</option>
-                <option value="pass">Passed</option>
-                <option value="fail">Failed</option>
-            </select>
         </div>
         <label for="notes" class="control-label">
             Notes:

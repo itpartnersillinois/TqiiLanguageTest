@@ -24,6 +24,9 @@ namespace TqiiLanguageTest.Models {
         };
 
         public string AnswerOptions { get; set; } = string.Empty;
+        public string BasicAnswerKey1 { get; set; } = string.Empty;
+        public string BasicAnswerKey2 { get; set; } = string.Empty;
+        public string BasicAnswerKey3 { get; set; } = string.Empty;
         public string BasicAnswers1 { get; set; } = string.Empty;
         public string BasicAnswers2 { get; set; } = string.Empty;
         public string BasicAnswers3 { get; set; } = string.Empty;
@@ -73,6 +76,8 @@ namespace TqiiLanguageTest.Models {
         public byte[] RecordingImage { get; set; } = Array.Empty<byte>();
         public string RecordingText { get; set; } = string.Empty;
         public string Route => (QuestionType == QuestionEnum.Instructions || (DurationAnswerInSeconds == 0 && DurationRecordingInSeconds == 0)) ? "MarkComplete" : DurationAnswerInSeconds == 0 ? "Recording" : "Answer";
+        public string SentenceRepetionText { get; set; } = string.Empty;
+
         public Test? Test { get; set; }
         public int TestId { get; set; }
         public string Title { get; set; } = string.Empty;

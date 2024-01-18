@@ -17,7 +17,13 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         [BindProperty]
+        public string NewRaterEmail { get; set; } = default!;
+
+        [BindProperty]
         public string NewRaterName { get; set; } = default!;
+
+        [BindProperty]
+        public string NewRaterNotes { get; set; } = default!;
 
         public IList<RaterName> Raters { get; set; } = default!;
 
@@ -32,17 +38,30 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         public async Task<IActionResult> OnPostAsync() {
-            if (NewRaterName.Contains(',')) {
-                var emailArray = NewRaterName.Split(',');
-                foreach (var email in emailArray) {
+            NewRaterName = string.IsNullOrWhiteSpace(NewRaterName) ? "" : NewRaterName;
+            NewRaterNotes = string.IsNullOrWhiteSpace(NewRaterNotes) ? "" : NewRaterNotes;
+            if (NewRaterEmail.Contains(',')) {
+                var emailArray = NewRaterEmail.Split(',');
+                var nameArray = NewRaterName.Split(',');
+                for (int i = 0; i < emailArray.Length; i++) {
                     _context.RaterNames.Add(new RaterName {
-                        Email = email.Trim()
+                        Email = emailArray[i].Trim(),
+                        Notes = NewRaterNotes.Trim(),
+                        FullName = nameArray.Length < i && !string.IsNullOrWhiteSpace(nameArray[i]) ? nameArray[i].Trim() : "",
+                        NumberOfTests = 0
                     });
                 }
             } else {
-                _context.RaterNames.Add(new RaterName { Email = NewRaterName });
+                var item = await _context.RaterNames.FirstOrDefaultAsync(rn => rn.Email == NewRaterEmail.Trim());
+                if (item != null) {
+                    item.FullName = NewRaterName.Trim();
+                    item.Notes = NewRaterNotes.Trim();
+                    item.NumberOfTests = 0;
+                } else {
+                    _context.RaterNames.Add(new RaterName { Email = NewRaterEmail.Trim(), FullName = NewRaterName.Trim(), Notes = NewRaterNotes.Trim(), NumberOfTests = 0 });
+                }
             }
-            _context.SaveChanges();
+            _ = await _context.SaveChangesAsync();
             return RedirectToPage("./CreateRater");
         }
     }
