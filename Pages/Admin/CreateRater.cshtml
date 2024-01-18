@@ -13,6 +13,12 @@
             <th>
                 Email
             </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Notes
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +28,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Notes)
+                </td>
             </tr>
         }
     </tbody>
@@ -29,8 +41,16 @@
 
 <form method="post">
     <div class="ils-input-entry form-group">
-        <label for="NewRaterName" class="control-label">Rater Email</label>
+        <label for="NewRaterEmail" class="control-label">Rater Email</label>
+        <input asp-for="NewRaterEmail" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="NewRaterName" class="control-label">Rater Name</label>
         <input asp-for="NewRaterName" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="NewRaterNotes" class="control-label">Notes</label>
+        <input asp-for="NewRaterNotes" class="form-control" style="width: 100%;" />
     </div>
     <div class="ils-input-entry form-group">
         <input type="submit" value="Create" class="il-button" />
