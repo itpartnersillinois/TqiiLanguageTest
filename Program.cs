@@ -25,6 +25,7 @@ builder.Services.AddScoped<TestUserHandler>();
 builder.Services.AddScoped<PracticeTestHandler>();
 builder.Services.AddScoped<QuestionHandler>();
 builder.Services.AddScoped<AnswerHandler>();
+builder.Services.AddScoped<Autograding>();
 builder.Services.AddScoped<PermissionsHandler>();
 builder.Services.AddScoped<PackageHelper>();
 builder.Services.AddTransient<IEmailSender, EmailSender>(e => new EmailSender(builder.Configuration.GetValue<string>("SocketLabsApiKey")));
