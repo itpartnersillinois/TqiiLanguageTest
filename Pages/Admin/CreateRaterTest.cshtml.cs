@@ -8,12 +8,16 @@ using TqiiLanguageTest.Models;
 namespace TqiiLanguageTest.Pages.Admin {
 
     public class CreateRaterTestModel : PageModel {
+        private readonly Autograding _autograding;
         private readonly LanguageDbContext _context;
+        private readonly Finalizing _finalizing;
         private readonly PermissionsHandler _permissions;
 
-        public CreateRaterTestModel(LanguageDbContext context, PermissionsHandler permissions) {
+        public CreateRaterTestModel(LanguageDbContext context, PermissionsHandler permissions, Autograding autograding, Finalizing finalizing) {
             _context = context;
             _permissions = permissions;
+            _autograding = autograding;
+            _finalizing = finalizing;
         }
 
         public IList<Tuple<string, string, string, int>> AssignedRaters { get; set; } = default!;
@@ -87,59 +91,10 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
 
             _context.SaveChanges();
-
-            // TODO Need to extract information into separate component
-
-            var autogradedQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.InteractiveReadingOptionsAnswerKey != "").Select(q => new { q.Id, q.InteractiveReadingOptionsAnswerKey }).ToList();
-            var autogradedQuestionsBasedOnQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.BasicAnswerKey1 != "").Select(q => new { q.Id, q.BasicAnswerKey1, q.BasicAnswerKey2, q.BasicAnswerKey3 }).ToList();
-            if (!Request.Form.ContainsKey("finalize") && (autogradedQuestions.Any() || autogradedQuestionsBasedOnQuestions.Any()) && !string.IsNullOrWhiteSpace(raters)) {
-                var autograders = _context.RaterTests.Where(rt => rt.TestUserId == testUserId && rt.DateAssigned == currentDate);
-                var answers = _context.Answers.Where(a => a.TestUserId == testUserId).Select(a => new { a.QuestionId, a.Id, a.Text, a.BasicAnswers1, a.BasicAnswers2, a.BasicAnswers3 }).ToList();
-                foreach (var autogradeQuestion in autogradedQuestions) {
-                    var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Id);
-                    if (answer != null) {
-                        foreach (var autograder in autograders) {
-                            _context.RaterAnswers.Add(new RaterAnswer {
-                                Score = answer != null && answer.Text.Contains(autogradeQuestion.InteractiveReadingOptionsAnswerKey) ? 1 : 0,
-                                AnswerId = answer.Id,
-                                DateFinished = currentDate,
-                                Notes = "autograded",
-                                RaterTestId = autograder.Id,
-                            });
-                        }
-                    }
-                }
-
-                foreach (var autogradeQuestion in autogradedQuestionsBasedOnQuestions) {
-                    var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Id);
-                    int total = 0;
-                    int count = 0;
-                    if (autogradeQuestion.BasicAnswerKey1 != "") {
-                        count++;
-                        total = answer != null && answer.BasicAnswers1 == autogradeQuestion.BasicAnswerKey1 ? total + 1 : total;
-                    }
-                    if (autogradeQuestion.BasicAnswerKey2 != "") {
-                        count++;
-                        total = answer != null && answer.BasicAnswers2 == autogradeQuestion.BasicAnswerKey2 ? total + 1 : total;
-                    }
-                    if (autogradeQuestion.BasicAnswerKey3 != "") {
-                        count++;
-                        total = answer != null && answer.BasicAnswers3 == autogradeQuestion.BasicAnswerKey3 ? total + 1 : total + 1;
-                    }
-
-                    if (answer != null) {
-                        foreach (var autograder in autograders) {
-                            _context.RaterAnswers.Add(new RaterAnswer {
-                                Score = total * 100 / count,
-                                AnswerId = answer.Id,
-                                DateFinished = currentDate,
-                                Notes = "autograded",
-                                RaterTestId = autograder.Id,
-                            });
-                        }
-                    }
-                }
-                _context.SaveChanges();
+            if (!Request.Form.ContainsKey("finalize") && !string.IsNullOrWhiteSpace(raters)) {
+                _autograding.AutoGrade(currentDate, testUser, testUserId);
+            } else if (Request.Form.ContainsKey("finalize")) {
+                _finalizing.FinalizeForTest(testUser);
             }
 
             return RedirectToPage("CreateRaterTest", new { id = testUserId });

@@ -53,6 +53,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             Question.BasicQuestion1 = Question.BasicQuestion1 ?? string.Empty;
             Question.BasicQuestion2 = Question.BasicQuestion2 ?? string.Empty;
             Question.BasicQuestion3 = Question.BasicQuestion3 ?? string.Empty;
+            Question.SentenceRepetionText = Question.SentenceRepetionText ?? string.Empty;
             if (string.IsNullOrWhiteSpace(Question.Title)) {
                 Question.OrderBy = -1;
                 Question.Title = "Deleted question on " + DateTime.Now.ToShortDateString();

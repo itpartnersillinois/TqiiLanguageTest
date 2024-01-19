@@ -9,11 +9,13 @@ namespace TqiiLanguageTest.Pages.Reviewer {
 
     public class ReviewModel : PageModel {
         private readonly LanguageDbContext _context;
+        private readonly Finalizing _finalizing;
         private readonly PermissionsHandler _permissions;
 
-        public ReviewModel(LanguageDbContext context, PermissionsHandler permissions) {
+        public ReviewModel(LanguageDbContext context, PermissionsHandler permissions, Finalizing finalizing) {
             _context = context;
             _permissions = permissions;
+            _finalizing = finalizing;
         }
 
         public Answer Answer { get; set; } = default!;
@@ -32,7 +34,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
         public string UrlString { get; set; }
 
         public async Task OnGetAsync() {
-            Rating = 9;
+            Rating = -1;
             Id = Request.Query["id"];
             RaterId = Request.Query["raterid"];
             AnswerId = Request.Query.ContainsKey("answerid") ? Request.Query["answerid"] : "0";
@@ -64,7 +66,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             }
 
             if (_context.Answers != null && answerId != 0) {
-                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
+                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, QuestionType = a.Question.QuestionType, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
                 var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                 if (raterAnswer != null) {
                     RaterNotes = raterAnswer.Notes;
@@ -109,8 +111,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 } else { //finalizing the test
                     var rater = _context.RaterTests.Single(rt => rt.Id == raterId);
                     rater.DateFinished = DateTime.Now;
-                    var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).Sum(ra => ra.Score);
-                    var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId);
+                    var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId && ra.Score >= 0).Sum(ra => ra.Score);
+                    var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId && ra.Score >= 0);
                     rater.FinalScore = (float) raterTotalScore / (float) raterTotalAnswers;
                     rater.Notes = Request.Form["notes"];
                     var id = int.Parse(Id);
@@ -119,6 +121,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     var raterName = _context.RaterNames.Single(rn => rn.Id == rater.RaterNameId);
                     raterName.NumberOfTests--;
                     await _context.SaveChangesAsync();
+
+                    _finalizing.FinalizeForRater(rater.TestUserId, raterId, User.Identity?.Name ?? "");
                 }
             }
             return RedirectToPage("Index");

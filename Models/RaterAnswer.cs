@@ -6,6 +6,7 @@ namespace TqiiLanguageTest.Models {
     public class RaterAnswer {
         public virtual Answer? Answer { get; set; }
         public int AnswerId { get; set; }
+        public string AutogradedNotes { get; set; } = "";
         public DateTime? DateFinished { get; set; }
 
         [Key]
