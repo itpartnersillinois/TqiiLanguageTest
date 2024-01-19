@@ -3,6 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TqiiLanguageTest.Models {
 
+    public enum TestEnum {
+        None,
+        SentenceRepetition, // Listen to a recording (introduction), optional multiple choice or reflection, record answer
+        IntegratedSpeaking, // Listen to a recording (introduction), optional reflection, record answer
+        InteractiveReading  // Type in text to complete information or choose from a drop-down
+    }
+
     public class Test {
         public string Conclusion { get; set; } = string.Empty;
         public string ConclusionLink { get; set; } = string.Empty;
@@ -19,6 +26,7 @@ namespace TqiiLanguageTest.Models {
         public int NumberQuestions { get; set; }
         public int PracticeOrder { get; set; }
         public virtual ICollection<Question>? Questions { get; set; }
+        public TestEnum TestType { get; set; }
         public string? Title { get; set; }
     }
 }

@@ -43,28 +43,11 @@
             </audio>
         </p>
 
-        @if (Model.Answer.Question.BasicQuestion1 != "")
-        {
-            <p><strong>Question #1: </strong>@Model.Answer.Question.BasicQuestion1</p>
-            <p><strong>Answer #1: </strong>@Model.Answer.BasicAnswers1</p>
-        }
-
-        @if (Model.Answer.Question.BasicQuestion2 != "")
-        {
-            <p><strong>Question #2: </strong>@Model.Answer.Question.BasicQuestion2</p>
-            <p><strong>Answer #2: </strong>@Model.Answer.BasicAnswers2</p>
-        }
-
-        @if (Model.Answer.Question.BasicQuestion3 != "")
-        {
-            <p><strong>Question #3: </strong>@Model.Answer.Question.BasicQuestion3</p>
-            <p><strong>Answer #3: </strong>@Model.Answer.BasicAnswers3</p>
-        }
-
         @if (Model.Answer.Text != "" && Model.Answer.Question.InteractiveReadingAnswer != "")
         {
             <p><strong>Interactive Reading: </strong>@Model.Answer.Question.InteractiveReadingAnswer</p>
             <p><strong>Answer: </strong>@Model.Answer.Text</p>
+                <p><strong>Key: </strong>@Model.Answer.Question.InteractiveReadingOptionsAnswerKey</p>
         }
         else if (Model.Answer.Text != "" && Model.Answer.Question.QuestionText != "")
         {
@@ -75,7 +58,29 @@
         {
             <p><strong>Answer: </strong>@Model.Answer.Text</p>
         }
-        <form method="post">
+            @if (Model.Answer.Question.BasicQuestion1 != "")
+            {
+                <p><strong>Question #1: </strong>@Model.Answer.Question.BasicQuestion1</p>
+                <p><strong>Answer #1: </strong>@Model.Answer.BasicAnswers1</p>
+                <p><strong>Answer Key #1: </strong>@Model.Answer.Question.BasicAnswerKey1</p>
+            }
+
+            @if (Model.Answer.Question.BasicQuestion2 != "")
+            {
+                <p><strong>Question #2: </strong>@Model.Answer.Question.BasicQuestion2</p>
+                <p><strong>Answer #2: </strong>@Model.Answer.BasicAnswers2</p>
+                <p><strong>Answer Key #2: </strong>@Model.Answer.Question.BasicAnswerKey2</p>
+            }
+
+            @if (Model.Answer.Question.BasicQuestion3 != "")
+            {
+                <p><strong>Question #3: </strong>@Model.Answer.Question.BasicQuestion3</p>
+                <p><strong>Answer #3: </strong>@Model.Answer.BasicAnswers3</p>
+                <p><strong>Answer Key #3: </strong>@Model.Answer.Question.BasicAnswerKey3</p>
+            }
+            @if (Model.Answer.QuestionType == Models.QuestionEnum.IntegratedSpeaking)
+            {
+            <form method="post">
             <input type="hidden" asp-for="Answer.Id" class="form-control" />
             <div class="ils-input-entry-radio ratings">
                 <p>Rating</p>
@@ -121,6 +126,82 @@
                 <input type="submit" value="Mark Question" class="il-button" style="width: fit-content;"/>
             </div>
             </form>
+            }
+            else if (Model.Answer.QuestionType == Models.QuestionEnum.SentenceRepetition)
+            {
+                <form method="post">
+                    <input type="hidden" asp-for="Answer.Id" class="form-control" />
+                    <div class="ils-input-entry-radio ratings">
+                        <p>Rating</p>
+                        <input type="radio" id="level_4" name="level" value="4" checked="@(Model.Rating == 4)">
+                        <label for="level_4">
+                            4: exact repetition <span>Repeating the prompt sentence word for word; however, contractions, substitutions for proper noun (e.g., names) are allowed.</span>
+                        </label>
+                        <input type="radio" id="level_3" name="level" value="3" checked="@(Model.Rating == 3)">
+                        <label for="level_3">
+                            3: appropriate paraphrasing
+                            <span>Did not repeat word for word but paraphrase the prompt sentence in such a way that the response is grammatical and remains the same meaning as the prompt.</span>
+                        </label>
+
+                        <input type="radio" id="level_2" name="level" value="2" checked="@(Model.Rating == 2)">
+                        <label for="level_2">
+                            2: minor deviation
+                            <span>Repeating the prompt sentence with minor grammatical errors which do not distort meaning; or missing minor information which does not change the main idea of the prompt sentence; or a combination of both.</span>
+                        </label>
+                        <input type="radio" id="level_1" name="level" value="1" checked="@(Model.Rating == 1)">
+                        <label for="level_1">
+                            1: inadequate response
+                            <span>Repeating the prompt sentence with major grammatical errors which distort meaning; or missing substantial information which changes the main idea of the prompt sentence; or a combination of both.</span>
+                        </label>
+
+                        <input type="radio" id="level_0" name="level" value="0" checked="@(Model.Rating == 0)">
+                        <label for="level_0">
+                            0: omission
+                            <span>Complete silence, or only one or few words repeated which do not make sense by itself.</span>
+                        </label>
+                    </div>
+
+                    <div class="ils-input-entry form-group">
+                        <label for="notes" class="control-label">
+                            Notes:
+                        </label>
+                        <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
+                    </div>
+                    <input type="hidden" value="@Model.Id" name="id">
+                    <input type="hidden" value="@Model.RaterId" name="raterid">
+                    <input type="hidden" value="@Model.AnswerId" name="answerid">
+                    <input type="hidden" value="@Model.NextAnswerId" name="nextid">
+                    <div class="form-group">
+                        <input type="submit" value="Mark Question" class="il-button" style="width: fit-content;" />
+                    </div>
+                </form>
+            }
+            else if (Model.Answer.QuestionType == Models.QuestionEnum.BasicQuestions || Model.Answer.QuestionType == Models.QuestionEnum.InteractiveReading)
+            {
+                <form method="post">
+                    <input type="hidden" asp-for="Answer.Id" class="form-control" />
+                    <div class="ils-input-entry form-group">
+                        <label for="level" class="control-label">
+                            Score:
+                        </label>
+                        <input type="text" class="form-control" id="level" name="level" value="@Model.Rating">
+                    </div>
+                    <div class="ils-input-entry form-group">
+                        <label for="notes" class="control-label">
+                            Notes:
+                        </label>
+                        <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
+                    </div>
+                    <input type="hidden" value="@Model.Id" name="id">
+                    <input type="hidden" value="@Model.RaterId" name="raterid">
+                    <input type="hidden" value="@Model.AnswerId" name="answerid">
+                    <input type="hidden" value="@Model.NextAnswerId" name="nextid">
+                    <div class="form-group">
+                        <input type="submit" value="Mark Question" class="il-button" style="width: fit-content;" />
+                    </div>
+                </form>
+            }
+
         }
         @if (Model.IsFinal)
         {

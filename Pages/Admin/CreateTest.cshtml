@@ -18,6 +18,15 @@
                 <span asp-validation-for="Test.Title" class="text-danger"></span>
             </div>
             <div class="ils-input-entry form-group">
+                <label for="Test_TestType" class="control-label">Test Type</label>
+                <select asp-for="Test.TestType" class="form-control" style="width: 300px;">
+                    <option value="0"></option>
+                    <option value="1">Sentence Repetition</option>
+                    <option value="2">Integrated Speaking</option>
+                    <option value="3">Interactive Reading</option>
+                </select>
+            </div>
+            <div class="ils-input-entry form-group">
                 <label for="Test_NumberQuestions" class="control-label">Number of questions</label>
                 <input asp-for="Test.NumberQuestions" class="form-control" />
                 <span asp-validation-for="Test.NumberQuestions" class="text-danger"></span>
