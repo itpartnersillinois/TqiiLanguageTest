@@ -10,12 +10,14 @@ namespace TqiiLanguageTest.Pages.Admin {
     public class CreateRaterTestModel : PageModel {
         private readonly Autograding _autograding;
         private readonly LanguageDbContext _context;
+        private readonly Finalizing _finalizing;
         private readonly PermissionsHandler _permissions;
 
-        public CreateRaterTestModel(LanguageDbContext context, PermissionsHandler permissions, Autograding autograding) {
+        public CreateRaterTestModel(LanguageDbContext context, PermissionsHandler permissions, Autograding autograding, Finalizing finalizing) {
             _context = context;
             _permissions = permissions;
             _autograding = autograding;
+            _finalizing = finalizing;
         }
 
         public IList<Tuple<string, string, string, int>> AssignedRaters { get; set; } = default!;
@@ -91,6 +93,8 @@ namespace TqiiLanguageTest.Pages.Admin {
             _context.SaveChanges();
             if (!Request.Form.ContainsKey("finalize") && !string.IsNullOrWhiteSpace(raters)) {
                 _autograding.AutoGrade(currentDate, testUser, testUserId);
+            } else if (Request.Form.ContainsKey("finalize")) {
+                _finalizing.FinalizeForTest(testUser);
             }
 
             return RedirectToPage("CreateRaterTest", new { id = testUserId });

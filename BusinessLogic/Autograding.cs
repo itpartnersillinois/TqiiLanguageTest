@@ -19,12 +19,17 @@ namespace TqiiLanguageTest.BusinessLogic {
                 foreach (var autogradeQuestion in autogradedQuestions) {
                     var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Id);
                     if (answer != null) {
+                        var individualScores = "";
                         var score = 0;
                         var answerArray = PullAnswers(answer.Text);
                         var answerKeyArray = PullAnswers(autogradeQuestion.InteractiveReadingOptionsAnswerKey);
                         for (var i = 0; i < answerKeyArray.Length; i++) {
+                            individualScores += $"{answerArray[i]},{answerKeyArray[i]},";
                             if (i < answerArray.Length && answerArray[i] == answerKeyArray[i]) {
                                 score++;
+                                individualScores += "1;";
+                            } else {
+                                individualScores += "0;";
                             }
                         }
                         var total = score * 100 / answerKeyArray.Length;
@@ -33,7 +38,8 @@ namespace TqiiLanguageTest.BusinessLogic {
                                 Score = total,
                                 AnswerId = answer.Id,
                                 DateFinished = currentDate,
-                                Notes = $"autograded with {score} / {answerKeyArray.Length}",
+                                Notes = $"autograded with {score} / {answerKeyArray.Length} with answers: {individualScores.Replace(";", "; ")}",
+                                AutogradedNotes = individualScores.Trim(';'),
                                 RaterTestId = autograder.Id,
                             });
                         }
@@ -44,26 +50,30 @@ namespace TqiiLanguageTest.BusinessLogic {
                     var answer = answers.SingleOrDefault(a => (a.QuestionId ?? 0) == autogradeQuestion.Id);
                     int total = 0;
                     int count = 0;
-                    if (autogradeQuestion.BasicAnswerKey1 != "") {
-                        count++;
-                        total = answer != null && answer.BasicAnswers1.Trim() == autogradeQuestion.BasicAnswerKey1.Trim() ? total + 1 : total;
+                    var individualScores = "";
+                    foreach (var basicAnswer in new List<Tuple<string, string>> {
+                        new Tuple<string, string>(autogradeQuestion.BasicAnswerKey1, answer?.BasicAnswers1 ?? ""),
+                        new Tuple<string, string>(autogradeQuestion.BasicAnswerKey2, answer?.BasicAnswers2 ?? ""),
+                        new Tuple<string, string>(autogradeQuestion.BasicAnswerKey3, answer?.BasicAnswers3 ?? "") }) {
+                        if (!string.IsNullOrWhiteSpace(basicAnswer.Item1)) {
+                            count++;
+                            individualScores += $"{basicAnswer.Item2},{basicAnswer.Item1},";
+                            if (basicAnswer.Item1.Trim() == basicAnswer.Item2.Trim()) {
+                                total++;
+                                individualScores += "1;";
+                            } else {
+                                individualScores += "0;";
+                            }
+                        }
                     }
-                    if (autogradeQuestion.BasicAnswerKey2 != "") {
-                        count++;
-                        total = answer != null && answer.BasicAnswers2.Trim() == autogradeQuestion.BasicAnswerKey2.Trim() ? total + 1 : total;
-                    }
-                    if (autogradeQuestion.BasicAnswerKey3 != "") {
-                        count++;
-                        total = answer != null && answer.BasicAnswers3.Trim() == autogradeQuestion.BasicAnswerKey3.Trim() ? total + 1 : total;
-                    }
-
                     if (answer != null) {
                         foreach (var autograder in autograders) {
                             _context.RaterAnswers.Add(new RaterAnswer {
                                 Score = total * 100 / count,
                                 AnswerId = answer.Id,
                                 DateFinished = currentDate,
-                                Notes = $"autograded with {total} / {count}",
+                                Notes = $"autograded with {total} / {count} with answers {individualScores.Replace(";", "; ")}",
+                                AutogradedNotes = individualScores.Trim(';'),
                                 RaterTestId = autograder.Id,
                             });
                         }

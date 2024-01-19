@@ -36,7 +36,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 DateEnded = testinformation.DateTimeEnd.ToString() ?? "";
                 UserId = testinformation.UserIdentification ?? "";
 
-                RaterInformation = _context.RaterAnswers.Include(ra => ra.Answer).ThenInclude(a => a.Question).Where(ra => ra.RaterTestId == raterTestId && ra.Answer.TestUserId == testinformation.Id && ra.Answer.Question.QuestionType != QuestionEnum.Instructions).OrderBy(ra => ra.Answer.DateTimeEnd).Select(ra => new Tuple<string, int, string>(ra.Answer.Question.Title, ra.Score, ra.Notes)).ToList();
+                RaterInformation = _context.RaterAnswers.Include(ra => ra.Answer).ThenInclude(a => a.Question).Where(ra => ra.RaterTestId == raterTestId && ra.Answer.TestUserId == testinformation.Id && ra.Answer.Question.QuestionType != QuestionEnum.Instructions).OrderBy(ra => ra.Answer.DateTimeEnd).Select(ra => new Tuple<string, int, string>(ra.Answer.Question.Title, ra.Score, ra.Notes == "" ? "(no notes)" : " (" + ra.Notes + ")")).ToList();
 
                 RaterEmail = _context.RaterTests.Include(rt => rt.Rater).Single(rt => rt.Id == raterTestId).Rater.Email;
             }

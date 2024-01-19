@@ -1,0 +1,86 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.IsbeReportModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "ISBE Report";
+}
+
+<h1>ISBE Report</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Test User
+            </th>
+            <th>
+                Test Date
+            </th>
+            <th>Total Score</th>
+            <th>Sentence Repetition Score</th>
+            <th>Integrated Speaking Score</th>
+            <th>Interactive Reading Score</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ReportIsbes)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserIdentification) (@Html.DisplayFor(modelItem => item.Email))
+                </td>
+                <td>
+                    @item.TestDate.ToShortDateString(), @item.TestDate.ToShortTimeString()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalScore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SentenceRepetitionScore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IntegratedSpeakingScore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InteractiveReadingScore)
+                </td>
+                <td>
+                    <a href="/audioanswerdownload/@item.Id">Download Data</a>
+                </td>
+                <td>
+                    <a href="#" onclick="passed('@item.Id'); return false;">Marked as Passed</a>
+                </td>
+                <td>
+                    <a href="#" onclick="failed('@item.Id'); return false;">Marked as Failed</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a href="/Admin">Back to Admin Page</a>
+</div>
+
+ @section Scripts {
+    <script>
+        function passed(id) {
+            fetch('/reportdownload/pass/' + id, {
+                method: 'GET'
+            }).then(function (response) {
+                location.reload();
+            });
+        }
+
+        function failed(id) {
+            fetch('/reportdownload/fail/' + id, {
+                method: 'GET'
+            }).then(function (response) {
+                location.reload();
+            });
+        }
+</script>
+}
