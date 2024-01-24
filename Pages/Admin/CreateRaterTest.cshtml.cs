@@ -73,15 +73,20 @@ namespace TqiiLanguageTest.Pages.Admin {
                 int totals = 0;
                 if (!string.IsNullOrWhiteSpace(raters)) {
                     foreach (var rater in raters.Split(',').Select(r => int.Parse(r.Trim()))) {
-                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = false, RaterNameId = rater, TestUserId = testUserId });
+                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = false, RaterNameId = rater, TestUserId = testUserId, RaterAnswerRemoveIdString = "" });
                         var rater1 = _context.RaterNames.First(rn => rn.Id == rater);
                         rater1.NumberOfTests++;
                         totals++;
                     }
                 }
                 if (!string.IsNullOrWhiteSpace(ratersSecond)) {
+                    var removeItem = new List<int>();
+                    var raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId)
+                        .GroupBy(ra => ra.AnswerId)
+                        .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) < 2).Select(rag => rag.Key).ToArray();
+
                     foreach (var rater in ratersSecond.Split(',').Select(r => int.Parse(r.Trim()))) {
-                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = true, RaterNameId = rater, TestUserId = testUserId });
+                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = true, RaterNameId = rater, TestUserId = testUserId, RaterAnswerRemoveIdString = string.Join(',', raterAnswers) });
                         var rater2 = _context.RaterNames.First(rn => rn.Id == rater);
                         rater2.NumberOfTests++;
                         totals++;
