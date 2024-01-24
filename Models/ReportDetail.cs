@@ -10,6 +10,9 @@ namespace TqiiLanguageTest.Models {
         public string AutogradedScore { get; set; } = "";
         public string Email { get; set; } = "";
 
+        public string FinalIndividualNotes { get; set; } = "";
+        public int FinalIndividualScore { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

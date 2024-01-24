@@ -37,6 +37,8 @@ namespace TqiiLanguageTest.Controllers {
             sb.Append("Response" + '\t');
             sb.Append("Answer Key" + '\t');
             sb.Append("Autograded Response" + '\t');
+            sb.Append("Final Score" + '\t');
+            sb.Append("Final Answer Notes" + '\t');
             sb.Append("Rater Name" + '\t');
             sb.Append("Rater Score" + '\t');
             sb.Append("Rater Comment");
@@ -53,6 +55,9 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(item.QuestionAnswered.ToShortTimeString() + '\t');
                 sb.Append(item.Answer + '\t');
                 sb.Append(item.AnswerKey + '\t');
+                sb.Append(item.AutogradedScore + '\t');
+                sb.Append(item.FinalIndividualScore.ToString() + '\t');
+                sb.Append(item.FinalIndividualNotes + '\t');
                 sb.Append(item.AutogradedScore + '\t');
                 sb.Append(item.RaterName + '\t');
                 sb.Append(item.RaterScore.ToString() + '\t');

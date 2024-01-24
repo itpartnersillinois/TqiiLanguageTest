@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240124152105_RaterAnswerRemoveIdString")]
+    partial class RaterAnswerRemoveIdString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -409,13 +411,6 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FinalIndividualNotes")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FinalIndividualScore")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("QuestionAnswered")
                         .HasColumnType("datetime2");

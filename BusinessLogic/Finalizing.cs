@@ -11,12 +11,16 @@ namespace TqiiLanguageTest.BusinessLogic {
             _context = context;
         }
 
-        public void FinalizeForRater(int testUserId, int raterTestId, string raterEmail) {
+        public void FinalizeForRater(int testUserId, int raterTestId, string raterEmail, string raterAnswerRemoveIdString) {
             var testUser = _context.TestUsers.Include(tu => tu.Test).Single(tu => tu.Id == testUserId);
             var raterAnswers = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterTestId).ToList();
             var rater = _context.RaterNames.FirstOrDefault(ra => ra.Email == raterEmail);
             var raterName = rater == null || string.IsNullOrWhiteSpace(rater.FullName) ? raterEmail : rater.FullName;
             var answers = _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == testUserId && a.Question.QuestionType != QuestionEnum.Instructions).Select(a => new { a.Id, a.QuestionId, a.Question.Title, a.DateTimeEnd, a.Question.QuestionType }).ToList();
+            if (!string.IsNullOrWhiteSpace(raterAnswerRemoveIdString)) {
+                var answersToRemove = raterAnswerRemoveIdString.Split(',').Select(i => int.Parse(i));
+                answers.RemoveAll(a => answersToRemove.Contains(a.Id));
+            }
 
             foreach (var answer in answers) {
                 var raterAnswer = raterAnswers.FirstOrDefault(ra => ra.AnswerId == answer.Id);
