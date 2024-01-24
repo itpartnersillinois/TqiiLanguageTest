@@ -16,6 +16,7 @@ namespace TqiiLanguageTest.Models {
         public bool IsPassed { get; set; }
         public string Notes { get; set; } = "";
         public virtual RaterName? Rater { get; set; }
+        public string RaterAnswerRemoveIdString { get; set; } = "";
         public int RaterNameId { get; set; }
         public virtual TestUser? Test { get; set; }
         public int TestUserId { get; set; }

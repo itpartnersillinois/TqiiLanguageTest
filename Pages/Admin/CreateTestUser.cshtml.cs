@@ -34,9 +34,11 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-
-            ViewData["TestId"] = new SelectList(_context.Tests.OrderBy(t => t.Title), "Id", "Title");
-            ViewData["TestIdOptional"] = new SelectList(_context.Tests.ToList().Union(new List<Test> { new Test { Id = 0, Title = "" } }).OrderBy(t => t.Title), "Id", "Title");
+            var dictionary = _context.Tests.Select(t => new { t.Id, t.Title }).OrderBy(t => t.Title).ToDictionary(t => t.Id, t => t.Title);
+            var dictionaryNew = dictionary.ToDictionary(t => t.Key, t => t.Value);
+            dictionaryNew.Add(0, "");
+            ViewData["TestId"] = new SelectList(dictionary, "Key", "Value");
+            ViewData["TestIdOptional"] = new SelectList(dictionaryNew, "Key", "Value", 0);
             TestUser = new TestUser();
             TestUser.OrderBy = 1;
             return Page();

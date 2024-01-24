@@ -1,0 +1,37 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.DetailReportModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Detail Report";
+}
+
+<h1>Detail Report</h1>
+
+<form method="post">
+@foreach (var item in Model.Details)
+{
+    <div>
+        @item.Question
+    </div>
+    <div>
+        Raters: 
+        @foreach (var rater in item.Raters)
+        {
+            <span style="margin-right: 20px; display:inline-block;">@rater</span>
+        }
+    </div>
+    <div class="ils-input-entry form-group">
+            <label for="score-@item.AnswerId" class="control-label">Final Score:</label>
+        <input id="score-@item.AnswerId" name="score-@item.AnswerId" value="@item.FinalScore">
+    </div>
+    <div class="ils-input-entry form-group">
+            <label for="notes-@item.AnswerId" class="control-label">Final Notes:</label>
+            <input id="notes-@item.AnswerId" name="notes-@item.AnswerId" class="ils-input-long" value=" @item.FinalNotes">
+    </div>
+    <hr />
+}
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Save" class="il-button" />
+    </div>
+
+</form>

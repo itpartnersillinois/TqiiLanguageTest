@@ -51,6 +51,12 @@ namespace TqiiLanguageTest.Pages.Reviewer {
 
             if (_context.Answers != null) {
                 var answerObjects = await _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == id && a.Question.QuestionType != QuestionEnum.Instructions).OrderBy(a => a.DateTimeEnd).Select(a => new { a.Question.Title, a.Id }).ToListAsync();
+
+                var secondaryRater = _context.RaterTests.First(rt => rt.Id == raterId).RaterAnswerRemoveIdString;
+                if (!string.IsNullOrWhiteSpace(secondaryRater)) {
+                    var answersToRemove = secondaryRater.Split(',').Select(i => int.Parse(i));
+                    answerObjects.RemoveAll(a => answersToRemove.Contains(a.Id));
+                }
                 var nextAnswer = 0;
                 for (var i = answerObjects.Count - 1; i >= 0; i--) {
                     if (nextAnswer == 0) {
@@ -121,8 +127,9 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     var raterName = _context.RaterNames.Single(rn => rn.Id == rater.RaterNameId);
                     raterName.NumberOfTests--;
                     await _context.SaveChangesAsync();
+                    var secondaryRater = _context.RaterTests.First(rt => rt.Id == raterId).RaterAnswerRemoveIdString;
 
-                    _finalizing.FinalizeForRater(rater.TestUserId, raterId, User.Identity?.Name ?? "");
+                    _finalizing.FinalizeForRater(rater.TestUserId, raterId, User.Identity?.Name ?? "", secondaryRater);
                 }
             }
             return RedirectToPage("Index");
