@@ -24,7 +24,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
 
             var email = User.Identity?.Name;
             if (_context.TestUsers != null && email != "") {
-                RaterTest = await _context.RaterTests.Include(rt => rt.Rater).Include(rt => rt.Test).Where(rt => rt.Rater.Email == email && rt.DateFinished == null).OrderBy(rt => rt.DateAssigned).Select(rt => new RaterTest { Id = rt.Id, Test = new TestUser { Id = rt.Test.Id, UserIdentification = rt.Test.UserIdentification, Email = rt.Test.Email } }).ToListAsync();
+                RaterTest = await _context.RaterTests.Include(rt => rt.Rater).Include(rt => rt.Test).ThenInclude(t => t.Test).Where(rt => rt.Rater.Email == email && rt.DateFinished == null).OrderBy(rt => rt.DateAssigned).Select(rt => new RaterTest { Id = rt.Id, Test = new TestUser { Id = rt.Test.Id, UserIdentification = rt.Test.UserIdentification, Email = rt.Test.Email, ReviewerNotes = rt.Test.Test.Title } }).ToListAsync();
             }
         }
     }
