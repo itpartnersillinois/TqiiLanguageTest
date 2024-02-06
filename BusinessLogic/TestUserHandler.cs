@@ -19,11 +19,16 @@ namespace TqiiLanguageTest.BusinessLogic {
                 var newUser = _context.TestUsers?.Where(tu => tu.UserIdentification != null && tu.UserIdentification != "").OrderByDescending(tu => tu.UserIdentification).FirstOrDefault();
                 user.UserIdentification = string.IsNullOrWhiteSpace(newUser?.UserIdentification) ? "0000000001" : (int.Parse(newUser.UserIdentification) + 1).ToString("0000000000");
             }
-            var test = _context.Tests?.Find(user.TestId) ?? new Test();
-            user.TotalQuestions = test.NumberQuestions;
-            test.Guid = Guid.NewGuid();
-            _context?.TestUsers?.Add(user);
-            return await _context.SaveChangesAsync();
+
+            var existingTestUser = _context.TestUsers?.FirstOrDefault(t => t.TestId == user.TestId && t.Email == user.Email);
+            if (existingTestUser == null) {
+                var test = _context.Tests?.Find(user.TestId) ?? new Test();
+                user.TotalQuestions = test.NumberQuestions;
+                test.Guid = Guid.NewGuid();
+                _context?.TestUsers?.Add(user);
+                return await _context.SaveChangesAsync();
+            }
+            return 0;
         }
 
         public bool DidUserCompleteAnyTests(string email) =>

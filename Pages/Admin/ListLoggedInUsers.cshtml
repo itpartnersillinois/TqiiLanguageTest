@@ -1,0 +1,26 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.ListLoggedInUsersModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "List Registered Users";
+}
+
+<h1>Users that have Registered</h1>
+
+<ol>
+    @foreach (var item in Model.Users)
+    {
+        @if (Model.UsersWithTests.Contains(item))
+        {
+            <li>@item</li>
+        } else
+        {
+            <li><strong>@item</strong> does not have a test assigned</li>
+        }
+    }
+</ol>
+
+
+<div>
+    <a href="/Admin">Back to Admin Page</a>
+</div>

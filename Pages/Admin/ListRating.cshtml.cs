@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
@@ -18,6 +19,7 @@ namespace TqiiLanguageTest.Pages.Admin {
         public string DateEnded { get; set; }
         public string Email { get; set; }
         public string RaterEmail { get; set; }
+        public int RaterId { get; set; }
         public List<Tuple<string, int, string>> RaterInformation { get; set; }
         public string RaterNotes { get; set; }
         public string TestName { get; set; }
@@ -42,7 +44,23 @@ namespace TqiiLanguageTest.Pages.Admin {
                 var raterTest = _context.RaterTests.Include(rt => rt.Rater).Single(rt => rt.Id == raterTestId);
                 RaterEmail = raterTest.Rater?.Email ?? "";
                 RaterNotes = raterTest.Notes;
+                RaterId = raterTest.Id;
             }
+        }
+
+        public async Task<IActionResult> OnPost() {
+            var Id = int.Parse(Request.Query["id"]);
+            var raterTestId = int.Parse(Request.Query["ratertestid"]);
+            var raterTest = _context.RaterTests.FirstOrDefault(r => r.Id == raterTestId);
+            var rater = _context.RaterNames.FirstOrDefault(r => r.Id == raterTest.RaterNameId);
+            var testUser = _context.TestUsers.FirstOrDefault(t => t.Id == raterTest.TestUserId);
+            if (raterTest != null && rater != null && testUser != null) {
+                _context.RaterTests.Remove(raterTest);
+                rater.NumberOfTests--;
+                testUser.NumberReviewers--;
+                _ = await _context.SaveChangesAsync();
+            }
+            return RedirectToPage("./Index");
         }
     }
 }

@@ -98,7 +98,8 @@ namespace TqiiLanguageTest.Pages.Admin {
             _context.SaveChanges();
             if (!Request.Form.ContainsKey("finalize") && !string.IsNullOrWhiteSpace(raters)) {
                 _autograding.AutoGrade(currentDate, testUser, testUserId);
-            } else if (Request.Form.ContainsKey("finalize")) {
+            }
+            if (Request.Form.ContainsKey("finalize")) {
                 _finalizing.FinalizeForTest(testUser);
             }
 
