@@ -13,6 +13,7 @@
             <th>
                 ID / Email
             </th>
+            <th>Test Name</th>
             <th>Review</th>
             <th>Download</th>
         </tr>
@@ -23,6 +24,9 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Test.UserIdentification) (@Html.DisplayFor(modelItem => item.Test.Email))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Test.ReviewerNotes)
                 </td>
                 <td>
                     <a href="/reviewer/review?id=@item.Test.Id&raterid=@item.Id">Review</a>

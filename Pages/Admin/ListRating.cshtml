@@ -26,3 +26,10 @@
     </ul>
 }
 <p>Rater Final Notes: @Model.RaterNotes</p>
+
+<form method="post">
+    <input type="hidden" value="@Model.RaterId" name="ratertestid" id="ratertestid" />
+    <div class="form-group">
+        <input type="submit" value="Remove Rater" style="width: fit-content" class="il-button" />
+    </div>
+</form>
