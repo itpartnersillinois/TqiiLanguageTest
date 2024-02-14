@@ -6,17 +6,31 @@
 }
 
 <h1>Users that have Registered</h1>
-
+<h2>Without tests</h2>
 <ol>
-    @foreach (var item in Model.Users)
+    @foreach (var item in Model.Users.Where(m => !Model.UsersWithTests.Select(u => u.Item1).Contains(m)))
     {
-        @if (Model.UsersWithTests.Contains(item))
-        {
-            <li>@item</li>
-        } else
-        {
-            <li><strong>@item</strong> does not have a test assigned</li>
-        }
+        <li><strong><a href="/Admin/ListTestUser?take=50&search=@item">@item</a></strong> does not have a test assigned</li>
+    }
+</ol>
+
+<h2>Tests coming soon</h2>
+<ol>
+    @foreach (var item in Model.UsersWithTests.Where(u => u.Item2.HasValue && DateTime.Now < u.Item2 && (u.Item2?.Date - DateTime.Now)?.Days < 2).OrderBy(u => u.Item2))
+    {
+        <li>
+            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @item.Item2?.ToString("g")
+        </li>
+    }
+</ol>
+
+<h2>With tests</h2>
+<ol>
+    @foreach (var item in Model.UsersWithTests)
+    {
+        <li>
+            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @(item.Item2.HasValue ? item.Item2?.ToString("g") : "Not scheduled")
+        </li>
     }
 </ol>
 
