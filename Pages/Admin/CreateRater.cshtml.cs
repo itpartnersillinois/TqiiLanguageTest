@@ -27,13 +27,16 @@ namespace TqiiLanguageTest.Pages.Admin {
 
         public IList<RaterName> Raters { get; set; } = default!;
 
+        public Dictionary<int, int> RaterTestCount { get; set; } = default!;
+
         public async Task OnGetAsync() {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 throw new Exception("Unauthorized");
             }
 
-            if (_context.RaterNames != null) {
+            if (_context.RaterNames != null && _context.RaterTests != null) {
                 Raters = await _context.RaterNames.OrderBy(r => r.Email).ToListAsync();
+                RaterTestCount = _context.RaterTests.Where(r => r.DateFinished != null).GroupBy(r => r.RaterNameId).Select(rt => new { Id = rt.Key, Count = rt.Count() }).ToDictionary(a => a.Id, b => b.Count);
             }
         }
 
