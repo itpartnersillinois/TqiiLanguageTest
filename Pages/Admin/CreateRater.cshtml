@@ -19,6 +19,12 @@
             <th>
                 Notes
             </th>
+            <th>
+                Assigned
+            </th>
+            <th>
+                Completed
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -33,6 +39,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Notes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfTests)
+                </td>
+                <td>
+                    @(Model.RaterTestCount.Keys.Contains(item.Id) ? Model.RaterTestCount[item.Id] : 0)
                 </td>
             </tr>
         }
