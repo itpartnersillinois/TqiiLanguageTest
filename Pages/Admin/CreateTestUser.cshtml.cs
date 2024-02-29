@@ -34,13 +34,14 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-            var dictionary = _context.Tests.Select(t => new { t.Id, t.Title }).OrderBy(t => t.Title).ToDictionary(t => t.Id, t => t.Title);
+            var dictionary = _context.Tests?.Select(t => new { t.Id, t.Title, t.Language }).OrderBy(t => t.Language).ThenBy(t => t.Title).ToDictionary(t => t.Id, t => t.Title + " (" + t.Language + ")");
             var dictionaryNew = dictionary.ToDictionary(t => t.Key, t => t.Value);
             dictionaryNew.Add(0, "");
             ViewData["TestId"] = new SelectList(dictionary, "Key", "Value");
             ViewData["TestIdOptional"] = new SelectList(dictionaryNew, "Key", "Value", 0);
             TestUser = new TestUser();
             TestUser.OrderBy = 1;
+            ViewData["Languages"] = new SelectList(_context.LanguageOptions?.Select(l => l.Language).ToList());
             return Page();
         }
 
@@ -56,7 +57,8 @@ namespace TqiiLanguageTest.Pages.Admin {
                         Email = email.Trim(),
                         OrderBy = TestUser.OrderBy,
                         DateTimeScheduled = TestUser.DateTimeScheduled,
-                        TestId = TestUser.TestId
+                        TestId = TestUser.TestId,
+                        Language = TestUser.Language
                     });
                 }
             } else {
@@ -76,7 +78,8 @@ namespace TqiiLanguageTest.Pages.Admin {
                         Email = email.Trim(),
                         DateTimeScheduled = TestUser.DateTimeScheduled,
                         OrderBy = TestUser.OrderBy + orderByIncrease,
-                        TestId = testId.Value
+                        TestId = testId.Value,
+                        Language = TestUser.Language
                     });
                 }
                 return true;

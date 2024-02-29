@@ -12,7 +12,6 @@ namespace TqiiLanguageTest.Models {
         public DateTime? DateTimeStart { get; set; }
 
         public string Email { get; set; } = string.Empty;
-
         public Guid Guid { get; set; } = Guid.NewGuid();
 
         [Key]
@@ -20,7 +19,7 @@ namespace TqiiLanguageTest.Models {
         public int Id { get; set; }
 
         public bool IsPassed { get; set; }
-
+        public string Language { get; set; } = string.Empty;
         public int NumberReviewers { get; set; }
         public int NumberReviewerScores { get; set; }
         public int OrderBy { get; set; }

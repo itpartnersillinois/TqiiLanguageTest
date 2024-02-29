@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240229221611_LanguageInformation")]
+    partial class LanguageInformation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -655,39 +657,6 @@ namespace TqiiLanguageTest.Migrations
                     b.HasIndex("TestId");
 
                     b.ToTable("TestUsers");
-                });
-
-            modelBuilder.Entity("TqiiLanguageTest.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("DateAdded")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateLastTest")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsPracticeTestEnded")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsPracticeTestStarted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Language")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("TqiiLanguageTest.Models.Answer", b =>

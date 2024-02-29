@@ -10,11 +10,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using TqiiLanguageTest.Data;
 
 namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
 
     public class RegisterModel : PageModel {
+        private readonly LanguageDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
@@ -27,13 +30,15 @@ namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender) {
+            IEmailSender emailSender,
+            LanguageDbContext context) {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         /// <summary>
@@ -49,6 +54,8 @@ namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
         [BindProperty]
         public InputModel Input { get; set; }
 
+        public List<string> Languages { get; set; }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -58,6 +65,7 @@ namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
         public async Task OnGetAsync(string returnUrl = null) {
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ViewData["Languages"] = new SelectList(_context.LanguageOptions.Select(l => l.Language).ToList());
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null) {
@@ -65,7 +73,8 @@ namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid) {
                 var user = CreateUser();
-
+                _context.Users.Add(new Models.User { Email = Input.Email, Language = Input.Language });
+                _context.SaveChanges();
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -141,6 +150,10 @@ namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
+
+            [Required]
+            [Display(Name = "Choose a Language")]
+            public string Language { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
