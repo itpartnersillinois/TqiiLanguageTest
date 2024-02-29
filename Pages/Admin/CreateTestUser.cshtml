@@ -23,9 +23,14 @@
                 <span asp-validation-for="TestUser.OrderBy" class="text-danger"></span>
             </div>
             <div class="ils-input-entry form-group">
-                <label for="TestUser_DateTimeScheduled" class="control-label">Scheduled For: </label>
+                <label for="TestUser_DateTimeScheduled" class="control-label">Scheduled For (use CDT/CST): </label>
                 <input asp-for="TestUser.DateTimeScheduled" class="form-control" />
             </div>
+            <div class="ils-input-entry form-group">
+                <label for="TestUser_Language" class="control-label">Choose a Language</label>
+                <select asp-for="TestUser.Language" class="ils-input-long" asp-items="ViewBag.Languages"></select>
+            </div>
+
             <div class="ils-input-entry form-group">
                 <label for="TestUser_TestId" class="control-label">Test (required):</label>
                 <select asp-for="TestUser.TestId" class="ils-input-long" asp-items="ViewBag.TestId"></select>

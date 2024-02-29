@@ -13,6 +13,7 @@ namespace TqiiLanguageTest.Data {
         }
 
         public DbSet<Answer>? Answers { get; set; }
+        public DbSet<LanguageOptions>? LanguageOptions { get; set; }
         public DbSet<Permission>? Permissions { get; set; }
         public DbSet<QuestionRubric>? QuestionRubrics { get; set; }
         public DbSet<Question>? Questions { get; set; }
@@ -23,6 +24,7 @@ namespace TqiiLanguageTest.Data {
         public DbSet<ReportIsbe> ReportIsbes { get; set; }
         public DbSet<Test>? Tests { get; set; }
         public DbSet<TestUser>? TestUsers { get; set; }
+        public DbSet<User>? Users { get; set; }
 
         public override void Dispose() {
             Debug.WriteLine($"{_id} context disposed.");

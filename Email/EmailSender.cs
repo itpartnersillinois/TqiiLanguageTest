@@ -40,7 +40,7 @@ namespace TqiiLanguageTest.Email {
             subject = CleanText(subject);
             htmlMessage = CleanText(htmlMessage);
 
-            var json = "{\"serverId\": " + _serverId + ", \"APIKey\": \"" + injectionApi + "\", \"Messages\": [ { \"To\": [ { \"emailAddress\" : \"" + email + "\" } ], \"From\": { \"emailAddress\": \"noreply@education.illinois.edu\" },\"Subject\": \"" + subject + "\", \"HtmlBody\": \"" + htmlMessage + "\" } ] }";
+            var json = "{\"serverId\": " + _serverId + ", \"APIKey\": \"" + injectionApi + "\", \"Messages\": [ { \"To\": [ { \"emailAddress\" : \"" + email + "\" } ], \"From\": { \"emailAddress\": \"noreply@education.illinois.edu\" },\"Subject\": \"" + subject + "\", \"HtmlBody\": \"" + htmlMessage + "\", \"MailingId\": \"TQII_Registration\" } ] }";
 
             using (var client = new HttpClient()) {
                 using (var message = new HttpRequestMessage(HttpMethod.Post, injectionUrl)) {

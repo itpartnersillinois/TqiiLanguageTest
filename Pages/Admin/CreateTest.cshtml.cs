@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
@@ -31,6 +32,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             } else {
                 Questions = new List<Question>();
             }
+            ViewData["Languages"] = new SelectList(_context.LanguageOptions?.Select(l => l.Language).ToList());
             return Page();
         }
 

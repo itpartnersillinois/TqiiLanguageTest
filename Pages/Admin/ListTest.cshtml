@@ -15,6 +15,9 @@
                 Test Title
             </th>
             <th>
+                Language
+            </th>
+            <th>
                 Number of Questions
             </th>
             <th></th>
@@ -26,7 +29,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
-            <td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Language)
+                </td>
+                <td>
                 @Html.DisplayFor(modelItem => item.NumberQuestions)
             </td>
             <td>

@@ -27,6 +27,11 @@
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
 
+            <div class="form-floating">
+                <select asp-for="Input.Language" class="form-control" asp-items="ViewBag.Languages" style="padding-block: 1px; padding-inline: 2px;"></select>
+                <label for="Input_Language">Choose a Language</label>
+            </div>
+
             <h2>Social Behavior Research Consent Form</h2>
 
             <p>You are being asked to participate in a voluntary research study. The purpose of this study is to research the test-taking process of a language proficiency test. Participating in this study will involve completing a set of reading and speaking test items, and your participation will last for 2 hours. To the best of our knowledge, the things you will be doing in this research have no more risk of harm than you would experience in everyday life. Although this study is not designed to benefit you directly, it may be beneficial to other people in the future. The results of the study are expected to provide implications for item development in the field of language assessment.</p>
