@@ -68,6 +68,7 @@ namespace TqiiLanguageTest.Models {
         [NotMapped]
         public string InteractiveReadingOptionsDropDown { get; set; } = string.Empty;
 
+        public int NumberTimesRefreshed { get; set; } = 0;
         public int OrderBy { get; set; }
         public virtual Question? Question { get; set; }
 
