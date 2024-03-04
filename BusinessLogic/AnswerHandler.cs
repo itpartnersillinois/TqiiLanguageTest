@@ -24,13 +24,14 @@ namespace TqiiLanguageTest.BusinessLogic {
             }
             var answer = _context.Answers?.SingleOrDefault(q => q.TestUserId == testUserObject.Id && q.QuestionId == question.Id);
             if (answer == null) {
+                // if no answer, then create one and save it
                 answer = new Answer {
                     Question = question,
                     TestUser = testUserObject
                 };
                 _context.Add(answer);
+                _ = await _context.SaveChangesAsync();
             }
-            _ = await _context.SaveChangesAsync();
             answer.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;
             answer.TotalQuestions = testUserObject.TotalQuestions;
             answer.AnswerOptions = question.AnswerOptions;
