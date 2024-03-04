@@ -72,7 +72,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             }
 
             if (_context.Answers != null && answerId != 0) {
-                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, QuestionType = a.Question.QuestionType, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
+                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
                 var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                 if (raterAnswer != null) {
                     RaterNotes = raterAnswer.Notes;
@@ -119,7 +119,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     rater.DateFinished = DateTime.Now;
                     var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId && ra.Score >= 0).Sum(ra => ra.Score);
                     var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId && ra.Score >= 0);
-                    rater.FinalScore = (float) raterTotalScore / (float) raterTotalAnswers;
+                    rater.FinalScore = raterTotalScore / (float) raterTotalAnswers;
                     rater.Notes = Request.Form["notes"];
                     var id = int.Parse(Id);
                     var test = _context.TestUsers.Single(tu => tu.Id == id);

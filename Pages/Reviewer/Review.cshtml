@@ -43,6 +43,11 @@
             </audio>
         </p>
 
+            @if (Model.Answer.NumberTimesRefreshed > 0)
+            {
+                <p><strong>Warning -- user accessed this answer extra times: @Model.Answer.NumberTimesRefreshed</strong></p>
+            }
+
         @if (Model.Answer.Text != "" && Model.Answer.Question.InteractiveReadingAnswer != "")
         {
             <p><strong>Interactive Reading: </strong>@Model.Answer.Question.InteractiveReadingAnswer</p>
