@@ -25,15 +25,10 @@ namespace TqiiLanguageTest.BusinessLogic {
             var answer = _context.Answers?.SingleOrDefault(q => q.TestUserId == testUserObject.Id && q.QuestionId == question.Id);
             if (answer == null) {
                 answer = new Answer {
-                    ReviewerNotes = "Starting",
                     Question = question,
                     TestUser = testUserObject
                 };
                 _context.Add(answer);
-            } else if (answer.ReviewerNotes == "Starting") {
-                return null;
-            } else {
-                answer.ReviewerNotes = "Starting";
             }
             _ = await _context.SaveChangesAsync();
             answer.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;

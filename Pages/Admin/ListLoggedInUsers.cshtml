@@ -6,20 +6,12 @@
 }
 
 <h1>Users that have Registered</h1>
-<h2>Without tests</h2>
-<ol>
-    @foreach (var item in Model.Users.Where(m => !Model.UsersWithTests.Select(u => u.Item1).Contains(m)))
-    {
-        <li><strong><a href="/Admin/ListTestUser?take=50&search=@item">@item</a></strong> does not have a test assigned</li>
-    }
-</ol>
-
 <h2>Tests coming soon</h2>
 <ol>
     @foreach (var item in Model.UsersWithTests.Where(u => u.Item2.HasValue && DateTime.Now < u.Item2 && (u.Item2?.Date - DateTime.Now)?.Days < 2).OrderBy(u => u.Item2))
     {
         <li>
-            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @item.Item2?.ToString("g")
+            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @item.Item2?.ToString("g"); @item.Item3
         </li>
     }
 </ol>
@@ -29,8 +21,16 @@
     @foreach (var item in Model.UsersWithTests)
     {
         <li>
-            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @(item.Item2.HasValue ? item.Item2?.ToString("g") : "Not scheduled")
+            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @(item.Item2.HasValue ? item.Item2?.ToString("g") : "Not scheduled"); @item.Item3
         </li>
+    }
+</ol>
+
+<h2>Without tests</h2>
+<ol>
+    @foreach (var item in Model.Users)
+    {
+        <li><strong><a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a></strong> does not have a test assigned. @item.Item2</li>
     }
 </ol>
 

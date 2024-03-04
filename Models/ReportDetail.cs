@@ -17,6 +17,7 @@ namespace TqiiLanguageTest.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public int NumberOfTimesRefreshed { get; set; }
         public DateTime QuestionAnswered { get; set; }
         public int QuestionId { get; set; }
         public string QuestionName { get; set; } = "";
