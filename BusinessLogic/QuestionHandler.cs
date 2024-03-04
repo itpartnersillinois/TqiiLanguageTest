@@ -1,4 +1,5 @@
-﻿using TqiiLanguageTest.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TqiiLanguageTest.Data;
 using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.BusinessLogic {
@@ -27,6 +28,12 @@ namespace TqiiLanguageTest.BusinessLogic {
             var testUserObject = _testUserHandler.GetTestUser(testUser);
             if (testUserObject == null) {
                 return returnValue;
+            }
+            var currentAnswer = _context?.Answers.Include(a => a.Question).FirstOrDefault(a => a.TestUserId == testUserObject.Id && a.DateTimeEnd == null);
+            if (currentAnswer != null) {
+                currentAnswer.NumberTimesRefreshed++;
+                _ = await _context.SaveChangesAsync();
+                return currentAnswer.Question;
             }
             testUserObject.CurrentQuestionOrder++;
             returnValue = GetQuestionByTestAndOrder(testUserObject.TestId, testUserObject.Id, testUserObject.CurrentQuestionOrder);

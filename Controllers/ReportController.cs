@@ -31,6 +31,7 @@ namespace TqiiLanguageTest.Controllers {
             sb.Append("Test Date" + '\t');
             sb.Append("Test Time" + '\t');
             sb.Append("Test Name" + '\t');
+            sb.Append("Total Times Refreshed" + '\t');
             sb.Append("Question" + '\t');
             sb.Append("Task" + '\t');
             sb.Append("Date Answered" + '\t');
@@ -50,6 +51,7 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(item.TestDate.ToShortDateString() + '\t');
                 sb.Append(item.TestDate.ToShortTimeString() + '\t');
                 sb.Append(item.TestName + '\t');
+                sb.Append(item.NumberOfTimesRefreshed + '\t');
                 sb.Append(item.QuestionName + '\t');
                 sb.Append(item.QuestionType + '\t');
                 sb.Append(item.QuestionAnswered.ToShortTimeString() + '\t');

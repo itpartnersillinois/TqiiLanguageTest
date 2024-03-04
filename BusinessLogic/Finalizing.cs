@@ -17,6 +17,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             var rater = _context.RaterNames.FirstOrDefault(ra => ra.Email == raterEmail);
             var raterName = rater == null || string.IsNullOrWhiteSpace(rater.FullName) ? raterEmail : rater.FullName;
             var answers = _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == testUserId && a.Question.QuestionType != QuestionEnum.Instructions).Select(a => new { a.Id, a.QuestionId, a.Question.Title, a.DateTimeEnd, a.Question.QuestionType }).ToList();
+            var totalTimesRefreshed = _context.Answers.Where(a => a.TestUserId == testUserId).Sum(a => a.NumberTimesRefreshed);
             if (!string.IsNullOrWhiteSpace(raterAnswerRemoveIdString)) {
                 var answersToRemove = raterAnswerRemoveIdString.Split(',').Select(i => int.Parse(i));
                 answers.RemoveAll(a => answersToRemove.Contains(a.Id));
@@ -65,7 +66,8 @@ namespace TqiiLanguageTest.BusinessLogic {
                         AutogradedScore = "",
                         RaterName = raterName,
                         RaterScore = raterAnswer?.Score ?? 0,
-                        RaterNotes = raterAnswer?.Notes ?? ""
+                        RaterNotes = raterAnswer?.Notes ?? "",
+                        NumberOfTimesRefreshed = totalTimesRefreshed
                     });
                 }
             }
