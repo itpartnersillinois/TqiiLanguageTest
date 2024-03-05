@@ -107,6 +107,7 @@ namespace TqiiLanguageTest.Areas.Identity.Pages.Account {
             }
 
             // If we got this far, something failed, redisplay form
+            ViewData["Languages"] = new SelectList(_context.LanguageOptions.Select(l => l.Language).ToList());
             return Page();
         }
 
