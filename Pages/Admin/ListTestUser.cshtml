@@ -37,7 +37,7 @@
             <th>On Question</th>
             <th>Download</th>
             <th>Delete</th>
-            <th>Retake</th>
+            <th>Placeholder</th>
             <th>Assign Rater / Score</th>
         </tr>
     </thead>
@@ -66,7 +66,7 @@
                 <a href="#" onclick="deleteTestUser('@item.Id'); return false;">Delete</a>
             </td>
             <td>
-                <a href="#" onclick="rewindTestUser('@item.Id'); return false;">Retake Question</a>
+                Placeholder
             </td>
                 <td>
                     @if (item.Score > 0)
@@ -86,7 +86,7 @@
 <button class="il-button" onclick="previous(); return false;">Previous</button>
 <button class="il-button" onclick="next(); return false;">Next</button>
 <label for="page">Page</label>
-<input id="page" onchange="changePageNumber" type="text" value="@(Request.Query["skip"])" />
+<input id="page" type="text" value="@(Request.Query["skip"])" />
 <input id="pagenumber" type="hidden" value="@(Request.Query["skip"])"/>
 
 @if (Request.Query["search"] != "")
@@ -103,19 +103,18 @@
 
 @section Scripts {
     <script>
-        function deleteTestUser(id) {
-            if (confirm("This will delete the user's test. Are you sure?")) {
-                fetch('/deletetestuser/' + id, {
-                    method: 'GET'
-                }).then(function (response) {
-                    location.reload();
-                });
+        document.getElementById("page").addEventListener("keydown", logKey);
+
+        function logKey(e) {
+            if (e.code == 'Enter') {
+                document.getElementById('pagenumber').value = parseInt(document.getElementById('page').value);
+                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
             }
         }
 
-        function rewindTestUser(id) {
-            if (confirm("This will allow the user to retake the last question. Are you sure?")) {
-                fetch('/deletetestuser/rewind/' + id, {
+        function deleteTestUser(id) {
+            if (confirm("This will delete the user's test. Are you sure?")) {
+                fetch('/deletetestuser/' + id, {
                     method: 'GET'
                 }).then(function (response) {
                     location.reload();
@@ -143,11 +142,6 @@
             } else {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) - 1;
             }
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
-        }
-
-        function changePageNumber() {
-            document.getElementById('pagenumber').value = parseInt(document.getElementById('page').value);
             location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
         }
 
