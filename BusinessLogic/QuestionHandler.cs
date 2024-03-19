@@ -43,6 +43,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                 returnValue.TotalQuestions = testUserObject.TotalQuestions;
             } else {
                 testUserObject.DateTimeEnd = DateTime.Now;
+                testUserObject.NumberTimesRefreshed = _context?.Answers.Where(a => a.TestUserId == testUserObject.Id).Sum(a => a.NumberTimesRefreshed) ?? 0;
             }
             if (testUserObject.DateTimeStart == null) {
                 testUserObject.DateTimeStart = DateTime.Now;

@@ -62,7 +62,7 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(item.FinalIndividualNotes + '\t');
                 sb.Append(item.AutogradedScore + '\t');
                 sb.Append(item.RaterName + '\t');
-                sb.Append(item.RaterScore.ToString() + '\t');
+                sb.Append((item.IsDisqualified ? "disqualified" : item.RaterScore.ToString()) + '\t');
                 sb.Append(item.RaterNotes);
                 sb.AppendLine();
             }

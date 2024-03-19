@@ -13,6 +13,9 @@ namespace TqiiLanguageTest.Models {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public bool IsAnswered { get; set; }
+        public bool IsDisqualified { get; set; }
+
         public string Notes { get; set; } = "";
         public virtual RaterTest? RaterTest { get; set; }
         public int RaterTestId { get; set; }

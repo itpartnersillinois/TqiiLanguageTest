@@ -22,6 +22,7 @@ namespace TqiiLanguageTest.Models {
         public string Language { get; set; } = string.Empty;
         public int NumberReviewers { get; set; }
         public int NumberReviewerScores { get; set; }
+        public int NumberTimesRefreshed { get; set; } = 0;
         public int OrderBy { get; set; }
         public string? ReviewerNotes { get; set; }
         public float Score { get; set; }

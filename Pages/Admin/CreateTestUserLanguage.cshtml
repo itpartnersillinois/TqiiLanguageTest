@@ -1,0 +1,26 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.CreateTestUserLanguageModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Create Test User (Step 1)";
+}
+
+<h1>Create Test User (Step 1)</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="ils-input-entry form-group">
+                <label for="TestUser_Language" class="control-label">Choose a Language</label>
+                <select asp-for="Language" class="ils-input-long" asp-items="ViewBag.Languages"></select>
+            </div>
+            <div class="ils-input-entry form-group">
+                <input type="submit" value="Continue" class="il-button" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a href="/Admin">Back to Admin Page</a>
+</div>

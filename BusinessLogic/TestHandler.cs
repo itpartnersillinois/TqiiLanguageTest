@@ -19,8 +19,8 @@ namespace TqiiLanguageTest.BusinessLogic {
                 return null;
             }
             var returnValue = _context.Tests?.Single(t => t.Id == testUserObject.TestId);
-            returnValue.Introduction = ConverToHtml(returnValue.Introduction);
-            returnValue.Conclusion = ConverToHtml(returnValue.Conclusion);
+            returnValue.Introduction = ConvertToHtml(returnValue.Introduction);
+            returnValue.Conclusion = ConvertToHtml(returnValue.Conclusion);
             return returnValue;
         }
 
@@ -42,7 +42,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             return string.Empty;
         }
 
-        internal static string ConverToHtml(string s) {
+        internal static string ConvertToHtml(string s) {
             var returnValue = new StringBuilder();
             foreach (var c in s) {
                 if (c == '\r') {
