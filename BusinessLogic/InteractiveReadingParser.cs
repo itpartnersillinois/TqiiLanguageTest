@@ -4,7 +4,7 @@ namespace TqiiLanguageTest.BusinessLogic {
 
     public static class InteractiveReadingParser {
 
-        public static string ConverToHtml(string s, IEnumerable<string> options) {
+        public static string ConvertToHtml(string s, IEnumerable<string> options) {
             var returnValue = new StringBuilder();
             var paragraph = new StringBuilder();
             var isInInputString = false;
