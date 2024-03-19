@@ -24,7 +24,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
         public IList<Tuple<int, string, int>> Answers { get; set; } = default!;
 
         public string Id { get; set; }
-
+        public bool IsDisqualified { get; set; }
         public bool IsFinal { get; set; }
         public string NextAnswerId { get; set; }
         public string RaterId { get; set; }
@@ -77,6 +77,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 if (raterAnswer != null) {
                     RaterNotes = raterAnswer.Notes;
                     Rating = raterAnswer.Score;
+                    IsDisqualified = raterAnswer.IsDisqualified;
                 }
             }
         }
@@ -91,21 +92,25 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     AnswerId = Request.Form["answerid"];
                     NextAnswerId = Request.Form["nextid"];
 
-                    if (Request.Form.ContainsKey("level")) {
+                    if (Request.Form.ContainsKey("level") || Request.Form.ContainsKey("isdisqualified")) {
                         var answerId = int.Parse(AnswerId);
 
                         var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                         if (raterAnswer != null) {
                             raterAnswer.Notes = Request.Form["notes"];
-                            raterAnswer.Score = int.Parse(Request.Form["level"]);
+                            raterAnswer.Score = Request.Form.ContainsKey("level") ? int.Parse(Request.Form["level"]) : 0;
+                            raterAnswer.IsAnswered = true;
+                            raterAnswer.IsDisqualified = Request.Form.ContainsKey("isdisqualified");
                             _context.RaterAnswers.Update(raterAnswer);
                         } else {
                             _context.RaterAnswers.Add(new RaterAnswer {
                                 AnswerId = answerId,
                                 DateFinished = DateTime.Now,
                                 Notes = Request.Form["notes"],
-                                Score = int.Parse(Request.Form["level"]),
-                                RaterTestId = raterId
+                                Score = Request.Form.ContainsKey("level") ? int.Parse(Request.Form["level"]) : 0,
+                                RaterTestId = raterId,
+                                IsAnswered = true,
+                                IsDisqualified = Request.Form.ContainsKey("isdisqualified")
                             });
                         }
                         await _context.SaveChangesAsync();
@@ -117,8 +122,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 } else { //finalizing the test
                     var rater = _context.RaterTests.Single(rt => rt.Id == raterId);
                     rater.DateFinished = DateTime.Now;
-                    var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId && ra.Score >= 0).Sum(ra => ra.Score);
-                    var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId && ra.Score >= 0);
+                    var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId && ra.IsAnswered && !ra.IsDisqualified).Sum(ra => ra.Score);
+                    var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId && ra.IsAnswered && !ra.IsDisqualified);
                     rater.FinalScore = raterTotalScore / (float) raterTotalAnswers;
                     rater.Notes = Request.Form["notes"];
                     var id = int.Parse(Id);

@@ -27,8 +27,8 @@
                 <input asp-for="TestUser.DateTimeScheduled" class="form-control" />
             </div>
             <div class="ils-input-entry form-group">
-                <label for="TestUser_Language" class="control-label">Choose a Language</label>
-                <select asp-for="TestUser.Language" class="ils-input-long" asp-items="ViewBag.Languages"></select>
+                <label for="TestUser_Language" class="control-label">Language</label>
+                <input asp-for="TestUser.Language" type="text" readonly="true" />
             </div>
 
             <div class="ils-input-entry form-group">

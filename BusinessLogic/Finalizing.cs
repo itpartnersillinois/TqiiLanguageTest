@@ -46,8 +46,10 @@ namespace TqiiLanguageTest.BusinessLogic {
                             AutogradedScore = answerArray[2],
                             RaterName = raterName,
                             RaterScore = raterAnswer?.Score ?? 0,
-                            RaterNotes = raterAnswer?.Notes ?? ""
+                            RaterNotes = raterAnswer?.Notes ?? "",
+                            IsDisqualified = raterAnswer?.IsDisqualified ?? false
                         });
+                        ;
                     }
                 } else {
                     _context.ReportDetails.Add(new ReportDetail {
@@ -67,6 +69,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                         RaterName = raterName,
                         RaterScore = raterAnswer?.Score ?? 0,
                         RaterNotes = raterAnswer?.Notes ?? "",
+                        IsDisqualified = raterAnswer?.IsDisqualified ?? false,
                         NumberOfTimesRefreshed = totalTimesRefreshed
                     });
                 }

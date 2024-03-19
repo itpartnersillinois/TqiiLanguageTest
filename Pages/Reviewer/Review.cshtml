@@ -123,10 +123,16 @@
                 </label>
                 <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
             </div>
+            <div class="ils-input-entry form-group">
+                <label for="isdisqualified" class="control-label">
+                    Disqualify this question because of technical issues:
+                </label>
+                        <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+            </div>
             <input type="hidden" value="@Model.Id" name="id">
             <input type="hidden" value="@Model.RaterId" name="raterid">
-                <input type="hidden" value="@Model.AnswerId" name="answerid">
-                <input type="hidden" value="@Model.NextAnswerId" name="nextid">
+            <input type="hidden" value="@Model.AnswerId" name="answerid">
+            <input type="hidden" value="@Model.NextAnswerId" name="nextid">
             <div class="form-group">
                 <input type="submit" value="Mark Question" class="il-button" style="width: fit-content;"/>
             </div>
@@ -172,6 +178,12 @@
                         </label>
                         <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
                     </div>
+                    <div class="ils-input-entry form-group">
+                        <label for="isdisqualified" class="control-label">
+                            Disqualify this question because of technical issues:
+                        </label>
+                        <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+                    </div>
                     <input type="hidden" value="@Model.Id" name="id">
                     <input type="hidden" value="@Model.RaterId" name="raterid">
                     <input type="hidden" value="@Model.AnswerId" name="answerid">
@@ -196,6 +208,12 @@
                             Notes:
                         </label>
                         <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
+                    </div>
+                    <div class="ils-input-entry form-group">
+                        <label for="isdisqualified" class="control-label">
+                            Disqualify this question because of technical issues:
+                        </label>
+                        <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
                     </div>
                     <input type="hidden" value="@Model.Id" name="id">
                     <input type="hidden" value="@Model.RaterId" name="raterid">

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240318205408_TestUser_CountRetakes")]
+    partial class TestUser_CountRetakes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -310,12 +312,6 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<DateTime?>("DateFinished")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsAnswered")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDisqualified")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -446,9 +442,6 @@ namespace TqiiLanguageTest.Migrations
 
                     b.Property<int>("FinalIndividualScore")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsDisqualified")
-                        .HasColumnType("bit");
 
                     b.Property<int>("NumberOfTimesRefreshed")
                         .HasColumnType("int");

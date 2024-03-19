@@ -34,14 +34,16 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-            var dictionary = _context.Tests?.Select(t => new { t.Id, t.Title, t.Language }).OrderBy(t => t.Language).ThenBy(t => t.Title).ToDictionary(t => t.Id, t => t.Title + " (" + t.Language + ")");
+            var language = Request.Query["language"].ToString();
+            var dictionary = _context.Tests?.Where(t => language == "" || language == t.Language).Select(t => new { t.Id, t.Title, t.Language }).OrderBy(t => t.Language).ThenBy(t => t.Title).ToDictionary(t => t.Id, t => t.Title + " (" + t.Language + ")");
             var dictionaryNew = dictionary.ToDictionary(t => t.Key, t => t.Value);
             dictionaryNew.Add(0, "");
             ViewData["TestId"] = new SelectList(dictionary, "Key", "Value");
             ViewData["TestIdOptional"] = new SelectList(dictionaryNew, "Key", "Value", 0);
-            TestUser = new TestUser();
-            TestUser.OrderBy = 1;
-            ViewData["Languages"] = new SelectList(_context.LanguageOptions?.Select(l => l.Language).ToList());
+            TestUser = new TestUser {
+                OrderBy = 1,
+                Language = language
+            };
             return Page();
         }
 

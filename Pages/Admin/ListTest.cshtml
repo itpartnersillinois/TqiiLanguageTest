@@ -8,6 +8,11 @@
 
 <h1>Tests</h1>
 
+<div class="ils-input-entry form-group">
+    <label for="TestUser_Language" class="control-label">Choose a Language</label>
+    <select asp-for="Language" class="ils-input-long" asp-items="ViewBag.Languages" onchange="window.location = '/admin/ListTest?language=' + this.value"></select>
+</div>
+
 <table class="table">
     <thead>
         <tr>

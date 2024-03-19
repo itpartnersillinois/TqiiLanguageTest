@@ -1,0 +1,38 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.RealtimeReportModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Real-time Report";
+}
+
+<h1>Real-time Report</h1>
+
+<h2>Test Information</h2>
+
+<p>Email: @Model.Email</p>
+<p>User Identification: @Model.UserId</p>
+<p>Test: @Model.TestName</p>
+<p>Question Number: @Model.CurrentQuestion</p>
+
+<h2>Question Progress</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Question Text</th>
+            <th>Date Time Started</th>
+            <th>Date Time Ended</th>
+            <th>Number Times Refreshed</th>
+        </tr>
+    </thead>
+@foreach (var answer in Model.AnswerList)
+{
+    <tr>
+            <td>@answer.Text</td>
+            <td>@answer.QuestionText</td>
+            <td>@(answer.DateTimeStart.HasValue ? answer.DateTimeStart.Value.ToString("g") : "No Date")</td>
+            <td>@(answer.DateTimeEnd.HasValue ? answer.DateTimeEnd.Value.ToString("g") : "No Date")</td>
+            <td>@answer.NumberTimesRefreshed</td>
+    </tr>    
+}
+</table>
