@@ -41,6 +41,8 @@
         <label for="Question_IntroductionText" class="control-label">Introduction Text</label>
         <textarea asp-for="Question.IntroductionText" class="ils-input-long form-control"></textarea>
     </div>
+    <div>An introduction is unlimited unless seconds are added in the <strong>Multiple Choice and/or Reflection</strong> section.</div>
+
     @if (Model.Question.HasAudio)
     {
     <audio controls>
