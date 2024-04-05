@@ -1,4 +1,5 @@
-﻿const manual_link = document.getElementById('manual_link');
+﻿const timerElement = document.getElementById('countdown');
+const manual_link = document.getElementById('manual_link');
 const question = document.getElementById('question');
 const route = document.getElementById('route');
 const params = new URLSearchParams(window.location.search);
@@ -24,6 +25,45 @@ window.addEventListener("DOMContentLoaded", (event) => {
 
     if (manual_link.style.display == 'none') {
         playSample();
+    }
+    if (timerElement != null && timerElement.innerText && timerElement.innerText != "0") {
+        let timer = timerElement.innerText;
+        if (isNaN(timer)) {
+            timer = 0;
+        }
+        if (timer < 20) {
+            timerElement.classList.add('background');
+        }
+        let minutes = Math.floor(timer / 60);
+        let seconds = timer % 60;
+        if (seconds < 10) {
+            seconds = '0' + seconds;
+        }
+        timerElement.innerText = minutes + ':' + seconds;
+
+        const myInterval = setInterval(function () {
+            let timer = timerElement.innerText.split(':');
+            let minutes = timer[0];
+            let seconds = timer[1];
+            seconds -= 1;
+            if (seconds < 0 && minutes != 0) {
+                minutes -= 1;
+                seconds = 59;
+            }
+            else if (seconds == 20 && minutes == 0) {
+                timerElement.classList.add('background');
+            }
+            else if (seconds < 10) {
+                seconds = '0' + seconds;
+            }
+
+            timerElement.innerText = minutes + ':' + seconds;
+
+            if (minutes == 0 && seconds == 0) {
+                clearInterval(myInterval);
+                document.getElementById('continue_link').click();
+            };
+        }, 1000);
     }
 });
 

@@ -37,6 +37,14 @@ else
 <div id="question" class="hidden">@Model.Question?.Guid</div>
 <div id="route" class="hidden">@Model.Question?.Route</div>
 
+@if (Model.Question.IsIntroduction && Model?.Question?.DurationAnswerInSeconds > 0)
+{
+<div>
+    <p id="countdown">@Model?.Question?.DurationAnswerInSeconds</p>
+</div>
+}
+
+
 @if (Model.Question.IsIntroduction)
 {
     <p><a class="il-button" id="continue_link">Continue</a></p>
@@ -47,5 +55,5 @@ else
 }
 
 @section Scripts {
-    <script src="~/js/question.js?cache=7" asp-append-version="true"></script>
+    <script src="~/js/question.js?cache=8" asp-append-version="true"></script>
 }
