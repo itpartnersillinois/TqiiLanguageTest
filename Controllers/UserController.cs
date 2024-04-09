@@ -23,7 +23,7 @@ namespace TqiiLanguageTest.Controllers {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-            var query = _languageContext.TestUsers.GroupBy(cm => cm.Email).Select(g => new { g.Key, MinDateTimeScheduled = g.Min(cm => cm.DateTimeScheduled) }).ToList();
+            var query = _languageContext.TestUsers.Include(tu => tu.Test).GroupBy(cm => cm.Email).Select(g => new { g.Key, MinDateTimeScheduled = g.Min(cm => cm.DateTimeScheduled), ListOfTests = string.Join('\t', g.Where(cm => !cm.Test.IsPractice).Select(cm => cm.Test.Title)) }).ToList();
 
             var queryTestsStarted = _languageContext.TestUsers.Include(tu => tu.Test).Where(tu => tu.Test != null && tu.Test.IsPractice && tu.DateTimeStart != null).Select(tu => tu.Email).Distinct().ToList();
 
@@ -31,7 +31,7 @@ namespace TqiiLanguageTest.Controllers {
 
             var emailAndLanguage = _languageContext.Users.OrderByDescending(c => c.DateAdded).Select(c => new Tuple<string, string>(c.Email, c.Language)).ToList();
 
-            var UsersWithTests = query.Select(g => new Tuple<string, DateTime?, string>(g.Key.Trim(), g.MinDateTimeScheduled, queryTestsEnded.Contains(g.Key) ? "Finished Practice Test" : queryTestsStarted.Contains(g.Key) ? "Started Practice Test" : "No Practice Test")).Distinct().OrderBy(c => c.Item2).ToList();
+            var UsersWithTests = query.Select(g => new Tuple<string, DateTime?, string, string>(g.Key.Trim(), g.MinDateTimeScheduled, queryTestsEnded.Contains(g.Key) ? "Finished Practice Test" : queryTestsStarted.Contains(g.Key) ? "Started Practice Test" : "No Practice Test", g.ListOfTests)).Distinct().OrderBy(c => c.Item2).ToList();
 
             var usersWithoutTests = _context.Users.Where(u => u.EmailConfirmed).OrderBy(u => u.NormalizedEmail).Select(u => u.NormalizedEmail.ToLowerInvariant()).ToList();
             var Users = new List<Tuple<string, string>>();
@@ -53,6 +53,8 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(user.Item2.HasValue ? user.Item2?.ToString("g") : "Not scheduled");
                 sb.Append('\t');
                 sb.Append(user.Item3);
+                sb.Append('\t');
+                sb.Append(user.Item4);
                 sb.AppendLine();
             }
             sb.AppendLine("Other Information");

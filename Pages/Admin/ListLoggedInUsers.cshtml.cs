@@ -6,7 +6,7 @@ namespace TqiiLanguageTest.Pages.Admin {
 
     public class ListLoggedInUsersModel : PageModel {
         public List<Tuple<string, string>> Users;
-        public List<Tuple<string, DateTime?, string>> UsersWithTests;
+        public List<Tuple<string, DateTime?, string, string>> UsersWithTests;
         private readonly ApplicationDbContext _context;
         private readonly LanguageDbContext _languageContext;
 
@@ -14,11 +14,11 @@ namespace TqiiLanguageTest.Pages.Admin {
             _context = context;
             _languageContext = languageContext;
             Users = new List<Tuple<string, string>>();
-            UsersWithTests = new List<Tuple<string, DateTime?, string>>();
+            UsersWithTests = new List<Tuple<string, DateTime?, string, string>>();
         }
 
         public void OnGet() {
-            var query = _languageContext.TestUsers.GroupBy(cm => cm.Email).Select(g => new { g.Key, MinDateTimeScheduled = g.Min(cm => cm.DateTimeScheduled) }).ToList();
+            var query = _languageContext.TestUsers.Include(tu => tu.Test).GroupBy(cm => cm.Email).Select(g => new { g.Key, MinDateTimeScheduled = g.Min(cm => cm.DateTimeScheduled), ListOfTests = string.Join("; ", g.Where(cm => !cm.Test.IsPractice).Select(cm => cm.Test.Title)) }).ToList();
 
             var queryTestsStarted = _languageContext.TestUsers.Include(tu => tu.Test).Where(tu => tu.Test != null && tu.Test.IsPractice && tu.DateTimeStart != null).Select(tu => tu.Email).Distinct().ToList();
 
@@ -26,7 +26,7 @@ namespace TqiiLanguageTest.Pages.Admin {
 
             var emailAndLanguage = _languageContext.Users.OrderByDescending(c => c.DateAdded).Select(c => new Tuple<string, string>(c.Email, c.Language)).ToList();
 
-            UsersWithTests = query.Select(g => new Tuple<string, DateTime?, string>(g.Key.Trim(), g.MinDateTimeScheduled, queryTestsEnded.Contains(g.Key) ? "Finished Practice Test" : queryTestsStarted.Contains(g.Key) ? "Started Practice Test" : "No Practice Test")).Distinct().OrderBy(c => c.Item2 != null).ThenByDescending(c => c.Item2).ToList();
+            UsersWithTests = query.Select(g => new Tuple<string, DateTime?, string, string>(g.Key.Trim(), g.MinDateTimeScheduled, queryTestsEnded.Contains(g.Key) ? "Finished Practice Test" : queryTestsStarted.Contains(g.Key) ? "Started Practice Test" : "No Practice Test", g.ListOfTests)).Distinct().OrderBy(c => c.Item2 != null).ThenByDescending(c => c.Item2).ToList();
 
             var usersWithoutTests = _context.Users.Where(u => u.EmailConfirmed).OrderBy(u => u.NormalizedEmail).Select(u => u.NormalizedEmail.ToLowerInvariant()).ToList();
 
