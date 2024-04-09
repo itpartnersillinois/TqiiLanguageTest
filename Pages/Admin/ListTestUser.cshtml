@@ -72,7 +72,8 @@
                     }
                     else if (item.DateTimeEnd.HasValue)
                     {
-                        <a href="/Admin/CreateRaterTest?id=@item.Id" target="_blank">Raters:&nbsp;@item.NumberReviewers Completed:&nbsp;@item.NumberReviewerScores </a>
+                        <a href="/Admin/CreateRaterTest?id=@item.Id" target="_blank">Raters:&nbsp;@item.NumberReviewers Completed:&nbsp;@item.NumberReviewerScores </a><br />
+                        <a href="/testrater/@item.Id">Download Rater Data</a>
                     }
                     else
                     {
