@@ -11,7 +11,7 @@
     @foreach (var item in Model.UsersWithTests.Where(u => u.Item2.HasValue && DateTime.Now < u.Item2 && (u.Item2?.Date - DateTime.Now)?.Days < 2).OrderBy(u => u.Item2))
     {
         <li>
-            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @item.Item2?.ToString("g"); @item.Item3
+            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @item.Item2?.ToString("g"); @item.Item3 <br />Tests: @item.Item4
         </li>
     }
 </ol>
@@ -21,7 +21,7 @@
     @foreach (var item in Model.UsersWithTests)
     {
         <li>
-            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @(item.Item2.HasValue ? item.Item2?.ToString("g") : "Not scheduled"); @item.Item3
+            <a href="/Admin/ListTestUser?take=50&search=@item.Item1">@item.Item1</a> -- @(item.Item2.HasValue ? item.Item2?.ToString("g") : "Not scheduled"); @item.Item3 <br />Tests: @item.Item4
         </li>
     }
 </ol>
