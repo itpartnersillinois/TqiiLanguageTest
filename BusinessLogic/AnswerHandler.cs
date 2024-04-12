@@ -22,6 +22,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             if (question == null) {
                 return null;
             }
+            var languageOptions = question.Language == "" ? new LanguageOptions() : _context.LanguageOptions?.FirstOrDefault(l => l.Language == question.Language);
             var answer = _context.Answers?.SingleOrDefault(q => q.TestUserId == testUserObject.Id && q.QuestionId == question.Id);
             if (answer == null) {
                 // if no answer, then create one and save it
@@ -32,6 +33,8 @@ namespace TqiiLanguageTest.BusinessLogic {
                 _context.Add(answer);
                 _ = await _context.SaveChangesAsync();
             }
+            answer.LanguageCharacters = languageOptions?.Characters ?? "";
+            answer.LanguagePopout = languageOptions?.Popout ?? false;
             answer.CurrentQuestionNumber = testUserObject.CurrentQuestionOrder;
             answer.TotalQuestions = testUserObject.TotalQuestions;
             answer.AnswerOptions = question.AnswerOptions;
@@ -47,6 +50,9 @@ namespace TqiiLanguageTest.BusinessLogic {
             answer.InteractiveReadingImage = question.InteractiveReadingImage;
             answer.InteractiveReadingOptions = question.InteractiveReadingOptions;
             answer.InteractiveReadingOptionsDropDown = question.InteractiveReadingOptionsDropDown;
+            if (answer.InteractiveReadingOptionsDropDown != "") {
+                answer.LanguageCharacters = "";
+            }
             answer.InteractiveReadingAnswer = InteractiveReadingParser.ConvertToHtml(question.InteractiveReadingAnswer, answer.ButtonInteractiveReadingOptionsDropDown);
             answer.BasicQuestion1 = question.BasicQuestion1;
             answer.BasicQuestion2 = question.BasicQuestion2;

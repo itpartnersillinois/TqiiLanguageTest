@@ -11,6 +11,7 @@
 <form method="post">
     <h2>General Information</h2>
     <div class="form-group ils-input-entry">
+        <input name="Question.Language" type="hidden" value="@Model.Question.Language">
         <input name="Question.TestId" type="hidden" value="@Model.Question.TestId">
         <input type="hidden" asp-for="Question.Id" class="form-control" />
     </div>

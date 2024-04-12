@@ -38,6 +38,19 @@
 }
 </div>
 
+@if (Model.Answer?.LanguageCharacters != null && Model.Answer?.LanguageCharacters != "")
+{
+    <div class="letters @(Model.Answer?.LanguagePopout ?? true ? "popup" : "")" role="dialog" aria-label="Special Character List" aria-describedby="letter-description">
+        <div class="button-area">
+        @foreach (var character in Model.Answer?.LanguageCharacters)
+        {
+            <button data-value="@character">@character</button>
+        }
+        </div>
+        <p id="letter-description">Use up/down arrows to switch between the test and the special characters. Use left/right arrows to move between the special characters.</p>
+    </div>
+}
+
 <div class="answer-bank-space"><a class="il-button" id="continue">Continue</a></div>
 
 <div>
