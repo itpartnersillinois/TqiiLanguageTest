@@ -1,0 +1,75 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.ListLanguagesModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Languages";
+}
+
+<h1>Languages</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Language
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Strict Autograding?
+            </th>
+            <th>
+                &nbsp;
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Languages)
+        {
+            <tr>
+                <td>
+                    @item.Language
+                </td>
+                <td>
+                    @(item.Popout ? "Popout" : "Full")
+                </td>
+                <td>
+                    @item.EnforceStrictGrading
+                </td>
+                <td>
+                    <a asp-page="./ListLanguages" asp-route-id="@item.Id">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form method="post">
+    <input asp-for="Id" class="form-control" style="width: 100%;" type="hidden" />
+    <div class="ils-input-entry form-group">
+        <label for="NewLanguage" class="control-label">Language Name</label>
+        <input asp-for="NewLanguage" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="NewCharacters" class="control-label">Special Characters (enter them in a single string)</label>
+        <input asp-for="NewCharacters" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="NewPopup" class="control-label">Use as Pop-up?</label>
+        <input asp-for="NewPopup" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="NewUseStrict" class="control-label">Use Strict Autograding?</label>
+        <input asp-for="NewUseStrict" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Create" class="il-button" />
+    </div>
+</form>
+
+
+<div>
+    <a href="/Admin">Back to Admin Page</a>
+</div>
+
