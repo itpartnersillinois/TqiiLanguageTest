@@ -1,4 +1,5 @@
-﻿using TqiiLanguageTest.Data;
+﻿using System.Globalization;
+using TqiiLanguageTest.Data;
 using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.BusinessLogic {
@@ -11,8 +12,10 @@ namespace TqiiLanguageTest.BusinessLogic {
         }
 
         public void AutoGrade(DateTime currentDate, TestUser testUser, int testUserId) {
-            var autogradedQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.InteractiveReadingOptionsAnswerKey != "").Select(q => new { q.Id, q.InteractiveReadingOptionsAnswerKey }).ToList();
+            var autogradedQuestions = _context.Questions?.Where(q => q.TestId == testUser.TestId && q.InteractiveReadingOptionsAnswerKey != "").Select(q => new { q.Id, q.InteractiveReadingOptionsAnswerKey }).ToList();
             var autogradedQuestionsBasedOnQuestions = _context.Questions.Where(q => q.TestId == testUser.TestId && q.BasicAnswerKey1 != "").Select(q => new { q.Id, q.BasicAnswerKey1, q.BasicAnswerKey2, q.BasicAnswerKey3 }).ToList();
+            var language = _context.Tests?.FirstOrDefault(t => t.Id == testUser.TestId)?.Language ?? "";
+            var useStrictGrading = string.IsNullOrWhiteSpace(language) ? true : _context.LanguageOptions.FirstOrDefault(l => l.Language == language)?.EnforceStrictGrading ?? true;
             if ((autogradedQuestions.Any() || autogradedQuestionsBasedOnQuestions.Any())) {
                 var autograders = _context.RaterTests.Where(rt => rt.TestUserId == testUserId && rt.DateAssigned == currentDate);
                 var answers = _context.Answers.Where(a => a.TestUserId == testUserId).Select(a => new { a.QuestionId, a.Id, a.Text, a.BasicAnswers1, a.BasicAnswers2, a.BasicAnswers3 }).ToList();
@@ -25,11 +28,20 @@ namespace TqiiLanguageTest.BusinessLogic {
                         var answerKeyArray = PullAnswers(autogradeQuestion.InteractiveReadingOptionsAnswerKey);
                         for (var i = 0; i < answerKeyArray.Length; i++) {
                             individualScores += $"{answerArray[i]},{answerKeyArray[i]},";
-                            if (i < answerArray.Length && answerArray[i] == answerKeyArray[i]) {
-                                score++;
-                                individualScores += "1;";
+                            if (useStrictGrading) {
+                                if (i < answerArray.Length && string.Equals(answerArray[i], answerKeyArray[i], StringComparison.CurrentCultureIgnoreCase)) {
+                                    score++;
+                                    individualScores += "1;";
+                                } else {
+                                    individualScores += "0;";
+                                }
                             } else {
-                                individualScores += "0;";
+                                if (i < answerArray.Length && string.Compare(answerArray[i], answerKeyArray[i], CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace) == 0) {
+                                    score++;
+                                    individualScores += "1;";
+                                } else {
+                                    individualScores += "0;";
+                                }
                             }
                         }
                         var total = score * 100 / answerKeyArray.Length;
@@ -52,9 +64,9 @@ namespace TqiiLanguageTest.BusinessLogic {
                     int count = 0;
                     var individualScores = "";
                     foreach (var basicAnswer in new List<Tuple<string, string>> {
-                        new Tuple<string, string>(autogradeQuestion.BasicAnswerKey1, answer?.BasicAnswers1 ?? ""),
-                        new Tuple<string, string>(autogradeQuestion.BasicAnswerKey2, answer?.BasicAnswers2 ?? ""),
-                        new Tuple<string, string>(autogradeQuestion.BasicAnswerKey3, answer?.BasicAnswers3 ?? "") }) {
+                        new(autogradeQuestion.BasicAnswerKey1, answer?.BasicAnswers1 ?? ""),
+                        new(autogradeQuestion.BasicAnswerKey2, answer?.BasicAnswers2 ?? ""),
+                        new(autogradeQuestion.BasicAnswerKey3, answer?.BasicAnswers3 ?? "") }) {
                         if (!string.IsNullOrWhiteSpace(basicAnswer.Item1)) {
                             count++;
                             individualScores += $"{basicAnswer.Item2},{basicAnswer.Item1},";
