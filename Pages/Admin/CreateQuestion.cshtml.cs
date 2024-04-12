@@ -24,7 +24,8 @@ namespace TqiiLanguageTest.Pages.Admin {
                 return Unauthorized();
             }
             if (questionid == 0) {
-                Question = new Question { TestId = id };
+                var language = _context.Tests?.Find(id)?.Language ?? "";
+                Question = new Question { TestId = id, Language = language };
             } else {
                 Question = _context.Questions?.Find(questionid) ?? new Question();
             }
@@ -36,6 +37,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 return Page();
             }
             var testid = Question.TestId;
+            Question.Language = Question.Language ?? string.Empty;
             Question.IntroductionText = Question.IntroductionText ?? string.Empty;
             Question.InteractiveReadingAnswer = Question.InteractiveReadingAnswer ?? string.Empty;
             Question.InteractiveReadingOptions = Question.InteractiveReadingOptions ?? string.Empty;

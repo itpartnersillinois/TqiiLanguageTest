@@ -14,7 +14,7 @@ namespace TqiiLanguageTest.Models {
 
     public class Question {
 
-        private readonly Dictionary<QuestionEnum, string> Titles = new Dictionary<QuestionEnum, string>() {
+        private readonly Dictionary<QuestionEnum, string> Titles = new() {
             { QuestionEnum.None, "Listen to the Recording" },
             { QuestionEnum.SentenceRepetition, "Sentence Repetition" },
             { QuestionEnum.IntegratedSpeaking, "Integrated Speaking" },
@@ -66,6 +66,7 @@ namespace TqiiLanguageTest.Models {
         [NotMapped]
         public bool IsIntroduction => QuestionType == QuestionEnum.Instructions || (QuestionType == QuestionEnum.SentenceRepetition && DurationRecordingInSeconds == 0);
 
+        public string Language { get; set; } = string.Empty;
         public int OrderBy { get; set; }
         public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
         public virtual QuestionRubric? QuestionRubric { get; set; }
