@@ -82,6 +82,11 @@ function letterArrowPress(event) {
         if (chosenItem != null) {
             chosenItem.focus();
         }
+    } else {
+        let chosenItem = document.querySelector('.letters button[data-key="' + event.key + '"]');
+        if (chosenItem != null) {
+            chosenItem.focus();
+        }
     }
 }
 
