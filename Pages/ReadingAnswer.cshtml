@@ -23,6 +23,10 @@
 }
 
 <div id="display-after-recording">
+@if (Model.Answer?.LanguageCharacters != null && Model.Answer?.LanguageCharacters != "")
+    {
+        <p>Use up/down arrows to switch between the test and the interface to add special characters.</p>
+    }
 <p class="interactive" >@Html.Raw(Model.Answer?.InteractiveReadingAnswer)</p>
 
 <div id="question" class="hidden">@Model.Answer?.Guid</div>
@@ -42,9 +46,9 @@
 {
     <div class="letters @(Model.Answer?.LanguagePopout ?? true ? "popup" : "")" role="dialog" aria-label="Special Character List" aria-describedby="letter-description">
         <div class="button-area">
-        @foreach (var character in Model.Answer?.LanguageCharacters)
+        @foreach (var character in (Model.Answer?.LanguageCharacters ?? "").Split(' ').Select(t => t.Trim()).Where(t => !string.IsNullOrWhiteSpace(t)))
         {
-            <button data-value="@character">@character</button>
+                <button data-value="@character.First()" data-key="@character.Last()">@character.First()</button>
         }
         </div>
         <p id="letter-description">Use up/down arrows to switch between the test and the special characters. Use left/right arrows to move between the special characters.</p>
@@ -65,5 +69,5 @@
 </form>
 
 @section Scripts {
-    <script src="~/js/readinganswer.js?cache=8" asp-append-version="true"></script>
+    <script src="~/js/readinganswer.js?cache=9" asp-append-version="true"></script>
 }
