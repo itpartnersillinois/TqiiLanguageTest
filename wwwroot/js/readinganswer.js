@@ -32,7 +32,7 @@ function inputKeyPress(event) {
         document.querySelector('.letters button').focus();
     }
     else if (!(event.code.startsWith('Delete') || event.code.startsWith('Arrow') || event.code.startsWith('Tab') || event.code.startsWith('Alt') || event.code.startsWith('Numpad') || event.code.startsWith('Control') || event.code.startsWith('Shift'))) {
-        addLetter(this, event.key, false, true);
+        addLetter(this, event.key, false, true, false);
         event.preventDefault();
     }
 }
@@ -52,15 +52,15 @@ function letterButton(event) {
     if (letters.classList.contains('popup-disabled')) {
         letters.classList.remove('popup-disabled');
         letters.classList.add('popup');
-        addLetter(chosenValue, this.innerText, true, true);
+        addLetter(chosenValue, this.innerText, true, true, true);
     } else {
         chosenValue.classList.remove('selected');
-        addLetter(chosenValue, this.innerText, true, false);
+        addLetter(chosenValue, this.innerText, true, false, true);
     }
 }
 
 function letterArrowPress(event) {
-    if (event.code == 'Backspace' || event.code == 'ArrowLeft' || (event.code == 'Tab' && event.shiftKey)) {
+    if (event.code == 'ArrowLeft' || (event.code == 'Tab' && event.shiftKey)) {
         let previousItem = this.previousElementSibling;
         if (previousItem != null) {
             previousItem.focus();
@@ -72,26 +72,46 @@ function letterArrowPress(event) {
             nextItem.focus();
         }
         event.preventDefault();
-    } else if (event.code == 'ArrowUp' || event.code == 'ArrowDown') {
-        let chosenItem = document.getElementById(globalSelectedId);
-        var letters = document.querySelector('.letters');
-        if (letters.classList.contains('popup-disabled')) {
-            letters.classList.remove('popup-disabled');
-            letters.classList.add('popup');
+    } else if (event.code == 'ArrowUp') {
+        let nextRow = this.parentElement.previousElementSibling;
+        if (nextRow != null && nextRow.classList.contains('button-row')) {
+            nextRow.querySelector('button').focus();
         }
-        if (chosenItem != null) {
-            chosenItem.focus();
+        event.preventDefault();
+    } else if (event.code == 'ArrowDown') {
+        let nextRow = this.parentElement.nextElementSibling;
+        if (nextRow != null && nextRow.classList.contains('button-row')) {
+            nextRow.querySelector('button').focus();
         }
+        event.preventDefault();
+    } else if (event.code == 'Backspace') {
+        let chosenValue = document.getElementById(globalSelectedId);
+        clearLetter(chosenValue);
+        event.preventDefault();
     } else {
         let chosenItem = document.querySelector('.letters button[data-key="' + event.key + '"]');
         if (chosenItem != null) {
             chosenItem.focus();
+            let chosenValue = document.getElementById(globalSelectedId);
+            addLetter(chosenValue, chosenItem.innerText, false, false, true);
         }
     }
 }
 
-function addLetter(input, letter, overwriteLastLetter, focusOnLetter) {
+function addLetter(input, letter, overwriteLastLetter, focusOnLetter, useStandardKeyboard) {
     let nextItem = input.nextElementSibling;
+    if (nextItem == null) {
+        let nextRow = input.parentElement.nextElementSibling;
+        if (nextRow != null) {
+            nextItem = nextRow.querySelector('input');
+        }
+    }
+    if (nextItem == null) {
+        let nextRow = input.parentElement.parentElement.nextElementSibling;
+        if (nextRow != null) {
+            nextItem = nextRow.querySelector('input');
+        }
+    }
     if (nextItem != null) {
         input.value = letter;
         if (focusOnLetter) {
@@ -99,12 +119,41 @@ function addLetter(input, letter, overwriteLastLetter, focusOnLetter) {
         } else {
             globalSelectedId = nextItem.id;
             nextItem.classList.add('selected');
+            input.classList.remove('selected');
         }
+    } else if (useStandardKeyboard) {
+        input.value = letter;
     } else if (letter == '' || letter == ' ') {
         input.value = '';
     } else if (input.value == '' || overwriteLastLetter) {
         input.value = letter;
         input.focus();
+    }
+}
+
+function clearLetter(input) {
+    let previousItem = input.previousElementSibling;
+    if (previousItem == null) {
+        let previousRow = input.parentElement.previousElementSibling;
+        if (previousRow != null) {
+            previousItems = previousRow.querySelectorAll('input');
+            previousItem = previousItems[previousItems.length - 1];
+        }
+    }
+    if (previousItem == null) {
+        let previousRow = input.parentElement.parentElement.previousElementSibling;
+        if (previousRow != null) {
+            previousItems = previousRow.querySelectorAll('input');
+            previousItem = previousItems[previousItems.length - 1];
+        }
+    }
+    if (previousItem != null) {
+        input.value = '';
+        globalSelectedId = previousItem.id;
+        previousItem.classList.add('selected');
+        input.classList.remove('selected');
+    } else {
+        input.value = '';
     }
 }
 
@@ -179,4 +228,8 @@ window.addEventListener("DOMContentLoaded", (event) => {
         i.addEventListener('click', letterButton);
         i.addEventListener('keydown', letterArrowPress);
     });
+    var letters = document.querySelector('.letters');
+    if (!letters.classList.contains('popup-disabled') && !letters.classList.contains('popup')) {
+        document.querySelector('.letters button').focus();
+    }
 });
