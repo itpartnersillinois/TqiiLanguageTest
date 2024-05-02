@@ -133,7 +133,34 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         padding: 20px 0;
         display: flex;
         column-gap: 10px;
+        row-gap: 3px;
+        flex-direction: column;
     }
+
+    .letters .button-row {
+        display: flex;
+        column-gap: 5px;
+        width: 500px;
+    }
+
+    .letters span.button-blank {
+        display: inline-block;
+        height: 2rem;
+        width: 2rem;
+        background: #ccc;
+    }
+
+        .letters span.button-blank.long {
+            width: 2.5rem;
+        }
+
+        .letters span.button-blank.long2 {
+            width: 3.4rem;
+        }
+
+        .letters span.button-blank.long3 {
+            width: 4.5rem;
+        }
 
     .letters button {
         height: 2rem;
