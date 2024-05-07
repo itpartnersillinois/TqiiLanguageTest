@@ -88,6 +88,9 @@ function letterArrowPress(event) {
         let chosenValue = document.getElementById(globalSelectedId);
         clearLetter(chosenValue);
         event.preventDefault();
+    } else if (event.code == 'Escape') {
+        let chosenValue = document.getElementById(globalSelectedId);
+        chosenValue.focus();
     } else {
         let chosenItem = document.querySelector('.letters button[data-key="' + event.key + '"]');
         if (chosenItem != null) {
