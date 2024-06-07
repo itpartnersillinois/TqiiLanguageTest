@@ -12,7 +12,7 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         public IActionResult OnGet() {
-            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+            if (!_permissions.IsAdmin(User.Identity?.Name ?? "") && !_permissions.IsReviewer(User.Identity?.Name ?? "") && !_permissions.IsItemWriter(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
             return Page();

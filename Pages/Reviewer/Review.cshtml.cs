@@ -21,12 +21,14 @@ namespace TqiiLanguageTest.Pages.Reviewer {
         public Answer Answer { get; set; } = default!;
 
         public string AnswerId { get; set; }
-        public IList<Tuple<int, string, int>> Answers { get; set; } = default!;
+        public IList<Tuple<int, string, int, bool>> Answers { get; set; } = default!;
 
+        public bool CanFinalize { get; set; }
         public string Id { get; set; }
         public bool IsDisqualified { get; set; }
         public bool IsFinal { get; set; }
         public string NextAnswerId { get; set; }
+        public string NumberAnswered { get; set; }
         public string RaterId { get; set; }
         public string RaterNotes { get; set; }
         public int Rating { get; set; }
@@ -47,10 +49,11 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 throw new Exception("Unauthorized");
             }
 
-            Answers = new List<Tuple<int, string, int>>();
+            Answers = new List<Tuple<int, string, int, bool>>();
 
-            if (_context.Answers != null) {
+            if (_context.Answers != null && _context.RaterAnswers != null && _context.RaterTests != null) {
                 var answerObjects = await _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == id && a.Question.QuestionType != QuestionEnum.Instructions).OrderBy(a => a.DateTimeEnd).Select(a => new { a.Question.Title, a.Id }).ToListAsync();
+                var raterAnswers = await _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).Select(ra => ra.AnswerId).ToListAsync();
 
                 var secondaryRater = _context.RaterTests.First(rt => rt.Id == raterId).RaterAnswerRemoveIdString;
                 if (!string.IsNullOrWhiteSpace(secondaryRater)) {
@@ -59,20 +62,24 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 }
                 var nextAnswer = 0;
                 for (var i = answerObjects.Count - 1; i >= 0; i--) {
+                    var isAnswered = raterAnswers.Contains(answerObjects[i].Id);
                     if (nextAnswer == 0) {
-                        Answers.Add(new Tuple<int, string, int>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer));
+                        Answers.Add(new Tuple<int, string, int, bool>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer, isAnswered));
                     } else {
-                        Answers.Insert(0, new Tuple<int, string, int>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer));
+                        Answers.Insert(0, new Tuple<int, string, int, bool>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer, isAnswered));
                     }
                     if (answerId == answerObjects[i].Id) {
                         NextAnswerId = nextAnswer.ToString();
                     }
                     nextAnswer = answerObjects[i].Id;
                 }
+
+                NumberAnswered = $"{raterAnswers.Count} / {answerObjects.Count}";
+                CanFinalize = raterAnswers.Count == answerObjects.Count;
             }
 
             if (_context.Answers != null && answerId != 0) {
-                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
+                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, QuestionGuid = a.Question.Guid, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
                 var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                 if (raterAnswer != null) {
                     RaterNotes = raterAnswer.Notes;

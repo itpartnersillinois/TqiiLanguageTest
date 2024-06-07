@@ -6,26 +6,31 @@
 }
 <h1>Administration Page</h1>
 
-<p><a href="/Admin/ListLanguages">Update language options.</a></p>
+<h2>Administration Functions</h2>
+<ul>
+    <li><a href="/Admin/ListLanguages">Update language options.</a></li>
+    <li><a href="/Admin/Permissions">Add / Edit Permissions.</a></li>
+    <li><a href="/Admin/CreateRater">Create a rater.</a></li>
+</ul>
 
-<p><a href="/Admin/CreateTest">Create a new test.</a></p>
 
-<p><a href="/Admin/ListTest">Edit an existing test.</a> This includes adding and editing questions.</p>
+<h2>Test Functions</h2>
+<ul>
+    <li><a href="/Admin/CreateTest">Create a new test.</a></li>
+    <li><a href="/Admin/ListTest">Edit an existing test.</a> This includes adding and editing questions.</li>
+</ul>
 
-<p><a href="/Admin/ListLoggedInUsers">List users that have registered and have tests coming up.</a></p>
+<h2>User and Test Assignment</h2>
+<ul>
+    <li><a href="/Admin/ListLoggedInUsers">List users that have registered and have tests coming up.</a></li>
+    <li><a href="/Admin/CreateTestUserLanguage">Assign a user to a test.</a></li>
+    <li><a href="/Admin/ListTestUser">List tests assigned to testers.</a> This includes downloading raw data and assigning raters.</li>
+    <li><a href="/Admin/IsbeReport">Finalize test for ISBE.</a></li>
+</ul>
 
-<p><a href="/Admin/CreateTestUserLanguage">Assign a user to a test.</a></p>
-
-<p><a href="/Admin/ListTestUser">List tests assigned to testers.</a> This includes downloading raw data and assigning raters.</p>
-
-<p><a href="/Admin/CreateRater">Create a rater.</a></p>
-
-<p><a href="/Reviewer">Review and grade tests.</a></p>
-
-<p><a href="/Admin/IsbeReport">Finalize test for ISBE.</a></p>
-
-<p><a href="/testdownload/all">Download all tests.</a></p>
-
-<p><a href="/reportdownload/isbe">Download ISBE report for completed tests.</a></p>
-
-<p><a href="/reportdownload/detail">Download detail report for completed tests.</a></p>
+<h2>Reports</h2>
+<ul>
+    <li><a href="/testdownload/all">Download all tests.</a></li>
+    <li><a href="/reportdownload/isbe">Download ISBE report for completed tests.</a></li>
+    <li><a href="/reportdownload/detail">Download detail report for completed tests.</a></li>
+</ul>
