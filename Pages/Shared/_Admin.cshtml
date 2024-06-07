@@ -22,8 +22,10 @@
             </div>
             <nav slot="links" aria-label="top right quick links" class="il-links">
                 <ul>
-                    <li>@User.Identity.Name</li>
-                    <li><a href="/Admin">Home</a></li>
+                    <li><a href="/Help">Help</a></li>
+                    <li><a href="/Admin">Admin Page</a></li>
+                    <li><a href="/Reviewer">Rater Page</a></li>
+                    <li>@(Html.Raw(User.Identity.Name ?? "<a href='/Identity/Account/Login'>Login</a>"))</li>
                     <li><a href="/Identity/Account/Logout">Sign out</a></li>
                 </ul>
             </nav>

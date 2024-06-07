@@ -56,7 +56,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                     FinalScore = assignedRaterInformation.Sum(a => a.FinalScore) / assignedRaterInformation.Count();
                 }
                 Raters = await _context.RaterNames.ToListAsync();
-                Raters = Raters.Where(r => !AssignedRaters.Select(ar => ar.Item1).Contains(r.Email)).ToList();
+                Raters = Raters.Where(r => r.IsActive && !AssignedRaters.Select(ar => ar.Item1).Contains(r.Email)).ToList();
             }
         }
 

@@ -11,6 +11,7 @@ namespace TqiiLanguageTest.Models {
         public int Id { get; set; }
 
         public bool IsAdministrator { get; set; }
+        public bool IsItemWriter { get; set; }
 
         public bool IsReviewer { get; set; }
     }
