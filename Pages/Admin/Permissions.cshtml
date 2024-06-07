@@ -1,11 +1,11 @@
 ﻿@page
-@model TqiiLanguageTest.Pages.Admin.CreateRaterModel
+@model TqiiLanguageTest.Pages.Admin.PermissionsModel
 @{
     Layout = "_Admin";
-    ViewData["Title"] = "Rater";
+    ViewData["Title"] = "Permissions";
 }
 
-<h1>Raters</h1>
+<h1>Permissions</h1>
 
 <table class="table">
     <thead>
@@ -14,16 +14,13 @@
                 Email
             </th>
             <th>
-                Name
+                Admin?
             </th>
             <th>
-                Notes
+                Rater?
             </th>
             <th>
-                Assigned
-            </th>
-            <th>
-                Completed
+                Test Writer?
             </th>
             <th>
                 Edit
@@ -31,26 +28,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Raters)
+        @foreach (var item in Model.Permissions)
         {
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
+                    @(item.IsAdministrator ? "Admin" : "")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Notes)
+                    @(item.IsReviewer ? "Rater" : "")
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NumberOfTests)
+                    @(item.IsItemWriter ? "Test Writer" : "")
                 </td>
                 <td>
-                    @(Model.RaterTestCount.Keys.Contains(item.Id) ? Model.RaterTestCount[item.Id] : 0)
-                </td>
-                <td>
-                    <a href="/Admin/CreateRater?id=@item.Id">Edit Person</a>
+                    <a href="/Admin/Permissions?id=@item.Id">Edit Person</a>
                 </td>
             </tr>
         }
@@ -59,17 +53,21 @@
 
 <form method="post">
     <div class="ils-input-entry form-group">
-        <label for="NewRaterEmail" class="control-label">Rater Email</label>
-        <input asp-for="NewRaterEmail" class="form-control" style="width: 100%;" />
+        <label for="NewPermissionEmail" class="control-label">Permission Email</label>
+        <input asp-for="NewPermissionEmail" class="form-control" />
         <p>Blank out email to delete</p>
     </div>
     <div class="ils-input-entry form-group">
-        <label for="NewRaterName" class="control-label">Rater Name</label>
-        <input asp-for="NewRaterName" class="form-control" style="width: 100%;" />
+        <label for="NewIsAdmin" class="control-label">Is Admin?</label>
+        <input asp-for="NewIsAdmin" class="form-control" />
     </div>
     <div class="ils-input-entry form-group">
-        <label for="NewRaterNotes" class="control-label">Notes</label>
-        <input asp-for="NewRaterNotes" class="form-control" style="width: 100%;" />
+        <label for="NewIsReviewer" class="control-label">Is Rater?</label>
+        <input asp-for="NewIsReviewer" class="form-control" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="NewIsItemWriter" class="control-label">Is Test Writer?</label>
+        <input asp-for="NewIsItemWriter" class="form-control" />
     </div>
     <input type="hidden" asp-for="NewId" class="form-control" />
     <div class="ils-input-entry form-group">
@@ -81,4 +79,3 @@
 <div>
     <a href="/Admin">Back to Admin Page</a>
 </div>
-

@@ -237,3 +237,11 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         width: 50px;
         flex: 0 0 50px;
     }
+
+.il-formatted a.answered {
+    font-style: italic;
+}
+
+    .il-formatted a.answered::after {
+        content: '*';
+    }

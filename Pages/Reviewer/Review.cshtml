@@ -12,11 +12,11 @@
             @foreach (var item in Model.Answers)
             {
                 <li>
-                    <a href="@Model.UrlInfo(item.Item1, item.Item3)">@item.Item2</a>
+                    <a class="@(item.Item4 ? "answered" : "")" href="@Model.UrlInfo(item.Item1, item.Item3)">@item.Item2</a>
                 </li>
             }
             <li>
-                <a href="@Model.UrlInfo(0, 0)">Finalize</a>
+                <a href="@Model.UrlInfo(0, 0)">Finalize</a>: (@Model.NumberAnswered)
             </li>
         </ul>
     </div>
@@ -25,7 +25,16 @@
         {
         <h2>@Model.Answer.Question.Title</h2>
 
-        <p>Question Audio</p>
+            @if (Model.Answer.Question.IntroductionText != "")
+            {
+                <p>@Model.Answer.Question.IntroductionText</p>
+            }
+
+            <div>
+                <img src="/Image/Introduction/@Model.Answer.QuestionGuid" alt="">
+            </div>
+
+            <p>Question Audio</p>
         <p>
             <audio controls>
                 <source src="/AudioReviewer/question/@Model.Answer.QuestionId" type="audio/ogg">
@@ -34,6 +43,7 @@
         </p>
 
         <p>Question Text: @Model.Answer.Question.SentenceRepetionText</p>
+
 
         <p>Answer Audio</p>
         <p>
@@ -83,6 +93,11 @@
                 <p><strong>Answer #3: </strong>@Model.Answer.BasicAnswers3</p>
                 <p><strong>Answer Key #3: </strong>@Model.Answer.Question.BasicAnswerKey3</p>
             }
+            <div>
+                <img src="/Image/Question/@Model?.Answer?.QuestionGuid" alt="">
+            </div>
+
+
             @if (Model.Answer.QuestionType == Models.QuestionEnum.IntegratedSpeaking)
             {
             <form method="post">
@@ -91,29 +106,48 @@
                 <p>Rating</p>
                 <input type="radio" id="level_4" name="level" value="4" checked="@(Model.Rating == 4)">
                 <label for="level_4">
-                    4: exact repetition <span>Repeating the prompt sentence word for word; however, contractions, substitutions for proper noun (e.g., names) are allowed.</span>
+                            4: Exact repetition
+                            <span>
+                                Speaker repeats the prompt sentence <strong>exactly</strong> (word for word). Omission, addition, or change of one function word (e.g., <em>please, any, for</em>), or change of order of content words, are allowed. Minor content omissions (e.g., <em>Friday, today</em>) may be allowed.
+                                <br />Very minor grammatical mistakes or lapses(e.g., agreement) do not change the meaning of the sentence.
+                                <br />Listener would be fully informed of the original information.
+                            </span>
                 </label>
                 <input type="radio" id="level_3" name="level" value="3" checked="@(Model.Rating == 3)">
                 <label for="level_3">
-                    3: appropriate paraphrasing
-                    <span>Did not repeat word for word but paraphrase the prompt sentence in such a way that the response is grammatical and remains the same meaning as the prompt.</span>
+                            3: Accurate meaning
+                            <span>
+                                Speaker may not repeat the prompt sentence exactly, but the response retains the <strong>full meaning</strong> of the original sentence. Omissions or changes of words/phrases are allowed but meaning does not change substantially.
+                                <br />Very minor grammatical mistakes or lapses (e.g., agreement) do not change the meaning of the sentence.
+                                <br />Listener would be fully informed of the original meaning despite changes.
+                            </span>
                 </label>
 
                 <input type="radio" id="level_2" name="level" value="2" checked="@(Model.Rating == 2)">
                 <label for="level_2">
-                    2: minor deviation
-                    <span>Repeating the prompt sentence with minor grammatical errors which do not distort meaning; or missing minor information which does not change the main idea of the prompt sentence; or a combination of both.</span>
+                            2: Approximate meaning
+                        <span>
+                            Speaker repeats the <strong>approximate meaning</strong> of the prompt. Omissions or alterations may include substantive content, such as final words or phrases (e.g., interventions), but meaning is largely preserved.
+                            <br />Response may contain grammatical, lexical, or phonological errors that may slightly impede meaning.
+                            <br />Listener would be informed of the main idea of the original meaning despite omissions.
+                        </span>
                 </label>
                 <input type="radio" id="level_1" name="level" value="1" checked="@(Model.Rating == 1)">
                 <label for="level_1">
-                    1: inadequate response
-                    <span>Repeating the prompt sentence with major grammatical errors which distort meaning; or missing substantial information which changes the main idea of the prompt sentence; or a combination of both.</span>
+                            1: Incomplete meaning
+                        <span>
+                            Speaker repeats <strong>incomplete information</strong> from the prompt, conveying an idea which may change the main idea of the prompt due to omissions or alterations.
+                            <br />Response may have major grammatical, lexical, or phonological errors that impede meaning.
+                            <br />Listener would not be fully informed by the response
+                        </span>
                 </label>
 
                 <input type="radio" id="level_0" name="level" value="0" checked="@(Model.Rating == 0)">
                 <label for="level_0">
-                    0: omission
-                    <span>Complete silence, or only one or few words repeated which do not make sense by itself.</span>
+                    0: Distorted meaning
+                            <span>Speaker may repeat few words from the prompt that do not convey coherent meaning. Response may be largely unintelligible or silent.
+                                <br />Listener would not be informed by the response.
+                            </span>
                 </label>
             </div>
 
@@ -146,30 +180,51 @@
                         <p>Rating</p>
                         <input type="radio" id="level_4" name="level" value="4" checked="@(Model.Rating == 4)">
                         <label for="level_4">
-                            4: exact repetition <span>Repeating the prompt sentence word for word; however, contractions, substitutions for proper noun (e.g., names) are allowed.</span>
+                            4: Exact repetition
+                            <span>
+                                Speaker repeats the prompt sentence <strong>exactly</strong> (word for word). Omission, addition, or change of one function word (e.g., <em>please, any, for</em>), or change of order of content words, are allowed. Minor content omissions (e.g., <em>Friday, today</em>) may be allowed.
+                                <br />Very minor grammatical mistakes or lapses(e.g., agreement) do not change the meaning of the sentence.
+                                <br />Listener would be fully informed of the original information.
+                            </span>
                         </label>
                         <input type="radio" id="level_3" name="level" value="3" checked="@(Model.Rating == 3)">
                         <label for="level_3">
-                            3: appropriate paraphrasing
-                            <span>Did not repeat word for word but paraphrase the prompt sentence in such a way that the response is grammatical and remains the same meaning as the prompt.</span>
+                            3: Accurate meaning
+                            <span>
+                                Speaker may not repeat the prompt sentence exactly, but the response retains the <strong>full meaning</strong> of the original sentence. Omissions or changes of words/phrases are allowed but meaning does not change substantially.
+                                <br />Very minor grammatical mistakes or lapses (e.g., agreement) do not change the meaning of the sentence.
+                                <br />Listener would be fully informed of the original meaning despite changes.
+                            </span>
                         </label>
 
                         <input type="radio" id="level_2" name="level" value="2" checked="@(Model.Rating == 2)">
                         <label for="level_2">
-                            2: minor deviation
-                            <span>Repeating the prompt sentence with minor grammatical errors which do not distort meaning; or missing minor information which does not change the main idea of the prompt sentence; or a combination of both.</span>
+                            2: Approximate meaning
+                            <span>
+                                Speaker repeats the <strong>approximate meaning</strong> of the prompt. Omissions or alterations may include substantive content, such as final words or phrases (e.g., interventions), but meaning is largely preserved.
+                                <br />Response may contain grammatical, lexical, or phonological errors that may slightly impede meaning.
+                                <br />Listener would be informed of the main idea of the original meaning despite omissions.
+                            </span>
                         </label>
                         <input type="radio" id="level_1" name="level" value="1" checked="@(Model.Rating == 1)">
                         <label for="level_1">
-                            1: inadequate response
-                            <span>Repeating the prompt sentence with major grammatical errors which distort meaning; or missing substantial information which changes the main idea of the prompt sentence; or a combination of both.</span>
+                            1: Incomplete meaning
+                            <span>
+                                Speaker repeats <strong>incomplete information</strong> from the prompt, conveying an idea which may change the main idea of the prompt due to omissions or alterations.
+                                <br />Response may have major grammatical, lexical, or phonological errors that impede meaning.
+                                <br />Listener would not be fully informed by the response
+                            </span>
                         </label>
 
                         <input type="radio" id="level_0" name="level" value="0" checked="@(Model.Rating == 0)">
                         <label for="level_0">
-                            0: omission
-                            <span>Complete silence, or only one or few words repeated which do not make sense by itself.</span>
+                            0: Distorted meaning
+                            <span>
+                                Speaker may repeat few words from the prompt that do not convey coherent meaning. Response may be largely unintelligible or silent.
+                                <br />Listener would not be informed by the response.
+                            </span>
                         </label>
+
                     </div>
 
                     <div class="ils-input-entry form-group">
@@ -226,7 +281,7 @@
             }
 
         }
-        @if (Model.IsFinal)
+        @if (Model.IsFinal && Model.CanFinalize)
         {
             <h2>Finalize Test</h2>
             <p>Note that this will lock the test for this reviewer.</p>
@@ -244,7 +299,13 @@
             </div>
             </form>
         }
-        
+        @if (Model.IsFinal && !Model.CanFinalize)
+        {
+            <h2>Finalize Test</h2>
+            <p>Note that this will lock the test for this reviewer.</p>
+            <p>All answers must be graded before finalizing test.</p>
+        }
+
 
     </div>
 

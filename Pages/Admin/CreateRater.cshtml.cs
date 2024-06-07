@@ -17,6 +17,9 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         [BindProperty]
+        public int NewId { get; set; }
+
+        [BindProperty]
         public string NewRaterEmail { get; set; } = default!;
 
         [BindProperty]
@@ -29,21 +32,40 @@ namespace TqiiLanguageTest.Pages.Admin {
 
         public Dictionary<int, int> RaterTestCount { get; set; } = default!;
 
-        public async Task OnGetAsync() {
+        public async Task OnGetAsync(int id) {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 throw new Exception("Unauthorized");
             }
 
             if (_context.RaterNames != null && _context.RaterTests != null) {
-                Raters = await _context.RaterNames.OrderBy(r => r.Email).ToListAsync();
+                Raters = await _context.RaterNames.Where(r => r.IsActive).OrderBy(r => r.Email).ToListAsync();
                 RaterTestCount = _context.RaterTests.Where(r => r.DateFinished != null).GroupBy(r => r.RaterNameId).Select(rt => new { Id = rt.Key, Count = rt.Count() }).ToDictionary(a => a.Id, b => b.Count);
+            }
+            NewId = id;
+            if (id != 0) {
+                NewRaterEmail = Raters.FirstOrDefault(p => p.Id == id)?.Email ?? "";
+                NewRaterName = Raters.FirstOrDefault(p => p.Id == id)?.FullName ?? "";
+                NewRaterNotes = Raters.FirstOrDefault(p => p.Id == id)?.Notes ?? "";
             }
         }
 
         public async Task<IActionResult> OnPostAsync() {
             NewRaterName = string.IsNullOrWhiteSpace(NewRaterName) ? "" : NewRaterName;
             NewRaterNotes = string.IsNullOrWhiteSpace(NewRaterNotes) ? "" : NewRaterNotes;
-            if (NewRaterEmail.Contains(',')) {
+            if (NewId != 0) {
+                if (string.IsNullOrWhiteSpace(NewRaterEmail)) {
+                    var baseRater = _context.RaterNames.First(t => t.Id == NewId);
+                    baseRater.IsActive = false;
+                    _context.RaterNames.Update(baseRater);
+                } else {
+                    var baseRater = _context.RaterNames.AsNoTracking().First(t => t.Id == NewId);
+                    baseRater.Email = NewRaterEmail;
+                    baseRater.FullName = NewRaterName;
+                    baseRater.Notes = NewRaterNotes;
+                    baseRater.IsActive = true;
+                    _context.RaterNames.Update(baseRater);
+                }
+            } else if (NewRaterEmail.Contains(',')) {
                 var emailArray = NewRaterEmail.Split(',');
                 var nameArray = NewRaterName.Split(',');
                 for (int i = 0; i < emailArray.Length; i++) {

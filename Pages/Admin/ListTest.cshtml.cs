@@ -23,7 +23,7 @@ namespace TqiiLanguageTest.Pages.Admin {
         public IList<Test> Test { get; set; } = default!;
 
         public async Task OnGetAsync() {
-            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+            if (!_permissions.IsItemWriter(User.Identity?.Name ?? "")) {
                 throw new Exception("Unauthorized");
             }
             var languageList = _context.LanguageOptions?.Select(l => l.Language).ToList() ?? new List<string>();
