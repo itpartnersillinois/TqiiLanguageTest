@@ -86,8 +86,6 @@ namespace TqiiLanguageTest.Models {
         [NotMapped]
         public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
 
-        public virtual QuestionRubric? QuestionRubric { get; set; }
-
         [NotMapped]
         public string QuestionText { get; set; } = string.Empty;
 

@@ -45,14 +45,6 @@
         <p>Question Text: @Model.Answer.Question.SentenceRepetionText</p>
 
 
-        <p>Answer Audio</p>
-        <p>
-            <audio controls>
-                <source src="/AudioReviewer/answer/@Model.Answer.Id" type="audio/ogg">
-                Your browser does not support the audio element.
-            </audio>
-        </p>
-
             @if (Model.Answer.NumberTimesRefreshed > 0)
             {
                 <p><strong>Warning -- user accessed this answer extra times: @Model.Answer.NumberTimesRefreshed</strong></p>
@@ -96,6 +88,13 @@
             <div>
                 <img src="/Image/Question/@Model?.Answer?.QuestionGuid" alt="">
             </div>
+            <p>Answer Audio</p>
+            <p>
+                <audio controls>
+                    <source src="/AudioReviewer/answer/@Model.Answer.Id" type="audio/ogg">
+                    Your browser does not support the audio element.
+                </audio>
+            </p>
 
 
             @if (Model.Answer.QuestionType == Models.QuestionEnum.IntegratedSpeaking)

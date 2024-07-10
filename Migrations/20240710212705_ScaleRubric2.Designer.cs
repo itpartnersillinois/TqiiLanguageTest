@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240710212705_ScaleRubric2")]
+    partial class ScaleRubric2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,9 +247,6 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<int>("QuestionType")
                         .HasColumnType("int");
 
-                    b.Property<int?>("RaterScaleId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("Recording")
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
@@ -272,8 +271,6 @@ namespace TqiiLanguageTest.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("RaterScaleId");
 
                     b.HasIndex("TestId");
 
@@ -380,7 +377,7 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
-                    b.Property<int?>("QuestionInformationId")
+                    b.Property<int?>("QuestionId")
                         .HasColumnType("int");
 
                     b.Property<string>("RaterScaleName")
@@ -398,6 +395,10 @@ namespace TqiiLanguageTest.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("QuestionId")
+                        .IsUnique()
+                        .HasFilter("[QuestionId] IS NOT NULL");
 
                     b.ToTable("RaterScales");
                 });
@@ -757,17 +758,11 @@ namespace TqiiLanguageTest.Migrations
 
             modelBuilder.Entity("TqiiLanguageTest.Models.Question", b =>
                 {
-                    b.HasOne("TqiiLanguageTest.Models.RaterScale", "RaterScale")
-                        .WithMany()
-                        .HasForeignKey("RaterScaleId");
-
                     b.HasOne("TqiiLanguageTest.Models.Test", "Test")
                         .WithMany("Questions")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("RaterScale");
 
                     b.Navigation("Test");
                 });
@@ -789,6 +784,13 @@ namespace TqiiLanguageTest.Migrations
                     b.Navigation("Answer");
 
                     b.Navigation("RaterTest");
+                });
+
+            modelBuilder.Entity("TqiiLanguageTest.Models.RaterScale", b =>
+                {
+                    b.HasOne("TqiiLanguageTest.Models.Question", null)
+                        .WithOne("RaterScale")
+                        .HasForeignKey("TqiiLanguageTest.Models.RaterScale", "QuestionId");
                 });
 
             modelBuilder.Entity("TqiiLanguageTest.Models.RaterTest", b =>
@@ -819,6 +821,11 @@ namespace TqiiLanguageTest.Migrations
                         .IsRequired();
 
                     b.Navigation("Test");
+                });
+
+            modelBuilder.Entity("TqiiLanguageTest.Models.Question", b =>
+                {
+                    b.Navigation("RaterScale");
                 });
 
             modelBuilder.Entity("TqiiLanguageTest.Models.Test", b =>
