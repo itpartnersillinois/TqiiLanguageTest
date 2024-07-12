@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240710214526_ScaleRubric3")]
+    partial class ScaleRubric3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,6 +70,9 @@ namespace TqiiLanguageTest.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ReviewerNotes")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RubricInformation")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TestUserId")
@@ -308,12 +313,8 @@ namespace TqiiLanguageTest.Migrations
                     b.Property<int>("RaterTestId")
                         .HasColumnType("int");
 
-                    b.Property<float>("Score")
-                        .HasColumnType("real");
-
-                    b.Property<string>("ScoreText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -625,10 +626,6 @@ namespace TqiiLanguageTest.Migrations
 
                     b.Property<int>("PracticeOrder")
                         .HasColumnType("int");
-
-                    b.Property<string>("RubricRaterScaleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TestType")
                         .HasColumnType("int");

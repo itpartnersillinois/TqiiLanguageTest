@@ -86,8 +86,6 @@ namespace TqiiLanguageTest.Models {
         [NotMapped]
         public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
 
-        public virtual QuestionRubric? QuestionRubric { get; set; }
-
         [NotMapped]
         public string QuestionText { get; set; } = string.Empty;
 
@@ -103,7 +101,6 @@ namespace TqiiLanguageTest.Models {
         public string RecordingText { get; set; } = string.Empty;
 
         public string? ReviewerNotes { get; set; }
-        public string? RubricInformation { get; set; }
         public virtual TestUser? TestUser { get; set; }
         public int? TestUserId { get; set; }
         public string Text { get; set; } = "";

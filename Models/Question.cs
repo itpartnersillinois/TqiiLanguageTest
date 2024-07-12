@@ -69,10 +69,10 @@ namespace TqiiLanguageTest.Models {
         public string Language { get; set; } = string.Empty;
         public int OrderBy { get; set; }
         public byte[] QuestionImage { get; set; } = Array.Empty<byte>();
-        public virtual QuestionRubric? QuestionRubric { get; set; }
         public string QuestionText { get; set; } = string.Empty;
         public string QuestionTitle => Titles[QuestionType];
         public QuestionEnum QuestionType { get; set; }
+        public virtual RaterScale? RaterScale { get; set; }
         public byte[] Recording { get; set; } = Array.Empty<byte>();
         public byte[] RecordingImage { get; set; } = Array.Empty<byte>();
         public string RecordingText { get; set; } = string.Empty;

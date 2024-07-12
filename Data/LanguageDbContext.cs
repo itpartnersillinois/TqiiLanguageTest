@@ -15,10 +15,10 @@ namespace TqiiLanguageTest.Data {
         public DbSet<Answer>? Answers { get; set; }
         public DbSet<LanguageOptions>? LanguageOptions { get; set; }
         public DbSet<Permission>? Permissions { get; set; }
-        public DbSet<QuestionRubric>? QuestionRubrics { get; set; }
         public DbSet<Question>? Questions { get; set; }
         public DbSet<RaterAnswer>? RaterAnswers { get; set; }
         public DbSet<RaterName>? RaterNames { get; set; }
+        public DbSet<RaterScale>? RaterScales { get; set; }
         public DbSet<RaterTest>? RaterTests { get; set; }
         public DbSet<ReportDetail> ReportDetails { get; set; }
         public DbSet<ReportIsbe> ReportIsbes { get; set; }
