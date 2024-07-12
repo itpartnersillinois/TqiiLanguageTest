@@ -91,6 +91,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                         rater2.NumberOfTests++;
                         totals++;
                     }
+                    // TODO: If there are no questions, then throw an error saying no ratings are set up.
                 }
                 testUser.NumberReviewers = testUser.NumberReviewers + totals;
             }

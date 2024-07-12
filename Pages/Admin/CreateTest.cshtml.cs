@@ -33,6 +33,9 @@ namespace TqiiLanguageTest.Pages.Admin {
                 Questions = new List<Question>();
             }
             ViewData["Languages"] = new SelectList(_context.LanguageOptions?.Select(l => l.Language).ToList());
+            var rubrics = _context.RaterScales?.Select(r => r.RaterScaleName).OrderBy(s => s).Distinct().ToList();
+            rubrics?.Insert(0, "");
+            ViewData["Rubrics"] = new SelectList(rubrics);
             return Page();
         }
 
@@ -44,6 +47,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             Test.Introduction = Test.Introduction ?? string.Empty;
             Test.Conclusion = Test.Conclusion ?? string.Empty;
             Test.ConclusionLink = Test.ConclusionLink ?? string.Empty;
+            Test.RubricRaterScaleName = Test.RubricRaterScaleName ?? string.Empty;
 
             if (Test.Id == 0) {
                 _context.Tests.Add(Test);

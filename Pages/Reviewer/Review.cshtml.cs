@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
 using TqiiLanguageTest.Models;
+using TqiiLanguageTest.RubricThinObjects;
 
 namespace TqiiLanguageTest.Pages.Reviewer {
 
@@ -31,8 +32,9 @@ namespace TqiiLanguageTest.Pages.Reviewer {
         public string NumberAnswered { get; set; }
         public string RaterId { get; set; }
         public string RaterNotes { get; set; }
-        public int Rating { get; set; }
-
+        public float Rating { get; set; }
+        public string RatingAnswers { get; set; }
+        public List<RubricThinQuestion> RubricThinQuestions { get; set; } = default!;
         public string UrlString { get; set; }
 
         public async Task OnGetAsync() {
@@ -78,6 +80,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 CanFinalize = raterAnswers.Count == answerObjects.Count;
             }
 
+            var scoreText = "";
+
             if (_context.Answers != null && answerId != 0) {
                 Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, QuestionGuid = a.Question.Guid, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
                 var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
@@ -85,7 +89,15 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     RaterNotes = raterAnswer.Notes;
                     Rating = raterAnswer.Score;
                     IsDisqualified = raterAnswer.IsDisqualified;
+                    scoreText = raterAnswer.ScoreText;
                 }
+            }
+
+            var testId = _context.TestUsers.First(tu => tu.Id == id).TestId;
+            var rubricRaterScaleName = _context.Tests.First(t => t.Id == testId).RubricRaterScaleName;
+            var rubricRatings = _context.RaterScales.Where(rs => rs.RaterScaleName == rubricRaterScaleName).ToList();
+            if (rubricRatings.Count > 0) {
+                RubricThinQuestions = RubricThinQuestion.GenerateFromDatabase(rubricRatings, scoreText);
             }
         }
 
@@ -94,8 +106,46 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 Id = Request.Form["id"];
                 RaterId = Request.Form["raterid"];
                 var raterId = int.Parse(RaterId);
-                // answering a single question
-                if (Request.Form.ContainsKey("answerid")) {
+                // answering a question with a custom rubric
+                if (Request.Form.ContainsKey("raterScale_0")) {
+                    AnswerId = Request.Form["answerid"];
+                    NextAnswerId = Request.Form["nextid"];
+                    var answerId = int.Parse(AnswerId);
+                    var i = 0;
+                    var answers = "";
+                    float totalValue = 0;
+                    foreach (var key in Request.Form.Keys.Where(k => k.StartsWith("raterScale_")).OrderBy(s => s)) {
+                        answers += i + ": " + Request.Form[key] + "; ";
+                        totalValue += float.Parse(Request.Form[key]) * float.Parse(Request.Form["raterScaleWeight_" + i]);
+                        i++;
+                    }
+
+                    var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
+                    if (raterAnswer != null) {
+                        raterAnswer.Notes = Request.Form["notes"];
+                        raterAnswer.Score = totalValue * 100;
+                        raterAnswer.ScoreText = answers;
+                        raterAnswer.IsAnswered = true;
+                        raterAnswer.IsDisqualified = Request.Form.ContainsKey("isdisqualified");
+                        _context.RaterAnswers.Update(raterAnswer);
+                    } else {
+                        _context.RaterAnswers.Add(new RaterAnswer {
+                            AnswerId = answerId,
+                            DateFinished = DateTime.Now,
+                            Notes = Request.Form["notes"],
+                            Score = Request.Form.ContainsKey("level") ? int.Parse(Request.Form["level"]) : 0,
+                            RaterTestId = raterId,
+                            IsAnswered = true,
+                            IsDisqualified = Request.Form.ContainsKey("isdisqualified")
+                        });
+                    }
+                    await _context.SaveChangesAsync();
+
+                    if (NextAnswerId == "0") {
+                        return RedirectToPage("Review", new { id = Id, raterid = RaterId, final = "true" });
+                    }
+                    return RedirectToPage("Review", new { id = Id, raterid = RaterId, answerId = NextAnswerId });
+                } else if (Request.Form.ContainsKey("answerid")) {  // answering a single question
                     AnswerId = Request.Form["answerid"];
                     NextAnswerId = Request.Form["nextid"];
 
@@ -131,7 +181,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     rater.DateFinished = DateTime.Now;
                     var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId && ra.IsAnswered && !ra.IsDisqualified).Sum(ra => ra.Score);
                     var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId && ra.IsAnswered && !ra.IsDisqualified);
-                    rater.FinalScore = raterTotalScore / (float) raterTotalAnswers;
+                    rater.FinalScore = raterTotalScore / raterTotalAnswers;
                     rater.Notes = Request.Form["notes"];
                     var id = int.Parse(Id);
                     var test = _context.TestUsers.Single(tu => tu.Id == id);

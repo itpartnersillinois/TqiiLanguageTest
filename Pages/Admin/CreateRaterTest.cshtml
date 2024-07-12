@@ -51,6 +51,7 @@
 @if (!Model.IsFinalized)
 {
     <h2>Assign Raters</h2>
+    <p>Secondary raters will only be assigned questions where the score of the primary raters differ by 2 or more.</p>
     <form method="post">
         <ul>
             @foreach (var item in Model.Raters)

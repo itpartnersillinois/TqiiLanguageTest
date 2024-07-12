@@ -44,6 +44,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                                 }
                             }
                         }
+                        // TODO insert if a question is correct or incorrect back into the answer.Text value
                         var total = score * 100 / answerKeyArray.Length;
                         foreach (var autograder in autograders) {
                             _context.RaterAnswers.Add(new RaterAnswer {

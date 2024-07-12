@@ -45,7 +45,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                             AnswerKey = answerArray[1],
                             AutogradedScore = answerArray[2],
                             RaterName = raterName,
-                            RaterScore = raterAnswer?.Score ?? 0,
+                            RaterScore = (int) (raterAnswer?.Score ?? 0),
                             RaterNotes = raterAnswer?.Notes ?? "",
                             IsDisqualified = raterAnswer?.IsDisqualified ?? false
                         });
@@ -67,7 +67,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                         AnswerKey = "",
                         AutogradedScore = "",
                         RaterName = raterName,
-                        RaterScore = raterAnswer?.Score ?? 0,
+                        RaterScore = (int) (raterAnswer?.Score ?? 0),
                         RaterNotes = raterAnswer?.Notes ?? "",
                         IsDisqualified = raterAnswer?.IsDisqualified ?? false,
                         NumberOfTimesRefreshed = totalTimesRefreshed

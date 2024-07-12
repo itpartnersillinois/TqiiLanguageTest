@@ -45,14 +45,6 @@
         <p>Question Text: @Model.Answer.Question.SentenceRepetionText</p>
 
 
-        <p>Answer Audio</p>
-        <p>
-            <audio controls>
-                <source src="/AudioReviewer/answer/@Model.Answer.Id" type="audio/ogg">
-                Your browser does not support the audio element.
-            </audio>
-        </p>
-
             @if (Model.Answer.NumberTimesRefreshed > 0)
             {
                 <p><strong>Warning -- user accessed this answer extra times: @Model.Answer.NumberTimesRefreshed</strong></p>
@@ -96,60 +88,42 @@
             <div>
                 <img src="/Image/Question/@Model?.Answer?.QuestionGuid" alt="">
             </div>
+            <p>Answer Audio</p>
+            <p>
+                <audio controls>
+                    <source src="/AudioReviewer/answer/@Model.Answer.Id" type="audio/ogg">
+                    Your browser does not support the audio element.
+                </audio>
+            </p>
 
 
-            @if (Model.Answer.QuestionType == Models.QuestionEnum.IntegratedSpeaking)
+            @if (Model.RubricThinQuestions.Count > 0)
             {
             <form method="post">
             <input type="hidden" asp-for="Answer.Id" class="form-control" />
-            <div class="ils-input-entry-radio ratings">
-                <p>Rating</p>
-                <input type="radio" id="level_4" name="level" value="4" checked="@(Model.Rating == 4)">
-                <label for="level_4">
-                            4: Exact repetition
-                            <span>
-                                Speaker repeats the prompt sentence <strong>exactly</strong> (word for word). Omission, addition, or change of one function word (e.g., <em>please, any, for</em>), or change of order of content words, are allowed. Minor content omissions (e.g., <em>Friday, today</em>) may be allowed.
-                                <br />Very minor grammatical mistakes or lapses(e.g., agreement) do not change the meaning of the sentence.
-                                <br />Listener would be fully informed of the original information.
-                            </span>
-                </label>
-                <input type="radio" id="level_3" name="level" value="3" checked="@(Model.Rating == 3)">
-                <label for="level_3">
-                            3: Accurate meaning
-                            <span>
-                                Speaker may not repeat the prompt sentence exactly, but the response retains the <strong>full meaning</strong> of the original sentence. Omissions or changes of words/phrases are allowed but meaning does not change substantially.
-                                <br />Very minor grammatical mistakes or lapses (e.g., agreement) do not change the meaning of the sentence.
-                                <br />Listener would be fully informed of the original meaning despite changes.
-                            </span>
-                </label>
-
-                <input type="radio" id="level_2" name="level" value="2" checked="@(Model.Rating == 2)">
-                <label for="level_2">
-                            2: Approximate meaning
-                        <span>
-                            Speaker repeats the <strong>approximate meaning</strong> of the prompt. Omissions or alterations may include substantive content, such as final words or phrases (e.g., interventions), but meaning is largely preserved.
-                            <br />Response may contain grammatical, lexical, or phonological errors that may slightly impede meaning.
-                            <br />Listener would be informed of the main idea of the original meaning despite omissions.
-                        </span>
-                </label>
-                <input type="radio" id="level_1" name="level" value="1" checked="@(Model.Rating == 1)">
-                <label for="level_1">
-                            1: Incomplete meaning
-                        <span>
-                            Speaker repeats <strong>incomplete information</strong> from the prompt, conveying an idea which may change the main idea of the prompt due to omissions or alterations.
-                            <br />Response may have major grammatical, lexical, or phonological errors that impede meaning.
-                            <br />Listener would not be fully informed by the response
-                        </span>
-                </label>
-
-                <input type="radio" id="level_0" name="level" value="0" checked="@(Model.Rating == 0)">
-                <label for="level_0">
-                    0: Distorted meaning
-                            <span>Speaker may repeat few words from the prompt that do not convey coherent meaning. Response may be largely unintelligible or silent.
-                                <br />Listener would not be informed by the response.
-                            </span>
-                </label>
-            </div>
+                    @foreach (var question in Model.RubricThinQuestions)
+                    {
+                        <div class="ils-input-entry-radio ratings">
+                            <input type="hidden" value="@question.Weight" name="@question.WeightId">
+                            <p>@question.Title <br /> @question.Description</p>
+                            @foreach (var answer in question.Answers)
+                            {
+                                <input type="radio" id="@answer.Id" name="@question.HtmlName" value="@answer.Value" checked="@(answer.IsSelected)">
+                                <div>
+                                <label for="@answer.Id">
+                                    @answer.Value: @answer.Title
+                                    @Html.Raw(answer.Description)
+                                </label>
+                                    <ul style="margin: 0 0 20px 0;">
+                                @foreach (var descriptor in answer.Descriptors)
+                                {
+                                    <li>@Html.Raw(descriptor)</li>
+                                }
+                                </ul>
+                                </div>
+                            }
+                        </div>
+                    }
 
             <div class="ils-input-entry form-group">
                 <label for="notes" class="control-label">
@@ -172,7 +146,7 @@
             </div>
             </form>
             }
-            else if (Model.Answer.QuestionType == Models.QuestionEnum.SentenceRepetition)
+            else if (Model.Answer.QuestionType == Models.QuestionEnum.IntegratedSpeaking || Model.Answer.QuestionType == Models.QuestionEnum.SentenceRepetition)
             {
                 <form method="post">
                     <input type="hidden" asp-for="Answer.Id" class="form-control" />

@@ -1,0 +1,46 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Admin.RubricModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Create and Edit Scale Answer";
+}
+
+<h1>Create and Edit Scale Answer</h1>
+
+<h2>Scale</h2>
+
+<h2>Scale Question</h2>
+
+<h2>Scale Information</h2>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="ils-input-entry form-group">
+                <label for="RaterScale_Title" class="control-label">Title (leave blank to delete)</label>
+                <input asp-for="RaterScale.Title" class="form-control" />
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="RaterScale_Description" class="control-label">Description</label>
+                <textarea asp-for="RaterScale.Description" class="ils-input-long form-control"></textarea>
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="RaterScale_Description" class="control-label">Descriptors (individual sentences of items to look for)</label>
+                <textarea asp-for="RaterScale.Descriptors" class="ils-input-long form-control"></textarea>
+            </div>
+            <div class="ils-input-entry form-group">
+                <label for="RaterScale_Value" class="control-label">Value (numeric)</label>
+                <input asp-for="RaterScale.Value" class="form-control" />
+            </div>
+            <input type="hidden" asp-for="RaterScale.Id" class="form-control" />
+            <input type="hidden" asp-for="RaterScale.QuestionInformationId" class="form-control" />
+            <input type="hidden" asp-for="RaterScale.RaterScaleName" class="form-control" />
+            <div class="form-group">
+                <input type="submit" value="Create" class="il-button" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
