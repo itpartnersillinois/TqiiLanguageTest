@@ -101,7 +101,6 @@ namespace TqiiLanguageTest.Models {
         public string RecordingText { get; set; } = string.Empty;
 
         public string? ReviewerNotes { get; set; }
-        public string? RubricInformation { get; set; }
         public virtual TestUser? TestUser { get; set; }
         public int? TestUserId { get; set; }
         public string Text { get; set; } = "";

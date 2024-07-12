@@ -19,6 +19,7 @@ namespace TqiiLanguageTest.Models {
         public string Notes { get; set; } = "";
         public virtual RaterTest? RaterTest { get; set; }
         public int RaterTestId { get; set; }
-        public int Score { get; set; }
+        public float Score { get; set; }
+        public string ScoreText { get; set; } = "";
     }
 }

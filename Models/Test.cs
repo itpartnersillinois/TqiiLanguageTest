@@ -27,6 +27,7 @@ namespace TqiiLanguageTest.Models {
         public int NumberQuestions { get; set; }
         public int PracticeOrder { get; set; }
         public virtual ICollection<Question>? Questions { get; set; }
+        public string RubricRaterScaleName { get; set; } = string.Empty;
         public TestEnum TestType { get; set; }
         public string? Title { get; set; }
     }

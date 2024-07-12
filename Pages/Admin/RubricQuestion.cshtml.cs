@@ -35,7 +35,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!string.IsNullOrWhiteSpace(idString)) {
                 QuestionId = int.Parse(idString);
                 RaterScale = _context?.RaterScales?.Find(QuestionId) ?? throw new SecurityException("Rater Scale not found");
-                RaterScaleAnswers = _context?.RaterScales?.Where(rs => rs.QuestionInformationId == QuestionId).ToDictionary(rs => rs.Id, rs => rs.Title + " (" + rs.Value + ")") ?? new Dictionary<int, string>();
+                RaterScaleAnswers = _context?.RaterScales?.Where(rs => rs.QuestionInformationId == QuestionId).OrderBy(rs => rs.Value).ToDictionary(rs => rs.Id, rs => rs.Title + " (" + rs.Value + ")") ?? new Dictionary<int, string>();
                 RaterScaleName = RaterScale.RaterScaleName;
             } else if (!string.IsNullOrWhiteSpace(RaterScaleName)) {
                 var items = _context?.RaterScales?.Where(rs => rs.RaterScaleName == RaterScaleName && rs.QuestionInformationId == null).OrderBy(rs => rs.Order).ToDictionary(rs => rs.Id, rs => rs.Title) ?? new Dictionary<int, string>();
@@ -52,7 +52,10 @@ namespace TqiiLanguageTest.Pages.Admin {
                 throw new Exception("Unauthorized");
             }
             RaterScaleName = Request.Query["name"];
-            if (RaterScale.Id != 0 && RaterScale.Title == "") {
+            RaterScale.Description = RaterScale.Description ?? "";
+            RaterScale.Descriptors = "";
+
+            if (RaterScale.Id != 0 && string.IsNullOrWhiteSpace(RaterScale.Title)) {
                 _context.Remove(RaterScale);
                 _context.SaveChanges();
             } else if (RaterScale.Id != 0) {

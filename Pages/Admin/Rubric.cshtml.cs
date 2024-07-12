@@ -41,10 +41,12 @@ namespace TqiiLanguageTest.Pages.Admin {
         }
 
         public async Task<IActionResult> OnPostAsync() {
+            RaterScale.Description = RaterScale.Description ?? "";
+            RaterScale.Descriptors = RaterScale.Descriptors ?? "";
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 throw new Exception("Unauthorized");
             }
-            if (RaterScale.Id != 0 && RaterScale.Title == "") {
+            if (RaterScale.Id != 0 && string.IsNullOrWhiteSpace(RaterScale.Title)) {
                 _context.Remove(RaterScale);
                 _context.SaveChanges();
             } else if (RaterScale.Id != 0) {
