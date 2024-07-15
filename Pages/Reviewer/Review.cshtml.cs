@@ -98,6 +98,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             var rubricRatings = _context.RaterScales.Where(rs => rs.RaterScaleName == rubricRaterScaleName).ToList();
             if (rubricRatings.Count > 0) {
                 RubricThinQuestions = RubricThinQuestion.GenerateFromDatabase(rubricRatings, scoreText);
+            } else {
+                RubricThinQuestions = new List<RubricThinQuestion>();
             }
         }
 
