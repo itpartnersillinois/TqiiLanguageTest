@@ -2,20 +2,20 @@
 @model TqiiLanguageTest.Pages.Admin.RubricScaleModel
 @{
     Layout = "_Admin";
-    ViewData["Title"] = "Create and Edit Scale";
+    ViewData["Title"] = "Create and Edit Rubric Scale";
 }
 
 <h2>Edit Scales</h2>
 
 <div class="ils-input-entry form-group">
-    <label for="scale" class="control-label">Choose a Scale</label>
+    <label for="scale" class="control-label">Choose a Scale to Edit</label>
     <select id="scale" class="ils-input-long" asp-items="ViewBag.RaterScale" onchange="window.location = '/admin/RubricQuestion?name=' + this.value"></select>
 </div>
 
-<h2>Or type in a new scale</h2>
+<h2>Or type in a new scale to create one</h2>
 
     <div class="ils-input-entry form-group">
-        <label for="title" class="control-label">Title (leave blank to delete)</label>
+        <label for="title" class="control-label">Title</label>
         <input id="title" class="form-control" />
     </div>
     <div class="form-group">
