@@ -2,36 +2,36 @@
 @model TqiiLanguageTest.Pages.Admin.RubricQuestionModel
 @{
     Layout = "_Admin";
-    ViewData["Title"] = "Create and Edit Scale Question";
+    ViewData["Title"] = "Create and Edit Scale Category";
 }
 
-<h1>Create and Edit Scale Question</h1>
+<h1>Create and Edit Scale Category</h1>
 
 <h2>Scale</h2>
 
-<p>@Model.RaterScaleName</p>
+<p>Scale: @Model.RaterScaleName</p>
 
-@if (Model.RaterScale.Id == 0)
+@if (Model.RaterScale?.Id == 0)
 {
-    <h2>Edit an Existing Question</h2>
+    <h2>Edit an Existing Category</h2>
     <div class="ils-input-entry form-group">
-        <label for="question" class="control-label">Choose a Question</label>
+        <label for="question" class="control-label">Choose a Category</label>
         <select id="question" class="ils-input-long" asp-items="ViewBag.RaterScaleQuestions" onchange="window.location = '/admin/RubricQuestion?id=' + this.value"></select>
     </div>
 }
-@if (Model.RaterScale.Id > 0)
+@if (Model.RaterScale?.Id > 0)
 {
-    <h2>Edit an Existing Answer</h2>
+    <h2>Score Levels</h2>
     <ul>
         @foreach (var item in Model.RaterScaleAnswers)
         {
             <li><a href="/admin/Rubric?id=@item.Key&questionid=@Model.RaterScale.Id">@item.Value</a></li>
         }
-        <li><a href="/admin/Rubric?questionid=@Model.RaterScale.Id">Or Add a New Answer</a></li>
+        <li><a href="/admin/Rubric?questionid=@Model.RaterScale.Id">Add a New Score Level</a></li>
     </ul>
 }
 
-<h2>Editing a Question</h2>
+<h2>Add or Edit a Category</h2>
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -44,11 +44,11 @@
                 <textarea asp-for="RaterScale.Description" class="ils-input-long form-control"></textarea>
             </div>
             <div class="ils-input-entry form-group">
-                <label for="RaterScale_Weight" class="control-label">Weight (decimal)</label>
+                <label for="RaterScale_Weight" class="control-label">Score Weight (decimal)</label>
                 <input asp-for="RaterScale.Weight" class="form-control" />
             </div>
             <div class="ils-input-entry form-group">
-                <label for="RaterScale_Order" class="control-label">Order (integer)</label>
+                <label for="RaterScale_Order" class="control-label">Order in which this appears (integer)</label>
                 <input asp-for="RaterScale.Order" class="form-control" />
             </div>
             <input type="hidden" asp-for="RaterScale.Id" class="form-control" />

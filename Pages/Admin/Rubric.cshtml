@@ -2,16 +2,11 @@
 @model TqiiLanguageTest.Pages.Admin.RubricModel
 @{
     Layout = "_Admin";
-    ViewData["Title"] = "Create and Edit Scale Answer";
+    ViewData["Title"] = "Create and Edit Scale Score Level";
 }
 
-<h1>Create and Edit Scale Answer</h1>
+<h1>Create and Edit Scale Score Level</h1>
 
-<h2>Scale</h2>
-
-<h2>Scale Question</h2>
-
-<h2>Scale Information</h2>
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -28,7 +23,7 @@
                 <textarea asp-for="RaterScale.Descriptors" class="ils-input-long form-control"></textarea>
             </div>
             <div class="ils-input-entry form-group">
-                <label for="RaterScale_Value" class="control-label">Value (numeric)</label>
+                <label for="RaterScale_Value" class="control-label">Score (numeric)</label>
                 <input asp-for="RaterScale.Value" class="form-control" />
             </div>
             <input type="hidden" asp-for="RaterScale.Id" class="form-control" />
