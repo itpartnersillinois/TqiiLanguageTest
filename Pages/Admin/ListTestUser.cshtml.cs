@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using System.Linq.Expressions;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
@@ -26,15 +27,36 @@ namespace TqiiLanguageTest.Pages.Admin {
             var take = string.IsNullOrWhiteSpace(Request.Query["take"]) ? 50 : int.Parse(Request.Query["take"]);
             var skip = string.IsNullOrWhiteSpace(Request.Query["skip"]) ? 0 : take * int.Parse(Request.Query["skip"]);
             var search = Request.Query["search"].ToString();
+            var testsearch = Request.Query["testsearch"].ToString();
+            var filter = Request.Query["filter"].ToString() ?? "";
 
             if (_context.TestUsers != null) {
-                if (string.IsNullOrEmpty(search)) {
-                    TestUser = await _context.TestUsers.OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
-                    .Include(t => t.Test).Select(tu => new TestUser { Id = tu.Id, UserIdentification = tu.UserIdentification, Email = tu.Email, CurrentQuestionOrder = tu.CurrentQuestionOrder, DateTimeStart = tu.DateTimeStart, DateTimeEnd = tu.DateTimeEnd, NumberReviewers = tu.NumberReviewers, NumberReviewerScores = tu.NumberReviewerScores, Score = tu.Score, NumberTimesRefreshed = tu.NumberTimesRefreshed, Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id } }).ToListAsync();
-                } else {
-                    TestUser = await _context.TestUsers.Where(tu => tu.Email.Contains(search) || tu.UserIdentification.Contains(search)).OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
-                    .Include(t => t.Test).Select(tu => new TestUser { Id = tu.Id, UserIdentification = tu.UserIdentification, Email = tu.Email, CurrentQuestionOrder = tu.CurrentQuestionOrder, DateTimeStart = tu.DateTimeStart, DateTimeEnd = tu.DateTimeEnd, NumberReviewers = tu.NumberReviewers, NumberReviewerScores = tu.NumberReviewerScores, Score = tu.Score, NumberTimesRefreshed = tu.NumberTimesRefreshed, Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id } }).ToListAsync();
-                }
+                Expression<Func<TestUser, bool>> whereLambda = !string.IsNullOrEmpty(search) ? (tu => tu.Email.Contains(search) || tu.UserIdentification.Contains(search)) :
+                    !string.IsNullOrEmpty(testsearch) ? tu => tu.Test.Title.Contains(testsearch) :
+                    filter == "not-started" ? tu => tu.DateTimeStart == null :
+                    filter == "in-process" ? tu => tu.DateTimeStart != null && tu.DateTimeEnd == null :
+                    filter == "test-completed" ? tu => tu.DateTimeEnd != null :
+                    filter == "restarts" ? tu => tu.NumberTimesRefreshed > 0 :
+                    filter == "need-reviewers" ? tu => tu.DateTimeEnd != null && tu.NumberReviewers == 0 :
+                    filter == "has-reviewers" ? tu => tu.NumberReviewers > 0 && tu.NumberReviewerScores != tu.NumberReviewers && tu.Score == 0 :
+                    filter == "reviews-completed" ? tu => tu.NumberReviewers > 0 && tu.NumberReviewerScores == tu.NumberReviewers && tu.Score == 0 :
+                    filter == "scored" ? tu => tu.NumberReviewers > 0 && tu.NumberReviewerScores == tu.NumberReviewers && tu.Score == 0 : tu => true;
+
+                TestUser = await _context.TestUsers.Include(t => t.Test).Where(whereLambda)
+                    .OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
+                    .Select(tu => new TestUser {
+                        Id = tu.Id,
+                        UserIdentification = tu.UserIdentification,
+                        Email = tu.Email,
+                        CurrentQuestionOrder = tu.CurrentQuestionOrder,
+                        DateTimeStart = tu.DateTimeStart,
+                        DateTimeEnd = tu.DateTimeEnd,
+                        NumberReviewers = tu.NumberReviewers,
+                        NumberReviewerScores = tu.NumberReviewerScores,
+                        Score = tu.Score,
+                        NumberTimesRefreshed = tu.NumberTimesRefreshed,
+                        Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id }
+                    }).ToListAsync();
             }
         }
     }
