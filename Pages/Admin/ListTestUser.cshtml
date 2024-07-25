@@ -39,6 +39,13 @@
         <option value="scored" selected="@(Request.Query["filter"] == "scored")">Scored Tests</option>
     </select>
 </div>
+<div class="ils-input-entry form-group">
+    <label for="sort">Sort Options</label>
+    <select id="sort">
+        <option value="">By Date</option>
+        <option value="test" selected="@(Request.Query["sort"] == "test")">By Test</option>
+    </select>
+</div>
 
 
 <button class="il-button" onclick="refresh(); return false;">Refresh</button>
@@ -130,7 +137,7 @@
         function logKey(e) {
             if (e.code == 'Enter') {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('page').value);
-                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
+                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
             }
         }
 
@@ -146,7 +153,7 @@
 
         function refresh() {
             document.getElementById('pagenumber').value = '1';
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}`;
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}`;
         }
 
         function next() {
@@ -155,7 +162,7 @@
             } else {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) + 1;
             }
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
         }
 
         function previous() {
@@ -164,7 +171,7 @@
             } else {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) - 1;
             }
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
         }
 
     </script>

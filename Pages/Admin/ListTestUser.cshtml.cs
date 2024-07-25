@@ -29,6 +29,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             var search = Request.Query["search"].ToString();
             var testsearch = Request.Query["testsearch"].ToString();
             var filter = Request.Query["filter"].ToString() ?? "";
+            var sort = Request.Query["sort"].ToString() ?? "";
 
             if (_context.TestUsers != null) {
                 Expression<Func<TestUser, bool>> whereLambda = !string.IsNullOrEmpty(search) ? (tu => tu.Email.Contains(search) || tu.UserIdentification.Contains(search)) :
@@ -42,21 +43,39 @@ namespace TqiiLanguageTest.Pages.Admin {
                     filter == "reviews-completed" ? tu => tu.NumberReviewers > 0 && tu.NumberReviewerScores == tu.NumberReviewers && tu.Score == 0 :
                     filter == "scored" ? tu => tu.NumberReviewers > 0 && tu.NumberReviewerScores == tu.NumberReviewers && tu.Score == 0 : tu => true;
 
-                TestUser = await _context.TestUsers.Include(t => t.Test).Where(whereLambda)
-                    .OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
-                    .Select(tu => new TestUser {
-                        Id = tu.Id,
-                        UserIdentification = tu.UserIdentification,
-                        Email = tu.Email,
-                        CurrentQuestionOrder = tu.CurrentQuestionOrder,
-                        DateTimeStart = tu.DateTimeStart,
-                        DateTimeEnd = tu.DateTimeEnd,
-                        NumberReviewers = tu.NumberReviewers,
-                        NumberReviewerScores = tu.NumberReviewerScores,
-                        Score = tu.Score,
-                        NumberTimesRefreshed = tu.NumberTimesRefreshed,
-                        Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id }
-                    }).ToListAsync();
+                if (sort == "test") {
+                    TestUser = await _context.TestUsers.Include(t => t.Test).Where(whereLambda)
+                        .OrderBy(tu => tu.Test.Title).ThenByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
+                        .Select(tu => new TestUser {
+                            Id = tu.Id,
+                            UserIdentification = tu.UserIdentification,
+                            Email = tu.Email,
+                            CurrentQuestionOrder = tu.CurrentQuestionOrder,
+                            DateTimeStart = tu.DateTimeStart,
+                            DateTimeEnd = tu.DateTimeEnd,
+                            NumberReviewers = tu.NumberReviewers,
+                            NumberReviewerScores = tu.NumberReviewerScores,
+                            Score = tu.Score,
+                            NumberTimesRefreshed = tu.NumberTimesRefreshed,
+                            Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id }
+                        }).ToListAsync();
+                } else {
+                    TestUser = await _context.TestUsers.Include(t => t.Test).Where(whereLambda)
+                        .OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
+                        .Select(tu => new TestUser {
+                            Id = tu.Id,
+                            UserIdentification = tu.UserIdentification,
+                            Email = tu.Email,
+                            CurrentQuestionOrder = tu.CurrentQuestionOrder,
+                            DateTimeStart = tu.DateTimeStart,
+                            DateTimeEnd = tu.DateTimeEnd,
+                            NumberReviewers = tu.NumberReviewers,
+                            NumberReviewerScores = tu.NumberReviewerScores,
+                            Score = tu.Score,
+                            NumberTimesRefreshed = tu.NumberTimesRefreshed,
+                            Test = new Test { Title = tu.Test.Title, Id = tu.Test.Id }
+                        }).ToListAsync();
+                }
             }
         }
     }
