@@ -10,7 +10,7 @@
 
 <div class="ils-input-entry form-group">
 <label for="take">Number of Items</label>
-<select id="take" onchange="">
+<select id="take">
     <option value="50">50</option>
     <option value="100">100</option>
     <option value="200">200</option>
@@ -18,9 +18,36 @@
 </div>
 
 <div class="ils-input-entry form-group">
-    <label for="search">Search: </label>
+    <label for="search">User Search: </label>
     <input id="search" type="text" value="@(Request.Query["search"])" />
 </div>
+<div class="ils-input-entry form-group">
+    <label for="testsearch">Test Title Search: </label>
+    <input id="testsearch" type="text" value="@(Request.Query["testsearch"])" />
+</div>
+<div class="ils-input-entry form-group">
+    <label for="filter">Test Filter</label>
+    <select id="filter" style="width: 400px;">
+        <option value="">All tests</option>
+        <option value="not-started" selected="@(Request.Query["filter"] == "not-started")">Tests not Started</option>
+        <option value="in-process" selected="@(Request.Query["filter"] == "in-process")">Tests in Process</option>
+        <option value="test-completed" selected="@(Request.Query["filter"] == "test-completed")">Completed Tests</option>
+        <option value="restarts" selected="@(Request.Query["filter"] == "restarts")">Tests Restarted</option>
+        <option value="need-reviewers" selected="@(Request.Query["filter"] == "need-reviewers")">Tests that need Reviewers</option>
+        <option value="has-reviewers" selected="@(Request.Query["filter"] == "has-reviewers")">Tests that have Reviewers</option>
+        <option value="reviews-completed" selected="@(Request.Query["filter"] == "reviews-completed")">Tests ready to be Finalized</option>
+        <option value="scored" selected="@(Request.Query["filter"] == "scored")">Scored Tests</option>
+    </select>
+</div>
+<div class="ils-input-entry form-group">
+    <label for="sort">Sort Options</label>
+    <select id="sort">
+        <option value="">By Date</option>
+        <option value="test" selected="@(Request.Query["sort"] == "test")">By Test</option>
+    </select>
+</div>
+
+
 <button class="il-button" onclick="refresh(); return false;">Refresh</button>
 
 <table class="table">
@@ -110,7 +137,7 @@
         function logKey(e) {
             if (e.code == 'Enter') {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('page').value);
-                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
+                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
             }
         }
 
@@ -126,7 +153,7 @@
 
         function refresh() {
             document.getElementById('pagenumber').value = '1';
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}`;
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}`;
         }
 
         function next() {
@@ -135,7 +162,7 @@
             } else {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) + 1;
             }
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
         }
 
         function previous() {
@@ -144,7 +171,7 @@
             } else {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) - 1;
             }
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&skip=${document.getElementById('pagenumber').value}`;
+            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
         }
 
     </script>
