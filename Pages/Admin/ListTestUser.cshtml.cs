@@ -24,6 +24,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 throw new Exception("Unauthorized");
             }
+            _ = _context.Database.ExecuteSqlRaw("exec dbo.ResetReviewerStats");
             var take = string.IsNullOrWhiteSpace(Request.Query["take"]) ? 50 : int.Parse(Request.Query["take"]);
             var skip = string.IsNullOrWhiteSpace(Request.Query["skip"]) ? 0 : take * int.Parse(Request.Query["skip"]);
             var search = Request.Query["search"].ToString();
