@@ -96,9 +96,38 @@
                 </audio>
             </p>
 
+            @if (Model.OtherAnswerList.Count != 0)
+            {
+                <section class="other-ratings">
+                    <h3>Other Ratings</h3>
+                    <p>You are giving a final grade based on the other ratings given. Please use these ratings in your final decision. </p>
+                    <table>
+                        <caption>Other ratings given to this answer</caption>
+                        <tr>
+                            <th>#</th>
+                            <th>Score</th>
+                            <th>Score Text (used in complex rubrics)</th>
+                            <th>Notes</th>
+                            <th>Disqualified</th>
+                        </tr>
+                        @foreach (var otherAnswer in Model.OtherAnswerList)
+                        {
+                            <tr>
+                                <td>@otherAnswer.Id</td>
+                                <td>@otherAnswer.Score</td>
+                                <td>@otherAnswer.ScoreText</td>
+                                <td>@otherAnswer.Notes</td>
+                                <td>@(otherAnswer.IsDisqualified ? "Yes" : "No")</td>
+                            </tr>
+                        }
+                    </table>
+                </section>
+            }
+
 
             @if (Model.RubricThinQuestions.Count > 0)
             {
+            <h3>Your Rating</h3>
             <form method="post">
             <input type="hidden" asp-for="Answer.Id" class="form-control" />
                     @foreach (var question in Model.RubricThinQuestions)

@@ -77,6 +77,7 @@ namespace TqiiLanguageTest.Models {
         public byte[] RecordingImage { get; set; } = Array.Empty<byte>();
         public string RecordingText { get; set; } = string.Empty;
         public string Route => (QuestionType == QuestionEnum.Instructions || (DurationAnswerInSeconds == 0 && DurationRecordingInSeconds == 0)) ? "MarkComplete" : DurationAnswerInSeconds == 0 ? "Recording" : "Answer";
+        public string RubricRaterScaleName { get; set; } = string.Empty;
         public string SentenceRepetionText { get; set; } = string.Empty;
 
         public Test? Test { get; set; }

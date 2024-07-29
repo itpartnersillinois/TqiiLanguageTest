@@ -36,6 +36,11 @@
             <option value="4">Basic Question / Answer</option>
         </select>
     </div>
+    <div class="ils-input-entry form-group">
+        <label for="Test_RubricRaterScaleName" class="control-label">Choose a Rubric / Rater Scale Name (leave blank to use the test rubric)</label>
+        <select asp-for="Question.RubricRaterScaleName" class="ils-input-long" asp-items="ViewBag.Rubrics"></select>
+    </div>
+
     <hr />
     <h3>Introduction (for Sentence Repetition, Integrated Speaking, and Instruction Only)</h3>
     <div class="ils-input-entry form-group">
