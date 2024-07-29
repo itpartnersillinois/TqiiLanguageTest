@@ -27,10 +27,18 @@
 @if (Model.IsFinalized)
 {
     <h2>Finalize Test</h2>
+
+
     <p>Note that this will finalize the test and prevent others from grading it.</p>
     <form method="post">
         <input type="hidden" value="@Model.IdString" name="id" id="id" />
         <input type="hidden" value="true" name="finalize" id="finalize" />
+
+        <div class="ils-input-entry form-group">
+            <label for="adminreview">Create an Admin Review (must be listed as a rater): </label>
+            <input type="checkbox" class="form-control" id="adminreview" name="adminreview" onclick="changeAdminReview()" />
+        </div>
+        <div id="finalscores">
         <div class="ils-input-entry form-group">
             <label for="score">Final Score: </label>
             <input type="text" value="@Model.FinalScore" class="form-control" id="score" name="score" />
@@ -39,9 +47,9 @@
             Notes:
         </label>
         <textarea class="ils-input-long form-control" id="notes" name="notes"></textarea>
-
+        </div>
         <div class="form-group">
-            <input type="submit" value="Finalize Test" style="width: fit-content" class="il-button" />
+            <input type="submit" id="finalizeTestButton" value="Finalize Test" style="width: fit-content" class="il-button" />
         </div>
 
     </form>
@@ -71,3 +79,20 @@
 
     <p><a href="/Admin/CreateRaterTest?finalize=true&id=@Model.IdString">Finalize Test</a></p>
 }
+
+<script>
+    function changeAdminReview() {
+        var adminreview = document.getElementById("adminreview");
+        var finalscores = document.getElementById("finalscores");
+        var button = document.getElementById("finalizeTestButton");
+
+        if (adminreview.checked) {
+            finalscores.style.display = "none";
+            button.value = "Create Final Review";
+        }
+        else {
+            finalscores.style.display = "block";
+            button.value = "Finalize Test";
+        }
+    }
+</script>

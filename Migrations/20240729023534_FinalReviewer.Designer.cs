@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations
 {
     [DbContext(typeof(LanguageDbContext))]
-    partial class LanguageDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240729023534_FinalReviewer")]
+    partial class FinalReviewer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,10 +256,6 @@ namespace TqiiLanguageTest.Migrations
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("RecordingText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RubricRaterScaleName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

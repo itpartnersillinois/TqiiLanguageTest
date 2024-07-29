@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
@@ -23,6 +24,10 @@ namespace TqiiLanguageTest.Pages.Admin {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
+            var rubrics = _context.RaterScales?.Select(r => r.RaterScaleName).OrderBy(s => s).Distinct().ToList();
+            rubrics?.Insert(0, "");
+            ViewData["Rubrics"] = new SelectList(rubrics);
+
             if (questionid == 0) {
                 var language = _context.Tests?.Find(id)?.Language ?? "";
                 Question = new Question { TestId = id, Language = language };

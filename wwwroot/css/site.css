@@ -245,3 +245,10 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
     .il-formatted a.answered::after {
         content: '*';
     }
+
+section.other-ratings {
+    margin: 20px 0;
+    padding: 20px 0;
+    border-top: thin solid var(--il-orange);
+    border-bottom: thin solid var(--il-orange);
+}

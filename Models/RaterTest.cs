@@ -13,6 +13,7 @@ namespace TqiiLanguageTest.Models {
         public int Id { get; set; }
 
         public bool IsExtraScorer { get; set; }
+        public bool IsFinalScorer { get; set; }
         public bool IsPassed { get; set; }
         public string Notes { get; set; } = "";
         public virtual RaterName? Rater { get; set; }

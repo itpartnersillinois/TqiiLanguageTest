@@ -30,6 +30,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
         public bool IsFinal { get; set; }
         public string NextAnswerId { get; set; }
         public string NumberAnswered { get; set; }
+        public List<RaterAnswer> OtherAnswerList { get; set; } = default!;
         public string RaterId { get; set; }
         public string RaterNotes { get; set; }
         public float Rating { get; set; }
@@ -44,6 +45,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             AnswerId = Request.Query.ContainsKey("answerid") ? Request.Query["answerid"] : "0";
             IsFinal = Request.Query.ContainsKey("final");
             UrlString = $"review?id={Id}&raterid={RaterId}";
+            var isFinalScorer = false;
             var id = int.Parse(Id);
             var raterId = int.Parse(RaterId);
             var answerId = int.Parse(AnswerId);
@@ -57,7 +59,9 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 var answerObjects = await _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == id && a.Question.QuestionType != QuestionEnum.Instructions).OrderBy(a => a.DateTimeEnd).Select(a => new { a.Question.Title, a.Id }).ToListAsync();
                 var raterAnswers = await _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).Select(ra => ra.AnswerId).ToListAsync();
 
-                var secondaryRater = _context.RaterTests.First(rt => rt.Id == raterId).RaterAnswerRemoveIdString;
+                var raterTest = _context.RaterTests.First(rt => rt.Id == raterId);
+                var secondaryRater = raterTest.RaterAnswerRemoveIdString;
+                isFinalScorer = raterTest.IsFinalScorer;
                 if (!string.IsNullOrWhiteSpace(secondaryRater)) {
                     var answersToRemove = secondaryRater.Split(',').Select(i => int.Parse(i));
                     answerObjects.RemoveAll(a => answersToRemove.Contains(a.Id));
@@ -83,7 +87,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             var scoreText = "";
 
             if (_context.Answers != null && answerId != 0) {
-                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, QuestionGuid = a.Question.Guid, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText } }).First(a => a.Id == answerId);
+                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, QuestionGuid = a.Question.Guid, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText, RubricRaterScaleName = a.Question.RubricRaterScaleName } }).First(a => a.Id == answerId);
                 var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                 if (raterAnswer != null) {
                     RaterNotes = raterAnswer.Notes;
@@ -91,10 +95,20 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     IsDisqualified = raterAnswer.IsDisqualified;
                     scoreText = raterAnswer.ScoreText;
                 }
+                if (isFinalScorer) {
+                    var otherTestIds = _context.RaterTests.Where(rt => rt.TestUserId == id && !rt.IsFinalScorer).Select(rt => rt.Id).ToList();
+                    OtherAnswerList = _context.RaterAnswers.Where(ra => ra.AnswerId == answerId && otherTestIds.Contains(ra.RaterTestId)).ToList();
+                    var i = 1;
+                    foreach (var otherAnswer in OtherAnswerList) {
+                        otherAnswer.Id = i++;
+                    }
+                } else {
+                    OtherAnswerList = new List<RaterAnswer>();
+                }
             }
 
             var testId = _context.TestUsers.First(tu => tu.Id == id).TestId;
-            var rubricRaterScaleName = _context.Tests.First(t => t.Id == testId).RubricRaterScaleName;
+            var rubricRaterScaleName = !string.IsNullOrWhiteSpace(Answer?.Question?.RubricRaterScaleName) ? Answer?.Question?.RubricRaterScaleName : _context.Tests.First(t => t.Id == testId).RubricRaterScaleName;
             var rubricRatings = _context.RaterScales.Where(rs => rs.RaterScaleName == rubricRaterScaleName).ToList();
             if (rubricRatings.Count > 0) {
                 RubricThinQuestions = RubricThinQuestion.GenerateFromDatabase(rubricRatings, scoreText);

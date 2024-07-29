@@ -48,9 +48,9 @@ namespace TqiiLanguageTest.Pages.Admin {
                 UserId = testinformation.UserIdentification ?? "";
                 IdString = Id.ToString();
 
-                var assignedRaterInformation = await _context.RaterTests.Include(rt => rt.Rater).Where(rt => rt.TestUserId == Id).Select(rt => new { rt.Id, rt.Rater.Email, rt.IsExtraScorer, rt.FinalScore, rt.DateFinished }).ToListAsync();
+                var assignedRaterInformation = await _context.RaterTests.Include(rt => rt.Rater).Where(rt => rt.TestUserId == Id).Select(rt => new { rt.Id, rt.Rater.Email, rt.IsExtraScorer, rt.IsFinalScorer, rt.FinalScore, rt.DateFinished }).ToListAsync();
 
-                AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string, int>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore, rt.Id)).OrderBy(s => s.Item1).ToList();
+                AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string, int>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : rt.IsFinalScorer ? " (Final)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore, rt.Id)).OrderBy(s => s.Item1).ToList();
 
                 if (assignedRaterInformation.Any() && !assignedRaterInformation.Any(a => a.DateFinished == null)) {
                     FinalScore = assignedRaterInformation.Sum(a => a.FinalScore) / assignedRaterInformation.Count();
@@ -66,7 +66,18 @@ namespace TqiiLanguageTest.Pages.Admin {
             var ratersSecond = Request.Form.ContainsKey("raters-second") ? Request.Form["raters-second"].ToString() : "";
             var testUser = _context.TestUsers.First(tu => tu.Id == testUserId);
             var currentDate = DateTime.Now;
-            if (Request.Form.ContainsKey("finalize")) {
+            if (Request.Form.ContainsKey("finalize") && Request.Form.ContainsKey("adminreview")) {
+                var currentEmail = User.Identity?.Name ?? "";
+                var adminRater = _context.RaterNames.FirstOrDefault(rn => rn.Email == currentEmail);
+                var finalRating = _context.RaterTests.FirstOrDefault(rt => rt.IsFinalScorer && rt.TestUserId == testUserId);
+                if (adminRater != null) {
+                    if (finalRating == null) {
+                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = false, IsFinalScorer = true, RaterNameId = adminRater.Id, TestUserId = testUserId, RaterAnswerRemoveIdString = "" });
+                    } else {
+                        finalRating.RaterNameId = adminRater.Id;
+                    }
+                }
+            } else if (Request.Form.ContainsKey("finalize")) {
                 testUser.ReviewerNotes = Request.Form["notes"];
                 testUser.Score = float.Parse(Request.Form["score"].ToString());
             } else {
@@ -97,6 +108,12 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
 
             _context.SaveChanges();
+            if (Request.Form.ContainsKey("finalize") && Request.Form.ContainsKey("adminreview")) {
+                var raterTest = _context.RaterTests.Where(rt => rt.TestUserId == testUserId && rt.IsFinalScorer).FirstOrDefault();
+                if (raterTest != null) {
+                    return Redirect($"/reviewer/review?id={testUserId}&raterid={raterTest.Id}");
+                }
+            }
             if (!Request.Form.ContainsKey("finalize") && !string.IsNullOrWhiteSpace(raters)) {
                 _autograding.AutoGrade(currentDate, testUser, testUserId);
             }
