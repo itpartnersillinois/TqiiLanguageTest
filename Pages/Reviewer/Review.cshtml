@@ -134,7 +134,7 @@
                     {
                         <div class="ils-input-entry-radio ratings">
                             <input type="hidden" value="@question.Weight" name="@question.WeightId">
-                            <p>@question.Title <br /> @question.Description</p>
+                            <div style="padding-top: 3px;"><p>@question.Title </p><p> @question.Description</p></div>
                             @foreach (var answer in question.Answers)
                             {
                                 <input type="radio" id="@answer.Id" name="@question.HtmlName" value="@answer.Value" checked="@(answer.IsSelected)">
