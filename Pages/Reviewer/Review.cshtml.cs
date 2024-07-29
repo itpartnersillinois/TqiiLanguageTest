@@ -149,7 +149,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                             AnswerId = answerId,
                             DateFinished = DateTime.Now,
                             Notes = Request.Form["notes"],
-                            Score = Request.Form.ContainsKey("level") ? int.Parse(Request.Form["level"]) : 0,
+                            Score = totalValue * 100,
+                            ScoreText = answers,
                             RaterTestId = raterId,
                             IsAnswered = true,
                             IsDisqualified = Request.Form.ContainsKey("isdisqualified")
