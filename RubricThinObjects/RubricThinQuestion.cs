@@ -17,7 +17,7 @@ namespace TqiiLanguageTest.RubricThinObjects {
                 Weight = rs.Weight,
                 HtmlName = "raterScale_" + i,
                 WeightId = "raterScaleWeight_" + i,
-                Answers = raterScales.Where(rsa => rsa.QuestionInformationId == rs.Id).OrderBy(rs => rs.Value).Select(rsa => new RubricThinAnswer {
+                Answers = raterScales.Where(rsa => rsa.QuestionInformationId == rs.Id).OrderByDescending(rs => rs.Value).Select(rsa => new RubricThinAnswer {
                     Description = rsa.Description,
                     Title = rsa.Title,
                     IsSelected = false,
