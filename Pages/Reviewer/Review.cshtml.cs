@@ -131,7 +131,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     var answers = "";
                     float totalValue = 0;
                     foreach (var key in Request.Form.Keys.Where(k => k.StartsWith("raterScale_")).OrderBy(s => s)) {
-                        answers += i + ": " + Request.Form[key] + "; ";
+                        answers += Request.Form["raterScaleTitle_" + i] + ": " + Request.Form[key] + "; ";
                         totalValue += float.Parse(Request.Form[key]) * float.Parse(Request.Form["raterScaleWeight_" + i]);
                         i++;
                     }
@@ -139,7 +139,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                     if (raterAnswer != null) {
                         raterAnswer.Notes = Request.Form["notes"];
-                        raterAnswer.Score = totalValue * 100;
+                        raterAnswer.Score = totalValue;
                         raterAnswer.ScoreText = answers;
                         raterAnswer.IsAnswered = true;
                         raterAnswer.IsDisqualified = Request.Form.ContainsKey("isdisqualified");
@@ -149,7 +149,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                             AnswerId = answerId,
                             DateFinished = DateTime.Now,
                             Notes = Request.Form["notes"],
-                            Score = totalValue * 100,
+                            Score = totalValue,
                             ScoreText = answers,
                             RaterTestId = raterId,
                             IsAnswered = true,

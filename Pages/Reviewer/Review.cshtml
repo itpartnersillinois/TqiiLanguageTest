@@ -134,6 +134,7 @@
                     {
                         <div class="ils-input-entry-radio ratings">
                             <input type="hidden" value="@question.Weight" name="@question.WeightId">
+                            <input type="hidden" value="@question.Title" name="@question.TitleId">
                             <div style="padding-top: 3px;"><p>@question.Title </p><p> @question.Description</p></div>
                             @foreach (var answer in question.Answers)
                             {
