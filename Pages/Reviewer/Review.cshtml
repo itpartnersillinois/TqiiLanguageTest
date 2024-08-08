@@ -213,11 +213,25 @@
                 </label>
                 <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
             </div>
-            <div class="ils-input-entry form-group">
-                <label for="isdisqualified" class="control-label">
-                    Disqualify this question because of technical issues:
-                </label>
-                        <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+            <div style="display: flex;">
+                <div class="ils-input-entry form-group">
+                    <label for="isdisqualified" class="control-label">
+                        Disqualify this question because of technical issues:
+                    </label>
+                    <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+                </div>
+                    <div class="ils-input-entry form-group">
+                    <label for="issuspicious" class="control-label">
+                        Mark this as malpractice:
+                    </label>
+                                    <input type="checkbox" class="ils-input form-control" id="issuspicious" name="issuspicious" checked="@Model.IsSuspicious">
+                </div>
+                <div class="ils-input-entry form-group">
+                    <label for="isflagged" class="control-label">
+                                Flag this for later review:
+                    </label>
+                                    <input type="checkbox" class="ils-input form-control" id="isflagged" name="isflagged" checked="@Model.IsFlagged">
+                </div>
             </div>
             <input type="hidden" value="@Model.Id" name="id">
             <input type="hidden" value="@Model.RaterId" name="raterid">
