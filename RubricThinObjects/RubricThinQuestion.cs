@@ -30,10 +30,12 @@ namespace TqiiLanguageTest.RubricThinObjects {
             }).ToList();
 
             if (!string.IsNullOrWhiteSpace(scoreText)) {
+                var i = 0;
                 foreach (var item in scoreText.Split(';').Select(a => a.Trim())) {
                     if (!string.IsNullOrWhiteSpace(item)) {
                         var parts = item.Split(':').Select(s => s.Trim()).ToList();
-                        returnValue[int.Parse(parts[0])].Answers.Single(a => a.Value == int.Parse(parts[1])).IsSelected = true;
+                        returnValue[i].Answers.Single(a => a.Value == int.Parse(parts[1])).IsSelected = true;
+                        i++;
                     }
                 }
             }

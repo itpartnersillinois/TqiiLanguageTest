@@ -9,10 +9,15 @@
 <div style="display: flex;margin-top: 10px;column-gap: 10px;">
     <div style="flex-basis: 0%;flex-grow: 1;background: var(--il-gray-1);">
         <ul>
+            @if (Model.OtherAnswerList.Count > 0) {
+                <li>
+                        <a href="@Model.UrlString">List of all Answers</a>
+                </li>
+            }
             @foreach (var item in Model.Answers)
             {
                 <li>
-                    <a class="@(item.Item4 ? "answered" : "")" href="@Model.UrlInfo(item.Item1, item.Item3)">@item.Item2</a>
+                    <a class="@(item.Item5 ? "flagged" : item.Item4 ? "answered" : "")" href="@Model.UrlInfo(item.Item1, item.Item3)">@item.Item2</a>
                 </li>
             }
             <li>
@@ -21,6 +26,50 @@
         </ul>
     </div>
     <div style="flex-basis: 0%; flex-grow: 3;">
+        @if (Model.Answer == null && Model.OtherAnswerList.Count > 0)
+        {
+            <div class="otheranswer-table">
+            @foreach (var item in Model.Answers)
+            {
+                <p>
+                    <a href="@Model.UrlInfo(item.Item1, item.Item3)">@item.Item2</a>
+                </p>
+                <table>
+                    <caption>Other ratings given to this answer</caption>
+                    <tr>
+                                <th>Person</th>
+                                <th>Score</th>
+                        <th>Score Text (used in complex rubrics)</th>
+                        <th>Notes</th>
+                        <th>Technical Disqualified</th>
+                        <th>Malpractice</th>
+                    </tr>
+                    @foreach (var otherAnswer in Model.OtherAnswerListById(Model.OtherAnswerList, item.Item1))
+                    {
+                        <tr>
+                            <td>Answer</td>
+                            <td>@otherAnswer.Score</td>
+                            <td>@otherAnswer.ScoreText</td>
+                            <td>@otherAnswer.Notes</td>
+                            <td>@(otherAnswer.IsDisqualified ? "Yes" : "No")</td>
+                            <td>@(otherAnswer.IsSuspicious ? "Yes" : "No")</td>
+                                    </tr>
+                    }
+                        @foreach (var otherAnswer in Model.OtherAnswerListById(Model.OtherAnswerListFinal, item.Item1))
+                        {
+                                    <tr>
+                                                    <td>Autograded</td>
+                                                    <td>@otherAnswer.Score</td>
+                                        <td>@otherAnswer.ScoreText</td>
+                                        <td>@otherAnswer.Notes</td>
+                                        <td>@(otherAnswer.IsDisqualified ? "Yes" : "No")</td>
+                                        <td>@(otherAnswer.IsSuspicious ? "Yes" : "No")</td>
+                                    </tr>
+                        }
+                        </table>
+            }
+            </div>
+        }
         @if (Model.Answer != null)
         {
         <h2>@Model.Answer.Question.Title</h2>
@@ -29,7 +78,6 @@
             {
                 <p>@Model.Answer.Question.IntroductionText</p>
             }
-
             <div>
                 <img src="/Image/Introduction/@Model.Answer.QuestionGuid" alt="">
             </div>
@@ -41,7 +89,10 @@
                 Your browser does not support the audio element.
             </audio>
         </p>
-
+        @if (Model.Answer.Question.TranscriptLink != "")
+        {
+            <p><a href="@Model.Answer.Question.TranscriptLink" target="_blank">Transcript of question</a></p>
+        }
         <p>Question Text: @Model.Answer.Question.SentenceRepetionText</p>
 
 
@@ -95,7 +146,6 @@
                     Your browser does not support the audio element.
                 </audio>
             </p>
-
             @if (Model.OtherAnswerList.Count != 0)
             {
                 <section class="other-ratings">
@@ -108,8 +158,9 @@
                             <th>Score</th>
                             <th>Score Text (used in complex rubrics)</th>
                             <th>Notes</th>
-                            <th>Disqualified</th>
-                        </tr>
+                                <th>Technical Disqualified</th>
+                                <th>Malpractice</th>
+                                </tr>
                         @foreach (var otherAnswer in Model.OtherAnswerList)
                         {
                             <tr>
@@ -118,7 +169,8 @@
                                 <td>@otherAnswer.ScoreText</td>
                                 <td>@otherAnswer.Notes</td>
                                 <td>@(otherAnswer.IsDisqualified ? "Yes" : "No")</td>
-                            </tr>
+                                            <td>@(otherAnswer.IsSuspicious ? "Yes" : "No")</td>
+                                        </tr>
                         }
                     </table>
                 </section>
@@ -161,11 +213,25 @@
                 </label>
                 <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
             </div>
-            <div class="ils-input-entry form-group">
-                <label for="isdisqualified" class="control-label">
-                    Disqualify this question because of technical issues:
-                </label>
-                        <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+            <div style="display: flex;">
+                <div class="ils-input-entry form-group">
+                    <label for="isdisqualified" class="control-label">
+                        Disqualify this question because of technical issues:
+                    </label>
+                    <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+                </div>
+                    <div class="ils-input-entry form-group">
+                    <label for="issuspicious" class="control-label">
+                        Mark this as malpractice:
+                    </label>
+                                    <input type="checkbox" class="ils-input form-control" id="issuspicious" name="issuspicious" checked="@Model.IsSuspicious">
+                </div>
+                <div class="ils-input-entry form-group">
+                    <label for="isflagged" class="control-label">
+                                Flag this for later review:
+                    </label>
+                                    <input type="checkbox" class="ils-input form-control" id="isflagged" name="isflagged" checked="@Model.IsFlagged">
+                </div>
             </div>
             <input type="hidden" value="@Model.Id" name="id">
             <input type="hidden" value="@Model.RaterId" name="raterid">
@@ -237,13 +303,27 @@
                         </label>
                         <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
                     </div>
-                    <div class="ils-input-entry form-group">
-                        <label for="isdisqualified" class="control-label">
-                            Disqualify this question because of technical issues:
-                        </label>
-                        <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
-                    </div>
-                    <input type="hidden" value="@Model.Id" name="id">
+                            <div style="display: flex;">
+                                <div class="ils-input-entry form-group">
+                                    <label for="isdisqualified" class="control-label">
+                                        Disqualify this question because of technical issues:
+                                    </label>
+                                    <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+                                </div>
+                                 <div class="ils-input-entry form-group">
+                                    <label for="issuspicious" class="control-label">
+                                        Mark this as malpractice:
+                                    </label>
+                                                    <input type="checkbox" class="ils-input form-control" id="issuspicious" name="issuspicious" checked="@Model.IsSuspicious">
+                                </div>
+                                <div class="ils-input-entry form-group">
+                                    <label for="isflagged" class="control-label">
+                                                Flag this for later review:
+                                    </label>
+                                                    <input type="checkbox" class="ils-input form-control" id="isflagged" name="isflagged" checked="@Model.IsFlagged">
+                                </div>
+                            </div>
+                            <input type="hidden" value="@Model.Id" name="id">
                     <input type="hidden" value="@Model.RaterId" name="raterid">
                     <input type="hidden" value="@Model.AnswerId" name="answerid">
                     <input type="hidden" value="@Model.NextAnswerId" name="nextid">
@@ -268,11 +348,25 @@
                         </label>
                         <textarea class="ils-input-long form-control" id="notes" name="notes">@Model.RaterNotes</textarea>
                     </div>
-                    <div class="ils-input-entry form-group">
-                        <label for="isdisqualified" class="control-label">
-                            Disqualify this question because of technical issues:
-                        </label>
-                        <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+                            <div style="display: flex;">
+                        <div class="ils-input-entry form-group">
+                            <label for="isdisqualified" class="control-label">
+                                Disqualify this question because of technical issues:
+                            </label>
+                            <input type="checkbox" class="ils-input form-control" id="isdisqualified" name="isdisqualified" checked="@Model.IsDisqualified">
+                        </div>
+                         <div class="ils-input-entry form-group">
+                            <label for="issuspicious" class="control-label">
+                                Mark this as malpractice:
+                            </label>
+                                    <input type="checkbox" class="ils-input form-control" id="issuspicious" name="issuspicious" checked="@Model.IsSuspicious">
+                        </div>
+                        <div class="ils-input-entry form-group">
+                            <label for="isflagged" class="control-label">
+                                        Flag this for later review:
+                            </label>
+                                    <input type="checkbox" class="ils-input form-control" id="isflagged" name="isflagged" checked="@Model.IsFlagged">
+                        </div>
                     </div>
                     <input type="hidden" value="@Model.Id" name="id">
                     <input type="hidden" value="@Model.RaterId" name="raterid">

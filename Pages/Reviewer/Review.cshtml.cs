@@ -22,15 +22,18 @@ namespace TqiiLanguageTest.Pages.Reviewer {
         public Answer Answer { get; set; } = default!;
 
         public string AnswerId { get; set; }
-        public IList<Tuple<int, string, int, bool>> Answers { get; set; } = default!;
+        public IList<Tuple<int, string, int, bool, bool>> Answers { get; set; } = default!;
 
         public bool CanFinalize { get; set; }
         public string Id { get; set; }
         public bool IsDisqualified { get; set; }
         public bool IsFinal { get; set; }
+        public bool IsFlagged { get; set; }
+        public bool IsSuspicious { get; set; }
         public string NextAnswerId { get; set; }
         public string NumberAnswered { get; set; }
         public List<RaterAnswer> OtherAnswerList { get; set; } = default!;
+        public List<RaterAnswer> OtherAnswerListFinal { get; set; } = default!;
         public string RaterId { get; set; }
         public string RaterNotes { get; set; }
         public float Rating { get; set; }
@@ -53,12 +56,12 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 throw new Exception("Unauthorized");
             }
 
-            Answers = new List<Tuple<int, string, int, bool>>();
+            Answers = new List<Tuple<int, string, int, bool, bool>>();
 
             if (_context.Answers != null && _context.RaterAnswers != null && _context.RaterTests != null) {
                 var answerObjects = await _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == id && a.Question.QuestionType != QuestionEnum.Instructions).OrderBy(a => a.DateTimeEnd).Select(a => new { a.Question.Title, a.Id }).ToListAsync();
                 var raterAnswers = await _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).Select(ra => ra.AnswerId).ToListAsync();
-
+                var raterFlagged = await _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId && ra.IsFlagged).Select(ra => ra.AnswerId).ToListAsync();
                 var raterTest = _context.RaterTests.First(rt => rt.Id == raterId);
                 var secondaryRater = raterTest.RaterAnswerRemoveIdString;
                 isFinalScorer = raterTest.IsFinalScorer;
@@ -69,10 +72,11 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 var nextAnswer = 0;
                 for (var i = answerObjects.Count - 1; i >= 0; i--) {
                     var isAnswered = raterAnswers.Contains(answerObjects[i].Id);
+                    var isFlagged = raterFlagged.Contains(answerObjects[i].Id);
                     if (nextAnswer == 0) {
-                        Answers.Add(new Tuple<int, string, int, bool>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer, isAnswered));
+                        Answers.Add(new Tuple<int, string, int, bool, bool>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer, isAnswered, isFlagged));
                     } else {
-                        Answers.Insert(0, new Tuple<int, string, int, bool>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer, isAnswered));
+                        Answers.Insert(0, new Tuple<int, string, int, bool, bool>(answerObjects[i].Id, answerObjects[i].Title, nextAnswer, isAnswered, isFlagged));
                     }
                     if (answerId == answerObjects[i].Id) {
                         NextAnswerId = nextAnswer.ToString();
@@ -87,12 +91,14 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             var scoreText = "";
 
             if (_context.Answers != null && answerId != 0) {
-                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, QuestionGuid = a.Question.Guid, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText, RubricRaterScaleName = a.Question.RubricRaterScaleName } }).First(a => a.Id == answerId);
+                Answer = _context.Answers.Include(a => a.Question).Select(a => new Answer { Id = a.Id, QuestionId = a.QuestionId, BasicAnswers1 = a.BasicAnswers1, BasicAnswers2 = a.BasicAnswers2, BasicAnswers3 = a.BasicAnswers3, Text = a.Text, NumberTimesRefreshed = a.NumberTimesRefreshed, QuestionType = a.Question.QuestionType, QuestionGuid = a.Question.Guid, Question = new Question { Title = a.Question.Title, BasicQuestion1 = a.Question.BasicQuestion1, BasicQuestion2 = a.Question.BasicQuestion2, BasicQuestion3 = a.Question.BasicQuestion3, BasicAnswerKey1 = a.Question.BasicAnswerKey1, BasicAnswerKey2 = a.Question.BasicAnswerKey2, BasicAnswerKey3 = a.Question.BasicAnswerKey3, InteractiveReadingAnswer = a.Question.InteractiveReadingAnswer, InteractiveReadingOptionsAnswerKey = a.Question.InteractiveReadingOptionsAnswerKey, QuestionText = a.Question.QuestionText, SentenceRepetionText = a.Question.SentenceRepetionText, RubricRaterScaleName = a.Question.RubricRaterScaleName, TranscriptLink = a.Question.TranscriptLink } }).First(a => a.Id == answerId);
                 var raterAnswer = _context.RaterAnswers.FirstOrDefault(ra => ra.AnswerId == answerId && ra.RaterTestId == raterId);
                 if (raterAnswer != null) {
                     RaterNotes = raterAnswer.Notes;
                     Rating = raterAnswer.Score;
                     IsDisqualified = raterAnswer.IsDisqualified;
+                    IsFlagged = raterAnswer.IsFlagged;
+                    IsSuspicious = raterAnswer.IsSuspicious;
                     scoreText = raterAnswer.ScoreText;
                 }
                 if (isFinalScorer) {
@@ -105,6 +111,12 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 } else {
                     OtherAnswerList = new List<RaterAnswer>();
                 }
+            } else if (_context.RaterAnswers != null && _context.RaterTests != null && isFinalScorer) {
+                var otherRaters = _context.RaterTests.Where(rt => rt.TestUserId == id && !rt.IsFinalScorer).Select(rt => rt.Id).ToList();
+                OtherAnswerList = _context.RaterAnswers.Where(ra => otherRaters.Contains(ra.RaterTestId)).ToList();
+                OtherAnswerListFinal = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).ToList();
+            } else {
+                OtherAnswerList = new List<RaterAnswer>();
             }
 
             var testId = _context.TestUsers.First(tu => tu.Id == id).TestId;
@@ -143,6 +155,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                         raterAnswer.ScoreText = answers;
                         raterAnswer.IsAnswered = true;
                         raterAnswer.IsDisqualified = Request.Form.ContainsKey("isdisqualified");
+                        raterAnswer.IsSuspicious = Request.Form.ContainsKey("issuspicious");
+                        raterAnswer.IsFlagged = Request.Form.ContainsKey("isflagged");
                         _context.RaterAnswers.Update(raterAnswer);
                     } else {
                         _context.RaterAnswers.Add(new RaterAnswer {
@@ -153,7 +167,9 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                             ScoreText = answers,
                             RaterTestId = raterId,
                             IsAnswered = true,
-                            IsDisqualified = Request.Form.ContainsKey("isdisqualified")
+                            IsDisqualified = Request.Form.ContainsKey("isdisqualified"),
+                            IsSuspicious = Request.Form.ContainsKey("issuspicious"),
+                            IsFlagged = Request.Form.ContainsKey("isflagged")
                         });
                     }
                     await _context.SaveChangesAsync();
@@ -175,6 +191,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                             raterAnswer.Score = Request.Form.ContainsKey("level") ? int.Parse(Request.Form["level"]) : 0;
                             raterAnswer.IsAnswered = true;
                             raterAnswer.IsDisqualified = Request.Form.ContainsKey("isdisqualified");
+                            raterAnswer.IsSuspicious = Request.Form.ContainsKey("issuspicious");
+                            raterAnswer.IsFlagged = Request.Form.ContainsKey("isflagged");
                             _context.RaterAnswers.Update(raterAnswer);
                         } else {
                             _context.RaterAnswers.Add(new RaterAnswer {
@@ -184,7 +202,9 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                                 Score = Request.Form.ContainsKey("level") ? int.Parse(Request.Form["level"]) : 0,
                                 RaterTestId = raterId,
                                 IsAnswered = true,
-                                IsDisqualified = Request.Form.ContainsKey("isdisqualified")
+                                IsDisqualified = Request.Form.ContainsKey("isdisqualified"),
+                                IsSuspicious = Request.Form.ContainsKey("issuspicious"),
+                                IsFlagged = Request.Form.ContainsKey("isflagged")
                             });
                         }
                         await _context.SaveChangesAsync();
@@ -213,6 +233,8 @@ namespace TqiiLanguageTest.Pages.Reviewer {
             }
             return RedirectToPage("Index");
         }
+
+        public List<RaterAnswer> OtherAnswerListById(List<RaterAnswer> list, int id) => list.Where(oal => oal.AnswerId == id).OrderBy(oal => oal.Id).ToList();
 
         public string UrlInfo(int answerid, int nextid) => answerid == 0 && nextid == 0 ? UrlString + "&final=true" : UrlString + "&answerid=" + answerid + "&nextid=" + nextid;
     }
