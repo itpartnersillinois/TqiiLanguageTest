@@ -61,6 +61,8 @@ namespace TqiiLanguageTest.Pages.Admin {
             Question.BasicQuestion2 = Question.BasicQuestion2 ?? string.Empty;
             Question.BasicQuestion3 = Question.BasicQuestion3 ?? string.Empty;
             Question.SentenceRepetionText = Question.SentenceRepetionText ?? string.Empty;
+            Question.RubricRaterScaleName = Question.RubricRaterScaleName ?? string.Empty;
+            Question.TranscriptLink = Question.TranscriptLink ?? string.Empty;
             if (string.IsNullOrWhiteSpace(Question.Title)) {
                 Question.OrderBy = -1;
                 Question.Title = "Deleted question on " + DateTime.Now.ToShortDateString();

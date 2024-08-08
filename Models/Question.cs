@@ -86,5 +86,7 @@ namespace TqiiLanguageTest.Models {
 
         [NotMapped]
         public int TotalQuestions { get; set; }
+
+        public string TranscriptLink { get; set; } = string.Empty;
     }
 }
