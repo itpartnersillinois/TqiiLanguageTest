@@ -41,7 +41,8 @@
                                 <th>Score</th>
                         <th>Score Text (used in complex rubrics)</th>
                         <th>Notes</th>
-                        <th>Disqualified</th>
+                        <th>Technical Disqualified</th>
+                        <th>Malpractice</th>
                     </tr>
                     @foreach (var otherAnswer in Model.OtherAnswerListById(Model.OtherAnswerList, item.Item1))
                     {
@@ -51,7 +52,8 @@
                             <td>@otherAnswer.ScoreText</td>
                             <td>@otherAnswer.Notes</td>
                             <td>@(otherAnswer.IsDisqualified ? "Yes" : "No")</td>
-                        </tr>
+                            <td>@(otherAnswer.IsSuspicious ? "Yes" : "No")</td>
+                                    </tr>
                     }
                         @foreach (var otherAnswer in Model.OtherAnswerListById(Model.OtherAnswerListFinal, item.Item1))
                         {
@@ -61,6 +63,7 @@
                                         <td>@otherAnswer.ScoreText</td>
                                         <td>@otherAnswer.Notes</td>
                                         <td>@(otherAnswer.IsDisqualified ? "Yes" : "No")</td>
+                                        <td>@(otherAnswer.IsSuspicious ? "Yes" : "No")</td>
                                     </tr>
                         }
                         </table>
@@ -155,8 +158,9 @@
                             <th>Score</th>
                             <th>Score Text (used in complex rubrics)</th>
                             <th>Notes</th>
-                            <th>Disqualified</th>
-                        </tr>
+                                <th>Technical Disqualified</th>
+                                <th>Malpractice</th>
+                                </tr>
                         @foreach (var otherAnswer in Model.OtherAnswerList)
                         {
                             <tr>
@@ -165,7 +169,8 @@
                                 <td>@otherAnswer.ScoreText</td>
                                 <td>@otherAnswer.Notes</td>
                                 <td>@(otherAnswer.IsDisqualified ? "Yes" : "No")</td>
-                            </tr>
+                                            <td>@(otherAnswer.IsSuspicious ? "Yes" : "No")</td>
+                                        </tr>
                         }
                     </table>
                 </section>
