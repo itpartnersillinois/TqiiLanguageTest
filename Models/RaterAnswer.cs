@@ -15,6 +15,8 @@ namespace TqiiLanguageTest.Models {
 
         public bool IsAnswered { get; set; }
         public bool IsDisqualified { get; set; }
+        public bool IsFlagged { get; set; }
+        public bool IsSuspicious { get; set; }
 
         public string Notes { get; set; } = "";
         public virtual RaterTest? RaterTest { get; set; }

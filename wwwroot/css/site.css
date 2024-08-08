@@ -246,9 +246,28 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         content: '*';
     }
 
+.il-formatted a.flagged {
+    font-style: italic;
+    font-weight: bold;
+}
+
+    .il-formatted a.flagged::after {
+        content: '****';
+    }
+
 section.other-ratings {
     margin: 20px 0;
     padding: 20px 0;
     border-top: thin solid var(--il-orange);
     border-bottom: thin solid var(--il-orange);
+}
+
+.otheranswer-table caption {
+    text-indent: -9999em;
+    outline: 0;
+    height: 0;
+}
+
+.il-formatted .otheranswer-table th, .il-formatted .otheranswer-table td {
+    padding: 0 1rem;
 }

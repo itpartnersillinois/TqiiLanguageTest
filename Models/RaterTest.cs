@@ -18,6 +18,7 @@ namespace TqiiLanguageTest.Models {
         public string Notes { get; set; } = "";
         public virtual RaterName? Rater { get; set; }
         public string RaterAnswerRemoveIdString { get; set; } = "";
+        public virtual ICollection<RaterAnswer> RaterAnswers { get; set; } = default!;
         public int RaterNameId { get; set; }
         public virtual TestUser? Test { get; set; }
         public int TestUserId { get; set; }

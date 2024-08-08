@@ -40,6 +40,13 @@
     </select>
 </div>
 <div class="ils-input-entry form-group">
+    <label for="daterange">Date Range</label>
+    <select id="daterange">
+        <option value="">All Items</option>
+        <option value="cohort1" selected="@(Request.Query["daterange"] == "cohort1")">After 8/12</option>
+    </select>
+</div>
+<div class="ils-input-entry form-group">
     <label for="sort">Sort Options</label>
     <select id="sort">
         <option value="">By Date</option>
@@ -48,8 +55,13 @@
 </div>
 
 
+<div style="display: flex; column-gap: 40px; align-items: center; justify-content: space-between;">
 <button class="il-button" onclick="refresh(); return false;">Refresh</button>
-
+<div>Page @Model.CurrentPage of @Model.PageCount</div>
+<div><label for="page-top">Go to page</label>
+<input id="page-top" type="text" />
+</div>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -72,15 +84,15 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.UserIdentification) (@Html.DisplayFor(modelItem => item.Email))
-                </td>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Test.Title)
             </td>
             <td>
-                    @Html.DisplayFor(modelItem => item.DateTimeStart) - @(item.DateTimeEnd.HasValue ? Html.DisplayFor(modelItem => item.DateTimeEnd) : "current")
+                @Html.DisplayFor(modelItem => item.DateTimeStart) - @(item.DateTimeEnd.HasValue ? Html.DisplayFor(modelItem => item.DateTimeEnd) : "current")
             </td>
             <td>
-                    @(item.DateTimeEnd.HasValue ? "Restarts: " + item.NumberTimesRefreshed  : "On Question " + item.CurrentQuestionOrder)
+                @(item.DateTimeEnd.HasValue ? "Restarts: " + item.NumberTimesRefreshed  : "On Question " + item.CurrentQuestionOrder)
             </td>
             <td>
                 <a href="/Admin/RealtimeReport?id=@item.Id" target="_blank">View</a>
@@ -115,7 +127,7 @@
 <button class="il-button" onclick="previous(); return false;">Previous</button>
 <button class="il-button" onclick="next(); return false;">Next</button>
 <label for="page">Page</label>
-<input id="page" type="text" value="@(Request.Query["skip"])" />
+<input id="page" type="text" />
 <input id="pagenumber" type="hidden" value="@(Request.Query["skip"])"/>
 
 @if (Request.Query["search"] != "")
@@ -133,11 +145,19 @@
 @section Scripts {
     <script>
         document.getElementById("page").addEventListener("keydown", logKey);
+        document.getElementById("page-top").addEventListener("keydown", logKey);
 
         function logKey(e) {
             if (e.code == 'Enter') {
-                document.getElementById('pagenumber').value = parseInt(document.getElementById('page').value);
-                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
+                if (!Number.isNaN(parseInt(document.getElementById('page').value))) {
+                    document.getElementById('pagenumber').value = parseInt(document.getElementById('page').value);
+                }
+                else if (!Number.isNaN(parseInt(document.getElementById('page-top').value))) {
+                    document.getElementById('pagenumber').value = parseInt(document.getElementById('page-top').value);
+                } else {
+                    document.getElementById('pagenumber').value = '';
+                }
+                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&daterange=${document.getElementById('daterange').value}&skip=${document.getElementById('pagenumber').value}`;
             }
         }
 
@@ -153,7 +173,7 @@
 
         function refresh() {
             document.getElementById('pagenumber').value = '1';
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}`;
+                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&daterange=${document.getElementById('daterange').value}`;
         }
 
         function next() {
@@ -162,7 +182,7 @@
             } else {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) + 1;
             }
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
+                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&daterange=${document.getElementById('daterange').value}&skip=${document.getElementById('pagenumber').value}`;
         }
 
         function previous() {
@@ -171,7 +191,7 @@
             } else {
                 document.getElementById('pagenumber').value = parseInt(document.getElementById('pagenumber').value) - 1;
             }
-            location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&skip=${document.getElementById('pagenumber').value}`;
+                location.href = `/Admin/ListTestUser?take=${document.getElementById('take').value}&search=${document.getElementById('search').value}&sort=${document.getElementById('sort').value}&testsearch=${document.getElementById('testsearch').value}&filter=${document.getElementById('filter').value}&daterange=${document.getElementById('daterange').value}&skip=${document.getElementById('pagenumber').value}`;
         }
 
     </script>

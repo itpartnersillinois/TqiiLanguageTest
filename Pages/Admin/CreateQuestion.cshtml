@@ -40,6 +40,10 @@
         <label for="Test_RubricRaterScaleName" class="control-label">Choose a Rubric / Rater Scale Name (leave blank to use the test rubric)</label>
         <select asp-for="Question.RubricRaterScaleName" class="ils-input-long" asp-items="ViewBag.Rubrics"></select>
     </div>
+    <div class="ils-input-entry form-group">
+        <label for="Question_TranscriptLink" class="control-label">URL to Transcript PDF (for reviewers)</label>
+        <input asp-for="Question.TranscriptLink" class="ils-input-long form-control"></input>
+    </div>
 
     <hr />
     <h3>Introduction (for Sentence Repetition, Integrated Speaking, and Instruction Only)</h3>

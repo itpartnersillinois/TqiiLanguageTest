@@ -28,6 +28,7 @@ namespace TqiiLanguageTest.Pages.Admin {
 
         public string IdString { get; set; } = default!;
         public bool IsFinalized { get; set; }
+        public int NumberOfDiscrepencyQuestions { get; set; }
         public IList<RaterName> Raters { get; set; } = default!;
         public string TestName { get; set; } = default!;
         public string UserId { get; set; } = default!;
@@ -57,6 +58,10 @@ namespace TqiiLanguageTest.Pages.Admin {
                 }
                 Raters = await _context.RaterNames.ToListAsync();
                 Raters = Raters.Where(r => r.IsActive && !AssignedRaters.Select(ar => ar.Item1).Contains(r.Email)).ToList();
+
+                NumberOfDiscrepencyQuestions = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == Id && !ra.RaterTest.IsExtraScorer && !ra.RaterTest.IsFinalScorer)
+                    .GroupBy(ra => ra.AnswerId)
+                    .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) >= 2).Count();
             }
         }
 
@@ -72,7 +77,26 @@ namespace TqiiLanguageTest.Pages.Admin {
                 var finalRating = _context.RaterTests.FirstOrDefault(rt => rt.IsFinalScorer && rt.TestUserId == testUserId);
                 if (adminRater != null) {
                     if (finalRating == null) {
-                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = false, IsFinalScorer = true, RaterNameId = adminRater.Id, TestUserId = testUserId, RaterAnswerRemoveIdString = "" });
+                        var raterTest = new RaterTest { DateAssigned = currentDate, IsExtraScorer = false, IsFinalScorer = true, RaterNameId = adminRater.Id, TestUserId = testUserId, RaterAnswerRemoveIdString = "" };
+                        var raterAnswersGrouping = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId).ToList();
+                        var raterAnswers = raterAnswersGrouping.GroupBy(ra => ra.AnswerId).Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) < 2).ToArray();
+                        var raterAnswerList = new List<RaterAnswer>();
+                        foreach (var raterAnswer in raterAnswers) {
+                            float score = 0;
+                            float count = 0;
+                            bool isSuspicious = true;
+                            bool isDisqualified = true;
+                            foreach (var answer in raterAnswer) {
+                                score += answer.Score;
+                                count++;
+                                isDisqualified = isSuspicious && answer.IsDisqualified;
+                                isSuspicious = isSuspicious && answer.IsSuspicious;
+                            }
+                            score = score / count;
+                            raterAnswerList.Add(new RaterAnswer { AnswerId = raterAnswer.Key, DateFinished = currentDate, Score = score, RaterTestId = raterTest.Id, IsDisqualified = isDisqualified, IsSuspicious = isSuspicious, IsAnswered = true, Notes = "Autograded" });
+                        }
+                        raterTest.RaterAnswers = raterAnswerList;
+                        _context.RaterTests.Add(raterTest);
                     } else {
                         finalRating.RaterNameId = adminRater.Id;
                     }
@@ -102,7 +126,6 @@ namespace TqiiLanguageTest.Pages.Admin {
                         rater2.NumberOfTests++;
                         totals++;
                     }
-                    // TODO: If there are no questions, then throw an error saying no ratings are set up.
                 }
                 testUser.NumberReviewers = testUser.NumberReviewers + totals;
             }
