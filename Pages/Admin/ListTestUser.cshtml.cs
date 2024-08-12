@@ -50,7 +50,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                     filter == "scored" ? tu => tu.NumberReviewers > 0 && tu.NumberReviewerScores == tu.NumberReviewers && tu.Score == 0 : tu => true;
 
                 var recordCount = _context.TestUsers.Include(t => t.Test).Where(whereLambda)
-                        .Where(tu => tu.DateTimeStart > date)
+                        .Where(tu => tu.DateTimeStart > date || tu.DateTimeScheduled > date || (tu.DateTimeStart == null && tu.DateTimeScheduled == null))
                         .Where(tu => search == "" || (tu.Email.Contains(search) || tu.UserIdentification.Contains(search)))
                         .Where(tu => testsearch == "" || tu.Test.Title.Contains(testsearch)).Count();
 
@@ -59,7 +59,7 @@ namespace TqiiLanguageTest.Pages.Admin {
 
                 if (sort == "test") {
                     TestUser = await _context.TestUsers.Include(t => t.Test).Where(whereLambda)
-                        .Where(tu => tu.DateTimeStart > date)
+                        .Where(tu => tu.DateTimeStart > date || tu.DateTimeScheduled > date || (tu.DateTimeStart == null && tu.DateTimeScheduled == null))
                         .Where(tu => search == "" || (tu.Email.Contains(search) || tu.UserIdentification.Contains(search)))
                         .Where(tu => testsearch == "" || tu.Test.Title.Contains(testsearch))
                         .OrderBy(tu => tu.Test.Title).ThenByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
@@ -70,6 +70,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                             CurrentQuestionOrder = tu.CurrentQuestionOrder,
                             DateTimeStart = tu.DateTimeStart,
                             DateTimeEnd = tu.DateTimeEnd,
+                            DateTimeScheduled = tu.DateTimeScheduled,
                             NumberReviewers = tu.NumberReviewers,
                             NumberReviewerScores = tu.NumberReviewerScores,
                             Score = tu.Score,
@@ -78,7 +79,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                         }).ToListAsync();
                 } else {
                     TestUser = await _context.TestUsers.Include(t => t.Test).Where(whereLambda)
-                        .Where(tu => tu.DateTimeStart > date)
+                        .Where(tu => tu.DateTimeStart > date || tu.DateTimeScheduled > date || (tu.DateTimeStart == null && tu.DateTimeScheduled == null))
                         .Where(tu => search == "" || (tu.Email.Contains(search) || tu.UserIdentification.Contains(search)))
                         .Where(tu => testsearch == "" || tu.Test.Title.Contains(testsearch))
                         .OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
@@ -89,6 +90,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                             CurrentQuestionOrder = tu.CurrentQuestionOrder,
                             DateTimeStart = tu.DateTimeStart,
                             DateTimeEnd = tu.DateTimeEnd,
+                            DateTimeScheduled = tu.DateTimeScheduled,
                             NumberReviewers = tu.NumberReviewers,
                             NumberReviewerScores = tu.NumberReviewerScores,
                             Score = tu.Score,
