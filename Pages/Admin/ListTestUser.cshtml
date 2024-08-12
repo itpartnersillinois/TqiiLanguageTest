@@ -89,10 +89,10 @@
                 @Html.DisplayFor(modelItem => item.Test.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateTimeStart) - @(item.DateTimeEnd.HasValue ? Html.DisplayFor(modelItem => item.DateTimeEnd) : "current")
+                    @(item.DateTimeStart.HasValue ? Html.DisplayFor(modelItem => item.DateTimeStart) : item.DateTimeScheduled.HasValue ? Html.DisplayFor(modelItem => item.DateTimeScheduled) : "not started") - @(item.DateTimeEnd.HasValue ? Html.DisplayFor(modelItem => item.DateTimeEnd) : item.DateTimeScheduled.HasValue && !item.DateTimeStart.HasValue ? " (scheduled)" : "current")
             </td>
             <td>
-                @(item.DateTimeEnd.HasValue ? "Restarts: " + item.NumberTimesRefreshed  : "On Question " + item.CurrentQuestionOrder)
+                    @(item.DateTimeEnd.HasValue ? "Restarts: " + item.NumberTimesRefreshed : (item.CurrentQuestionOrder == 0 ? "Not Started" : "On Question " + item.CurrentQuestionOrder))
             </td>
             <td>
                 <a href="/Admin/RealtimeReport?id=@item.Id" target="_blank">View</a>
