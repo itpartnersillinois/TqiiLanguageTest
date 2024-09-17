@@ -29,13 +29,13 @@
     <label for="filter">Test Filter</label>
     <select id="filter" style="width: 400px;">
         <option value="">All tests</option>
-        <option value="not-started" selected="@(Request.Query["filter"] == "not-started")">Tests not Started</option>
-        <option value="in-process" selected="@(Request.Query["filter"] == "in-process")">Tests in Process</option>
+        <option value="not-started" selected="@(Request.Query["filter"] == "not-started")">Tests Not Started</option>
+        <option value="in-process" selected="@(Request.Query["filter"] == "in-process")">Tests In Process</option>
         <option value="test-completed" selected="@(Request.Query["filter"] == "test-completed")">Completed Tests</option>
         <option value="restarts" selected="@(Request.Query["filter"] == "restarts")">Tests Restarted</option>
-        <option value="need-reviewers" selected="@(Request.Query["filter"] == "need-reviewers")">Tests that need Reviewers</option>
-        <option value="has-reviewers" selected="@(Request.Query["filter"] == "has-reviewers")">Tests that have Reviewers</option>
-        <option value="reviews-completed" selected="@(Request.Query["filter"] == "reviews-completed")">Tests ready to be Finalized</option>
+        <option value="need-reviewers" selected="@(Request.Query["filter"] == "need-reviewers")">Tests That Need Raters</option>
+        <option value="has-reviewers" selected="@(Request.Query["filter"] == "has-reviewers")">Tests That Have Raters</option>
+        <option value="reviews-completed" selected="@(Request.Query["filter"] == "reviews-completed")">Tests Ready To Be Finalized</option>
         <option value="scored" selected="@(Request.Query["filter"] == "scored")">Scored Tests</option>
     </select>
 </div>
