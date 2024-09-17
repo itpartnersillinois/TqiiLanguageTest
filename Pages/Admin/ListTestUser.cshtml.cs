@@ -31,7 +31,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             }
             _ = _context.Database.ExecuteSqlRaw("exec dbo.ResetReviewerStats");
             var take = string.IsNullOrWhiteSpace(Request.Query["take"]) ? 50 : int.Parse(Request.Query["take"]);
-            var skip = string.IsNullOrWhiteSpace(Request.Query["skip"]) ? 0 : take * int.Parse(Request.Query["skip"]);
+            var skip = string.IsNullOrWhiteSpace(Request.Query["skip"]) ? 0 : take * (int.Parse(Request.Query["skip"]) - 1);
             var search = Request.Query["search"].ToString();
             var testsearch = Request.Query["testsearch"].ToString();
             var filter = Request.Query["filter"].ToString() ?? "";
