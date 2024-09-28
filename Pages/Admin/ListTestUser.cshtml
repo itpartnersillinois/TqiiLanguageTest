@@ -30,6 +30,7 @@
     <select id="filter" style="width: 400px;">
         <option value="">All tests</option>
         <option value="not-started" selected="@(Request.Query["filter"] == "not-started")">Tests Not Started</option>
+        <option value="scheduled" selected="@(Request.Query["filter"] == "scheduled")">Tests Scheduled But Not Started</option>
         <option value="in-process" selected="@(Request.Query["filter"] == "in-process")">Tests In Process</option>
         <option value="test-completed" selected="@(Request.Query["filter"] == "test-completed")">Completed Tests</option>
         <option value="restarts" selected="@(Request.Query["filter"] == "restarts")">Tests Restarted</option>

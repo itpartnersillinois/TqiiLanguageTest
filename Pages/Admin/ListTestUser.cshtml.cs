@@ -41,6 +41,7 @@ namespace TqiiLanguageTest.Pages.Admin {
 
             if (_context.TestUsers != null) {
                 Expression<Func<TestUser, bool>> whereLambda = filter == "not-started" ? tu => tu.DateTimeStart == null :
+                    filter == "scheduled" ? tu => tu.DateTimeStart == null && tu.DateTimeScheduled != null :
                     filter == "in-process" ? tu => tu.DateTimeStart != null && tu.DateTimeEnd == null :
                     filter == "test-completed" ? tu => tu.DateTimeEnd != null :
                     filter == "restarts" ? tu => tu.NumberTimesRefreshed > 0 :
@@ -62,7 +63,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                         .Where(tu => tu.DateTimeStart > date || tu.DateTimeScheduled > date || (tu.DateTimeStart == null && tu.DateTimeScheduled == null))
                         .Where(tu => search == "" || (tu.Email.Contains(search) || tu.UserIdentification.Contains(search)))
                         .Where(tu => testsearch == "" || tu.Test.Title.Contains(testsearch))
-                        .OrderBy(tu => tu.Test.Title).ThenByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
+                        .OrderBy(tu => tu.Test.Title).ThenByDescending(tu => tu.DateTimeStart).ThenByDescending(tu => tu.DateTimeScheduled).Skip(skip).Take(take)
                         .Select(tu => new TestUser {
                             Id = tu.Id,
                             UserIdentification = tu.UserIdentification,
@@ -82,7 +83,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                         .Where(tu => tu.DateTimeStart > date || tu.DateTimeScheduled > date || (tu.DateTimeStart == null && tu.DateTimeScheduled == null))
                         .Where(tu => search == "" || (tu.Email.Contains(search) || tu.UserIdentification.Contains(search)))
                         .Where(tu => testsearch == "" || tu.Test.Title.Contains(testsearch))
-                        .OrderByDescending(tu => tu.DateTimeStart).Skip(skip).Take(take)
+                        .OrderByDescending(tu => tu.DateTimeStart).ThenByDescending(tu => tu.DateTimeScheduled).Skip(skip).Take(take)
                         .Select(tu => new TestUser {
                             Id = tu.Id,
                             UserIdentification = tu.UserIdentification,
