@@ -32,7 +32,7 @@ namespace TqiiLanguageTest.Controllers {
                 sb.AppendLine("Test:\t" + testinformation.Title ?? "");
                 sb.AppendLine("Date Ended:\t" + testinformation.DateTimeEnd.ToString() ?? "");
 
-                var raterInformation = _context.RaterAnswers.Include(ra => ra.RaterTest).ThenInclude(rt => rt.Rater).Include(ra => ra.Answer).ThenInclude(a => a.Question).Where(ra => ra.RaterTest.TestUserId == id && ra.Answer.TestUserId == testinformation.Id && ra.Answer.Question.QuestionType != QuestionEnum.Instructions).Select(ra => new { QuestionTitle = ra.Answer.Question.Title, ra.Score, Notes = ra.Notes == "" ? "no notes" : ra.Notes, RaterName = ra.RaterTest.Rater.FullName, AnswerDate = ra.Answer.DateTimeEnd }).ToList();
+                var raterInformation = _context.RaterAnswers.Include(ra => ra.RaterTest).ThenInclude(rt => rt.Rater).Include(ra => ra.Answer).ThenInclude(a => a.Question).Where(ra => ra.RaterTest.TestUserId == id && ra.Answer.TestUserId == testinformation.Id && ra.Answer.Question.QuestionType != QuestionEnum.Instructions).Select(ra => new { QuestionTitle = ra.Answer.Question.Title, ra.Score, ra.ScoreText, Notes = ra.Notes == "" ? "no notes" : ra.Notes, RaterName = ra.RaterTest.Rater.FullName, AnswerDate = ra.Answer.DateTimeEnd }).ToList();
 
                 var answers = raterInformation.Select(ri => ri.QuestionTitle).Distinct();
                 var raterNames = raterInformation.Select(ri => ri.RaterName).Distinct();
@@ -44,6 +44,8 @@ namespace TqiiLanguageTest.Controllers {
                 foreach (var raterName in raterNames) {
                     sb.Append('\t');
                     sb.Append(raterName + " score");
+                    sb.Append('\t');
+                    sb.Append(raterName + " details");
                     sb.Append('\t');
                     sb.Append(raterName + " notes");
                 }
@@ -60,7 +62,9 @@ namespace TqiiLanguageTest.Controllers {
                         var target = raterInformation.FirstOrDefault(t => t.QuestionTitle == answer && t.RaterName == raterName);
                         if (target != null) {
                             sb.Append('\t');
-                            sb.Append(target.Score);
+                            sb.Append(target.Score.ToString("0.00"));
+                            sb.Append('\t');
+                            sb.Append(target.ScoreText);
                             sb.Append('\t');
                             sb.Append(target.Notes);
                         }
