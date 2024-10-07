@@ -8,6 +8,7 @@ using TqiiLanguageTest.Models;
 namespace TqiiLanguageTest.Pages.Admin {
 
     public class CreateRaterTestModel : PageModel {
+        public readonly float ScorePassingRange = 2.4F;
         private readonly Autograding _autograding;
         private readonly LanguageDbContext _context;
         private readonly Finalizing _finalizing;
@@ -51,7 +52,7 @@ namespace TqiiLanguageTest.Pages.Admin {
 
                 var assignedRaterInformation = await _context.RaterTests.Include(rt => rt.Rater).Where(rt => rt.TestUserId == Id).Select(rt => new { rt.Id, rt.Rater.Email, rt.IsExtraScorer, rt.IsFinalScorer, rt.FinalScore, rt.DateFinished }).ToListAsync();
 
-                AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string, int>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : rt.IsFinalScorer ? " (Final)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore, rt.Id)).OrderBy(s => s.Item1).ToList();
+                AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string, int>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : rt.IsFinalScorer ? " (Final)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore.ToString("0.00"), rt.Id)).OrderBy(s => s.Item1).ToList();
 
                 if (assignedRaterInformation.Any() && !assignedRaterInformation.Any(a => a.DateFinished == null)) {
                     FinalScore = assignedRaterInformation.Sum(a => a.FinalScore) / assignedRaterInformation.Count();
@@ -61,7 +62,7 @@ namespace TqiiLanguageTest.Pages.Admin {
 
                 NumberOfDiscrepencyQuestions = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == Id && !ra.RaterTest.IsExtraScorer && !ra.RaterTest.IsFinalScorer)
                     .GroupBy(ra => ra.AnswerId)
-                    .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) >= 2).Count();
+                    .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) > ScorePassingRange && rag.Min(r => r.Score) < ScorePassingRange).Count();
             }
         }
 
@@ -118,7 +119,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                     var removeItem = new List<int>();
                     var raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId)
                         .GroupBy(ra => ra.AnswerId)
-                        .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) < 2).Select(rag => rag.Key).ToArray();
+                        .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) > ScorePassingRange && rag.Min(r => r.Score) < ScorePassingRange).Select(rag => rag.Key).ToArray();
 
                     foreach (var rater in ratersSecond.Split(',').Select(r => int.Parse(r.Trim()))) {
                         _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = true, RaterNameId = rater, TestUserId = testUserId, RaterAnswerRemoveIdString = string.Join(',', raterAnswers) });
