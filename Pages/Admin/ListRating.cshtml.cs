@@ -20,7 +20,7 @@ namespace TqiiLanguageTest.Pages.Admin {
         public string Email { get; set; }
         public string RaterEmail { get; set; }
         public int RaterId { get; set; }
-        public List<Tuple<string, int, string>> RaterInformation { get; set; }
+        public List<Tuple<string, float, string>> RaterInformation { get; set; }
         public string RaterNotes { get; set; }
         public string TestName { get; set; }
         public string UserId { get; set; }
@@ -39,7 +39,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 DateEnded = testinformation.DateTimeEnd.ToString() ?? "";
                 UserId = testinformation.UserIdentification ?? "";
 
-                RaterInformation = _context.RaterAnswers.Include(ra => ra.Answer).ThenInclude(a => a.Question).Where(ra => ra.RaterTestId == raterTestId && ra.Answer.TestUserId == testinformation.Id && ra.Answer.Question.QuestionType != QuestionEnum.Instructions).OrderBy(ra => ra.Answer.DateTimeEnd).Select(ra => new Tuple<string, int, string>(ra.Answer.Question.Title, (int) ra.Score, ra.Notes == "" ? "(no notes)" : " (" + ra.Notes + ")")).ToList();
+                RaterInformation = _context.RaterAnswers.Include(ra => ra.Answer).ThenInclude(a => a.Question).Where(ra => ra.RaterTestId == raterTestId && ra.Answer.TestUserId == testinformation.Id && ra.Answer.Question.QuestionType != QuestionEnum.Instructions).OrderBy(ra => ra.Answer.DateTimeEnd).Select(ra => new Tuple<string, float, string>(ra.Answer.Question.Title, ra.Score, ra.ScoreText + " " + (ra.Notes == "" ? "(no notes)" : " (" + ra.Notes + ")"))).ToList();
 
                 var raterTest = _context.RaterTests.Include(rt => rt.Rater).Single(rt => rt.Id == raterTestId);
                 RaterEmail = raterTest.Rater?.Email ?? "";
