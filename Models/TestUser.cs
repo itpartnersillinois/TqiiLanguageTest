@@ -7,6 +7,7 @@ namespace TqiiLanguageTest.Models {
         public int CurrentQuestionId { get; set; }
         public int CurrentQuestionOrder { get; set; }
         public DateTime? DateTimeEnd { get; set; }
+        public DateTime? DateTimeExpired { get; set; }
 
         public DateTime? DateTimeScheduled { get; set; }
         public DateTime? DateTimeStart { get; set; }

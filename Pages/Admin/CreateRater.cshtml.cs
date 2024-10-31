@@ -73,7 +73,8 @@ namespace TqiiLanguageTest.Pages.Admin {
                         Email = emailArray[i].Trim(),
                         Notes = NewRaterNotes.Trim(),
                         FullName = nameArray.Length < i && !string.IsNullOrWhiteSpace(nameArray[i]) ? nameArray[i].Trim() : "",
-                        NumberOfTests = 0
+                        NumberOfTests = 0,
+                        IsActive = true
                     });
                 }
             } else {
@@ -83,7 +84,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                     item.Notes = NewRaterNotes.Trim();
                     item.NumberOfTests = 0;
                 } else {
-                    _context.RaterNames.Add(new RaterName { Email = NewRaterEmail.Trim(), FullName = NewRaterName.Trim(), Notes = NewRaterNotes.Trim(), NumberOfTests = 0 });
+                    _context.RaterNames.Add(new RaterName { Email = NewRaterEmail.Trim(), FullName = NewRaterName.Trim(), Notes = NewRaterNotes.Trim(), NumberOfTests = 0, IsActive = true });
                 }
             }
             _ = await _context.SaveChangesAsync();
