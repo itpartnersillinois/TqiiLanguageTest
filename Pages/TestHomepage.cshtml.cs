@@ -16,6 +16,7 @@ namespace TqiiLanguageTest.Pages {
         public Guid? PracticeGuid { get; set; }
 
         public DateTime? TimeActive { get; set; }
+        public DateTime? TimeExpired { get; set; }
 
         public void OnGet() {
             // TODO Asked to temporarily remove the "must take practice test" -- need to re-add this later
@@ -26,6 +27,7 @@ namespace TqiiLanguageTest.Pages {
             var test = _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "");
             Guid = test.Item1;
             TimeActive = test.Item2;
+            TimeExpired = test.Item3;
             PracticeGuid = _practiceTestHandler.GetTestUserGuid(User.Identity?.Name ?? "", true);
         }
     }

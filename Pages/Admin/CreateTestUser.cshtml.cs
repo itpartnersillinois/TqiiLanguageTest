@@ -59,6 +59,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                         Email = email.Trim(),
                         OrderBy = TestUser.OrderBy,
                         DateTimeScheduled = TestUser.DateTimeScheduled,
+                        DateTimeExpired = TestUser.DateTimeExpired,
                         TestId = TestUser.TestId,
                         Language = TestUser.Language
                     });
@@ -79,6 +80,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                     _ = await _testUserHandler.AddTestUser(new TestUser {
                         Email = email.Trim(),
                         DateTimeScheduled = TestUser.DateTimeScheduled,
+                        DateTimeExpired = TestUser.DateTimeExpired,
                         OrderBy = TestUser.OrderBy + orderByIncrease,
                         TestId = testId.Value,
                         Language = TestUser.Language
