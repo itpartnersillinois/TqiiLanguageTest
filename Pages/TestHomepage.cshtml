@@ -26,6 +26,10 @@
 {
     <p>You do not have any tests available at this time. </p>
 }
+else if (Model.TimeExpired.HasValue && Model.TimeExpired.Value < DateTime.Now)
+{
+    <p>Your test has expired on @Model.TimeExpired.Value.ToString("F") (all times are Central). Please contact TQII to schedule a re-test. </p>
+}
 else if (Model.TimeActive.HasValue && Model.TimeActive.Value > DateTime.Now)
 {
     <p>Your test is scheduled at @Model.TimeActive.Value.ToString("F") (all times are Central)</p>
@@ -33,7 +37,14 @@ else if (Model.TimeActive.HasValue && Model.TimeActive.Value > DateTime.Now)
         <a href="/TestHomepage" class="il-button">Refresh Page</a>
     </div>
 }
-else 
+else if (Model.TimeActive.HasValue && Model.TimeActive.Value > DateTime.Now)
+{
+    <p>Your test is scheduled at @Model.TimeActive.Value.ToString("F") (all times are Central)</p>
+    <div>
+        <a href="/TestHomepage" class="il-button">Refresh Page</a>
+    </div>
+}
+else
 {
     <div>
         <a href="/Starting?id=@Model.Guid" class="il-button" id="continue">Start Test</a>

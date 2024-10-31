@@ -8,7 +8,7 @@ using TqiiLanguageTest.Models;
 namespace TqiiLanguageTest.Pages.Admin {
 
     public class CreateRaterTestModel : PageModel {
-        public readonly float ScorePassingRange = 2.4F;
+        public readonly float ScorePassingRange = 2.2F;
         private readonly Autograding _autograding;
         private readonly LanguageDbContext _context;
         private readonly Finalizing _finalizing;
