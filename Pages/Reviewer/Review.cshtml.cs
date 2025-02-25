@@ -23,6 +23,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
 
         public string AnswerId { get; set; }
         public IList<Tuple<int, string, int, bool, bool>> Answers { get; set; } = default!;
+        public IList<Tuple<string, string, string>> AssignedRaters { get; set; } = default!;
 
         public bool CanFinalize { get; set; }
         public string Id { get; set; }
@@ -115,6 +116,9 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 var otherRaters = _context.RaterTests.Where(rt => rt.TestUserId == id && !rt.IsFinalScorer).Select(rt => rt.Id).ToList();
                 OtherAnswerList = _context.RaterAnswers.Where(ra => otherRaters.Contains(ra.RaterTestId)).ToList();
                 OtherAnswerListFinal = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).ToList();
+                var assignedRaterInformation = await _context.RaterTests.Include(rt => rt.Rater).Where(rt => rt.TestUserId == id).Select(rt => new { rt.Id, rt.Rater.Email, rt.IsExtraScorer, rt.IsFinalScorer, rt.FinalScore, rt.DateFinished }).ToListAsync();
+                AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : rt.IsFinalScorer ? " (Final)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore.ToString("0.00"))).OrderBy(s => s.Item1).ToList();
+
             } else {
                 OtherAnswerList = new List<RaterAnswer>();
             }

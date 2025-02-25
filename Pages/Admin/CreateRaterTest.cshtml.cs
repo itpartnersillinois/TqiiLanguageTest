@@ -70,7 +70,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             var testUserId = int.Parse(Request.Form["id"].ToString());
             var raters = Request.Form.ContainsKey("raters") ? Request.Form["raters"].ToString() : "";
             var ratersSecond = Request.Form.ContainsKey("raters-second") ? Request.Form["raters-second"].ToString() : "";
-            var testUser = _context.TestUsers.First(tu => tu.Id == testUserId);
+            var testUser = _context.TestUsers.Include(tu => tu.Test).First(tu => tu.Id == testUserId);
             var currentDate = DateTime.Now;
             if (Request.Form.ContainsKey("finalize") && Request.Form.ContainsKey("adminreview")) {
                 var currentEmail = User.Identity?.Name ?? "";
@@ -117,12 +117,23 @@ namespace TqiiLanguageTest.Pages.Admin {
                 }
                 if (!string.IsNullOrWhiteSpace(ratersSecond)) {
                     var removeItem = new List<int>();
-                    var raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId)
-                        .GroupBy(ra => ra.AnswerId)
-                        .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) > ScorePassingRange && rag.Min(r => r.Score) < ScorePassingRange).Select(rag => rag.Key).ToArray();
+                    var allAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId).Select(ra => ra.AnswerId).Distinct().ToList();
+
+                    var raterAnswers = new List<int>();
+                    if (testUser.Test.TestType == TestEnum.SentenceRepetition) {
+                        raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId)
+                            .GroupBy(ra => ra.AnswerId)
+                            .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) > 1).Select(rag => rag.Key).ToList();
+                    } else {
+                        raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId)
+                            .GroupBy(ra => ra.AnswerId)
+                            .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) > ScorePassingRange && rag.Min(r => r.Score) < ScorePassingRange).Select(rag => rag.Key).ToList();
+                    }
+
+                    var raterAnswerRemoveIdString = string.Join(',', allAnswers.Where(a => !raterAnswers.Contains(a)));
 
                     foreach (var rater in ratersSecond.Split(',').Select(r => int.Parse(r.Trim()))) {
-                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = true, RaterNameId = rater, TestUserId = testUserId, RaterAnswerRemoveIdString = string.Join(',', raterAnswers) });
+                        _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = true, RaterNameId = rater, TestUserId = testUserId, RaterAnswerRemoveIdString = raterAnswerRemoveIdString });
                         var rater2 = _context.RaterNames.First(rn => rn.Id == rater);
                         rater2.NumberOfTests++;
                         totals++;

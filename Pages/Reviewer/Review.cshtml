@@ -29,6 +29,7 @@
         @if (Model.Answer == null && Model.OtherAnswerList.Count > 0)
         {
             <div class="otheranswer-table">
+            <h2>List of Answers</h2>
             @foreach (var item in Model.Answers)
             {
                 <p>
@@ -69,6 +70,17 @@
                         </table>
             }
             </div>
+
+            <h2>Summary of Rater Information</h2>
+            @foreach (var item in Model.AssignedRaters)
+            {
+                <ul>
+                    <li>
+                        @item.Item1 @item.Item2: @item.Item3
+                    </li>
+                </ul>
+            }
+
         }
         @if (Model.Answer != null)
         {

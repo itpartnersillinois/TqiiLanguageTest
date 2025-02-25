@@ -60,6 +60,7 @@
 {
     <h2>Assign Raters</h2>
     <p>Secondary raters will only be assigned questions where the score of the primary raters is on either side of @Model.ScorePassingRange.ToString("0.00").</p>
+    <p>For Sentence Repetition, secondary raters will only be assigned questions where the score of the primary raters differs by more than 1 (so 0-2 or 1-3 or 1-4 will require a secondary rater, but 1-2 will not).</p>
     <p>Number of Questions in Disagreement (requires secondary raters): @Model.NumberOfDiscrepencyQuestions</p>
     <hr />
     <form method="post">
