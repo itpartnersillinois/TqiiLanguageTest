@@ -43,7 +43,7 @@ namespace TqiiLanguageTest.Pages.Admin {
             IsFinalized = Request.Query.ContainsKey("finalize");
 
             if (_context.RaterNames != null && _context.TestUsers != null && _context.RaterTests != null) {
-                var testinformation = _context.TestUsers.Include(t => t.Test).Select(tu => new { tu.Id, tu.UserIdentification, tu.Email, tu.DateTimeEnd, tu.Test.Title }).First(tu => tu.Id == Id);
+                var testinformation = _context.TestUsers.Include(t => t.Test).Select(tu => new { tu.Id, tu.UserIdentification, tu.Email, tu.DateTimeEnd, tu.Test.Title, tu.Test.TestType }).First(tu => tu.Id == Id);
                 Email = testinformation.Email ?? "";
                 TestName = testinformation.Title ?? "";
                 DateEnded = testinformation.DateTimeEnd.ToString() ?? "";
@@ -60,9 +60,15 @@ namespace TqiiLanguageTest.Pages.Admin {
                 Raters = await _context.RaterNames.ToListAsync();
                 Raters = Raters.Where(r => r.IsActive && !AssignedRaters.Select(ar => ar.Item1).Contains(r.Email)).ToList();
 
-                NumberOfDiscrepencyQuestions = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == Id && !ra.RaterTest.IsExtraScorer && !ra.RaterTest.IsFinalScorer)
-                    .GroupBy(ra => ra.AnswerId)
-                    .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) > ScorePassingRange && rag.Min(r => r.Score) < ScorePassingRange).Count();
+                if (testinformation.TestType == TestEnum.SentenceRepetition) {
+                    NumberOfDiscrepencyQuestions = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == Id && !ra.RaterTest.IsExtraScorer)
+                        .GroupBy(ra => ra.AnswerId)
+                        .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) > 1).Count();
+                } else {
+                    NumberOfDiscrepencyQuestions = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == Id && !ra.RaterTest.IsExtraScorer)
+                        .GroupBy(ra => ra.AnswerId)
+                        .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) > ScorePassingRange && rag.Min(r => r.Score) < ScorePassingRange).Count();
+                }
             }
         }
 
@@ -121,11 +127,11 @@ namespace TqiiLanguageTest.Pages.Admin {
 
                     var raterAnswers = new List<int>();
                     if (testUser.Test.TestType == TestEnum.SentenceRepetition) {
-                        raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId)
+                        raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId && !ra.RaterTest.IsExtraScorer)
                             .GroupBy(ra => ra.AnswerId)
                             .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) - rag.Min(r => r.Score) > 1).Select(rag => rag.Key).ToList();
                     } else {
-                        raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId)
+                        raterAnswers = _context.RaterAnswers.Include(ra => ra.RaterTest).Where(ra => ra.RaterTest.TestUserId == testUserId && !ra.RaterTest.IsExtraScorer)
                             .GroupBy(ra => ra.AnswerId)
                             .Where(rag => rag.Count() > 1 && rag.Max(r => r.Score) > ScorePassingRange && rag.Min(r => r.Score) < ScorePassingRange).Select(rag => rag.Key).ToList();
                     }
