@@ -36,7 +36,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                                     individualScores += "0;";
                                 }
                             } else {
-                                if (i < answerArray.Length && string.Compare(answerArray[i], answerKeyArray[i], CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace) == 0) {
+                                if (i < answerArray.Length && string.Compare(answerArray[i], answerKeyArray[i], CultureInfo.CurrentCulture, CompareOptions.IgnoreNonSpace & CompareOptions.IgnoreCase) == 0) {
                                     score++;
                                     individualScores += "1;";
                                 } else {
