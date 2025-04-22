@@ -118,7 +118,6 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                 OtherAnswerListFinal = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId).ToList();
                 var assignedRaterInformation = await _context.RaterTests.Include(rt => rt.Rater).Where(rt => rt.TestUserId == id).Select(rt => new { rt.Id, rt.Rater.Email, rt.IsExtraScorer, rt.IsFinalScorer, rt.FinalScore, rt.DateFinished }).ToListAsync();
                 AssignedRaters = assignedRaterInformation.Select(rt => new Tuple<string, string, string>(rt.Email, rt.IsExtraScorer ? " (Second Pass)" : rt.IsFinalScorer ? " (Final)" : "", rt.FinalScore == 0 ? "Not Scored" : "Final Score: " + rt.FinalScore.ToString("0.00"))).OrderBy(s => s.Item1).ToList();
-
             } else {
                 OtherAnswerList = new List<RaterAnswer>();
             }
@@ -222,7 +221,7 @@ namespace TqiiLanguageTest.Pages.Reviewer {
                     rater.DateFinished = DateTime.Now;
                     var raterTotalScore = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterId && ra.IsAnswered && !ra.IsDisqualified).Sum(ra => ra.Score);
                     var raterTotalAnswers = _context.RaterAnswers.Count(ra => ra.RaterTestId == raterId && ra.IsAnswered && !ra.IsDisqualified);
-                    rater.FinalScore = raterTotalScore / raterTotalAnswers;
+                    rater.FinalScore = raterTotalAnswers == 0 ? 0 : raterTotalScore / raterTotalAnswers;
                     rater.Notes = Request.Form["notes"];
                     var id = int.Parse(Id);
                     var test = _context.TestUsers.Single(tu => tu.Id == id);

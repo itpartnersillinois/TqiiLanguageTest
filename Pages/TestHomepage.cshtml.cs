@@ -12,11 +12,7 @@ namespace TqiiLanguageTest.Pages {
             _practiceTestHandler = practiceTestHandler;
         }
 
-        public Guid? Guid { get; set; }
-        public Guid? PracticeGuid { get; set; }
-
-        public DateTime? TimeActive { get; set; }
-        public DateTime? TimeExpired { get; set; }
+        public List<TestObject> TestObjects { get; set; } = new List<TestObject>();
 
         public void OnGet() {
             // TODO Asked to temporarily remove the "must take practice test" -- need to re-add this later
@@ -24,11 +20,25 @@ namespace TqiiLanguageTest.Pages {
             //     ? _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "")
             //     : null;
 
-            var test = _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "");
-            Guid = test.Item1;
-            TimeActive = test.Item2;
-            TimeExpired = test.Item3;
-            PracticeGuid = _practiceTestHandler.GetTestUserGuid(User.Identity?.Name ?? "", true);
+            TestObjects = _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "").Select(i =>
+            new TestObject {
+                Guid = i.Item1,
+                TimeActive = i.Item2,
+                TimeExpired = i.Item3,
+                Language = i.Item4,
+            }).ToList();
+
+            foreach (var testObject in TestObjects) {
+                testObject.PracticeGuid = _practiceTestHandler.GetTestUserGuid(User.Identity?.Name ?? "", true, testObject.Language);
+            }
         }
+    }
+
+    public class TestObject {
+        public Guid? Guid { get; set; }
+        public string Language { get; set; } = "";
+        public Guid? PracticeGuid { get; set; }
+        public DateTime? TimeActive { get; set; }
+        public DateTime? TimeExpired { get; set; }
     }
 }
