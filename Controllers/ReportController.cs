@@ -42,6 +42,7 @@ namespace TqiiLanguageTest.Controllers {
             sb.Append("Final Answer Notes" + '\t');
             sb.Append("Rater Name" + '\t');
             sb.Append("Rater Score" + '\t');
+            sb.Append("Is Secondary Rater?" + '\t');
             sb.Append("Rater Comment");
             sb.AppendLine();
 
@@ -62,6 +63,7 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(item.FinalIndividualNotes + '\t');
                 sb.Append(item.RaterName + '\t');
                 sb.Append((item.IsDisqualified ? "disqualified" : item.RaterScore.ToString()) + '\t');
+                sb.Append((item.IsSecondaryRater ? "secondary rater" : "") + '\t');
                 sb.Append(item.RaterNotes);
                 sb.AppendLine();
             }

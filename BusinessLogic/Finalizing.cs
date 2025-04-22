@@ -15,6 +15,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             var testUser = _context.TestUsers.Include(tu => tu.Test).Single(tu => tu.Id == testUserId);
             var raterAnswers = _context.RaterAnswers.Where(ra => ra.RaterTestId == raterTestId).ToList();
             var rater = _context.RaterNames.FirstOrDefault(ra => ra.Email == raterEmail);
+            var raterTest = _context.RaterTests.FirstOrDefault(rt => rt.Id == raterTestId);
             var raterName = rater == null || string.IsNullOrWhiteSpace(rater.FullName) ? raterEmail : rater.FullName;
             var answers = _context.Answers.Include(a => a.Question).Where(a => a.TestUserId == testUserId && a.Question.QuestionType != QuestionEnum.Instructions).Select(a => new { a.Id, a.QuestionId, a.Question.Title, a.DateTimeEnd, a.Question.QuestionType }).ToList();
             var totalTimesRefreshed = _context.Answers.Where(a => a.TestUserId == testUserId).Sum(a => a.NumberTimesRefreshed);
@@ -47,7 +48,9 @@ namespace TqiiLanguageTest.BusinessLogic {
                             RaterName = raterName,
                             RaterScore = (int) (raterAnswer?.Score ?? 0),
                             RaterNotes = raterAnswer?.Notes ?? "",
-                            IsDisqualified = raterAnswer?.IsDisqualified ?? false
+                            IsSecondaryRater = raterTest?.IsExtraScorer ?? false,
+                            IsDisqualified = raterAnswer?.IsDisqualified ?? false,
+                            NumberOfTimesRefreshed = totalTimesRefreshed
                         });
                     }
                 } else if (raterAnswer != null && !string.IsNullOrWhiteSpace(raterAnswer.ScoreText)) {
@@ -70,6 +73,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                             RaterName = raterName,
                             RaterScore = (int) (raterAnswer?.Score ?? 0),
                             RaterNotes = (subtestBreakdownItem ?? "") + " -- " + (raterAnswer?.Notes ?? ""),
+                            IsSecondaryRater = raterTest?.IsExtraScorer ?? false,
                             IsDisqualified = raterAnswer?.IsDisqualified ?? false,
                             NumberOfTimesRefreshed = totalTimesRefreshed
                         });
@@ -93,6 +97,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                         RaterScore = (int) (raterAnswer?.Score ?? 0),
                         RaterNotes = raterAnswer?.Notes ?? "",
                         IsDisqualified = raterAnswer?.IsDisqualified ?? false,
+                        IsSecondaryRater = raterTest?.IsExtraScorer ?? false,
                         NumberOfTimesRefreshed = totalTimesRefreshed
                     });
                 }
