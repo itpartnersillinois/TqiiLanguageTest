@@ -14,39 +14,42 @@
 
 <p>Now, please click “Start Practice TQII Language Proficiency Test” to start your practice session. Or, if you have already finished the practice session, you can click “Start TQII Language Proficiency Test” to start your actual TQII Language Proficiency test.</p>
 
-<h2>Practice TQII Language Proficiency Test</h2>
-
-<div>
-    <a href="/Starting?id=@Model.PracticeGuid" class="il-button" id="continue">Start Practice</a>
-</div>
-
-
 <h2>TQII Language Proficiency Test</h2>
-@if (Model.Guid == null || Model.Guid == Guid.Empty)
+
+@if (Model.TestObjects == null || Model.TestObjects.Count == 0)
 {
     <p>You do not have any tests available at this time. </p>
 }
-else if (Model.TimeExpired.HasValue && Model.TimeExpired.Value < DateTime.Now)
+
+
+@if (Model.TestObjects != null)
 {
-    <p>Your test has expired on @Model.TimeExpired.Value.ToString("F") (all times are Central). Please contact TQII to schedule a re-test. </p>
-}
-else if (Model.TimeActive.HasValue && Model.TimeActive.Value > DateTime.Now)
-{
-    <p>Your test is scheduled at @Model.TimeActive.Value.ToString("F") (all times are Central)</p>
-    <div>
-        <a href="/TestHomepage" class="il-button">Refresh Page</a>
-    </div>
-}
-else if (Model.TimeActive.HasValue && Model.TimeActive.Value > DateTime.Now)
-{
-    <p>Your test is scheduled at @Model.TimeActive.Value.ToString("F") (all times are Central)</p>
-    <div>
-        <a href="/TestHomepage" class="il-button">Refresh Page</a>
-    </div>
-}
-else
-{
-    <div>
-        <a href="/Starting?id=@Model.Guid" class="il-button" id="continue">Start Test</a>
-    </div>
+    @foreach (var testObject in Model.TestObjects)
+    {
+        <h3>Language: @testObject.Language</h3>
+
+        @if (testObject.PracticeGuid != null && testObject.PracticeGuid != Guid.Empty)
+        {
+            <div>
+                <a href="/Starting?id=@testObject.PracticeGuid" class="il-button" id="continue">Start Practice TQII @testObject.Language Language Proficiency Test</a>
+            </div>
+        }
+        @if (testObject.TimeExpired.HasValue && testObject.TimeExpired.Value < DateTime.Now)
+        {
+            <p>Your test has expired on @testObject.TimeExpired.Value.ToString("F") (all times are Central). Please contact TQII to schedule a re-test. </p>
+        }
+        else if (testObject.TimeActive.HasValue && testObject.TimeActive.Value > DateTime.Now)
+        {
+            <p>Your test is scheduled at @testObject.TimeActive.Value.ToString("F") (all times are Central)</p>
+            <div>
+                <a href="/TestHomepage" class="il-button">Refresh Page</a>
+            </div>
+        }
+        else
+        {
+            <div>
+                <a href="/Starting?id=@testObject.Guid" class="il-button" id="continue">Start TQII @testObject.Language Language Proficiency Test</a>
+            </div>
+        }
+    }
 }

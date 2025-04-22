@@ -49,7 +49,30 @@ namespace TqiiLanguageTest.BusinessLogic {
                             RaterNotes = raterAnswer?.Notes ?? "",
                             IsDisqualified = raterAnswer?.IsDisqualified ?? false
                         });
-                        ;
+                    }
+                } else if (raterAnswer != null && !string.IsNullOrWhiteSpace(raterAnswer.ScoreText)) {
+                    var subtestBreakdownItems = raterAnswer.ScoreText.Split(";");
+                    foreach (var subtestBreakdownItem in subtestBreakdownItems) {
+                        _context.ReportDetails.Add(new ReportDetail {
+                            Email = testUser.Email,
+                            UserIdentification = testUser.UserIdentification ?? "",
+                            TestUserId = testUser.Id,
+                            QuestionId = answer.QuestionId ?? 0,
+                            AnswerId = answer.Id,
+                            TestDate = testUser.DateTimeEnd ?? DateTime.Now,
+                            TestName = testUser.Test?.Title ?? "",
+                            QuestionName = answer.Title,
+                            QuestionType = answer.QuestionType.ToString(),
+                            QuestionAnswered = answer.DateTimeEnd ?? DateTime.Now,
+                            Answer = "",
+                            AnswerKey = "",
+                            AutogradedScore = "",
+                            RaterName = raterName,
+                            RaterScore = (int) (raterAnswer?.Score ?? 0),
+                            RaterNotes = (subtestBreakdownItem ?? "") + " -- " + (raterAnswer?.Notes ?? ""),
+                            IsDisqualified = raterAnswer?.IsDisqualified ?? false,
+                            NumberOfTimesRefreshed = totalTimesRefreshed
+                        });
                     }
                 } else {
                     _context.ReportDetails.Add(new ReportDetail {
