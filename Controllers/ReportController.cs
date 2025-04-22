@@ -51,7 +51,7 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(item.TestDate.ToShortDateString() + '\t');
                 sb.Append(item.TestDate.ToShortTimeString() + '\t');
                 sb.Append(item.TestName + '\t');
-                sb.Append(item.NumberOfTimesRefreshed + '\t');
+                sb.Append(item.NumberOfTimesRefreshed.ToString() + '\t');
                 sb.Append(item.QuestionName + '\t');
                 sb.Append(item.QuestionType + '\t');
                 sb.Append(item.QuestionAnswered.ToShortTimeString() + '\t');
@@ -60,7 +60,6 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(item.AutogradedScore + '\t');
                 sb.Append(item.FinalIndividualScore.ToString() + '\t');
                 sb.Append(item.FinalIndividualNotes + '\t');
-                sb.Append(item.AutogradedScore + '\t');
                 sb.Append(item.RaterName + '\t');
                 sb.Append((item.IsDisqualified ? "disqualified" : item.RaterScore.ToString()) + '\t');
                 sb.Append(item.RaterNotes);

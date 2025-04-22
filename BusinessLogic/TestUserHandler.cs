@@ -36,10 +36,15 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public TestUser? GetTestUser(Guid guid) => _context.TestUsers?.SingleOrDefault(tu => tu.Guid == guid);
 
-        public Tuple<Guid?, DateTime?, DateTime?> GetTestUserGuid(string email) {
-            var returnValue = _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null && tu.DateTimeStart != null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
-            returnValue ??= _context.TestUsers?.Include(tu => tu.Test).Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy).FirstOrDefault();
-            return new Tuple<Guid?, DateTime?, DateTime?>(returnValue?.Guid, returnValue?.DateTimeScheduled, returnValue?.DateTimeExpired);
+        public List<Tuple<Guid?, DateTime?, DateTime?, string>> GetTestUserGuid(string email) {
+            var returnValue = _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy);
+            if (returnValue == null) {
+                return new List<Tuple<Guid?, DateTime?, DateTime?, string>>();
+            }
+            return returnValue.Select(r => new Tuple<Guid?, DateTime?, DateTime?, string>(r.Guid, r.DateTimeScheduled, r.DateTimeExpired, r.Language)).ToList();
         }
+
+        public Guid? GetTestUserGuidNextTestOnly(string email) =>
+            _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy).FirstOrDefault()?.Guid;
     }
 }
