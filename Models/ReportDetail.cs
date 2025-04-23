@@ -19,6 +19,7 @@ namespace TqiiLanguageTest.Models {
 
         public bool IsDisqualified { get; set; }
 
+        public bool IsSecondaryRater { get; set; }
         public int NumberOfTimesRefreshed { get; set; }
         public DateTime QuestionAnswered { get; set; }
         public int QuestionId { get; set; }
