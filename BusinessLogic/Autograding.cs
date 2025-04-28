@@ -27,7 +27,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                         var answerArray = PullAnswers(answer.Text);
                         var answerKeyArray = PullAnswers(autogradeQuestion.InteractiveReadingOptionsAnswerKey);
                         for (var i = 0; i < answerKeyArray.Length; i++) {
-                            individualScores += $"{answerArray[i]},{answerKeyArray[i]},";
+                            individualScores += $"{answerArray[i].Replace(",", "")},{answerKeyArray[i].Replace(",", "")},";
                             if (useStrictGrading) {
                                 if (i < answerArray.Length && string.Equals(answerArray[i], answerKeyArray[i], StringComparison.CurrentCultureIgnoreCase)) {
                                     score++;
@@ -70,7 +70,7 @@ namespace TqiiLanguageTest.BusinessLogic {
                         new(autogradeQuestion.BasicAnswerKey3, answer?.BasicAnswers3 ?? "") }) {
                         if (!string.IsNullOrWhiteSpace(basicAnswer.Item1)) {
                             count++;
-                            individualScores += $"{basicAnswer.Item2},{basicAnswer.Item1},";
+                            individualScores += $"{basicAnswer.Item2.Replace(",", "")},{basicAnswer.Item1.Replace(",", "")},";
                             if (basicAnswer.Item1.Trim() == basicAnswer.Item2.Trim()) {
                                 total++;
                                 individualScores += "1;";

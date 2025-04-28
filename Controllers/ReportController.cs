@@ -20,7 +20,8 @@ namespace TqiiLanguageTest.Controllers {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-            var report = _context?.ReportDetails.Where(ri => ri.TotalScore > 0);
+            var report = _context?.ReportDetails.Where(ri => ri.TotalScore > 0 && ri.UserIdentification == "0000000214"
+            && ri.QuestionType == "BasicQuestions");
 
             var sb = new StringBuilder();
 
@@ -117,7 +118,7 @@ namespace TqiiLanguageTest.Controllers {
         [HttpGet("pass/{id}")]
         public IActionResult ReportPass(int id) => ProcessReport(id, true);
 
-        private static string ProcessColumnItem(string s) => s.Replace("\t", " ").Replace("\n", " ").Replace("\r", " ").Trim();
+        private static string ProcessColumnItem(string s) => s.Replace('\t', ' ').Replace('\n', ' ').Replace('\r', ' ').Trim();
 
         private IActionResult ProcessReport(int id, bool pass) {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
