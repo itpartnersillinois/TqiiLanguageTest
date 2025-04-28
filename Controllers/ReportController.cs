@@ -53,18 +53,18 @@ namespace TqiiLanguageTest.Controllers {
                 sb.Append(item.TestDate.ToShortTimeString() + '\t');
                 sb.Append(item.TestName + '\t');
                 sb.Append(item.NumberOfTimesRefreshed.ToString() + '\t');
-                sb.Append(item.QuestionName + '\t');
-                sb.Append(item.QuestionType + '\t');
+                sb.Append(ProcessColumnItem(item.QuestionName) + '\t');
+                sb.Append(ProcessColumnItem(item.QuestionType) + '\t');
                 sb.Append(item.QuestionAnswered.ToShortTimeString() + '\t');
-                sb.Append(item.Answer + '\t');
-                sb.Append(item.AnswerKey + '\t');
+                sb.Append(ProcessColumnItem(item.Answer) + '\t');
+                sb.Append(ProcessColumnItem(item.AnswerKey) + '\t');
                 sb.Append(item.AutogradedScore + '\t');
                 sb.Append(item.FinalIndividualScore.ToString() + '\t');
-                sb.Append(item.FinalIndividualNotes + '\t');
+                sb.Append(ProcessColumnItem(item.FinalIndividualNotes) + '\t');
                 sb.Append(item.RaterName + '\t');
                 sb.Append((item.IsDisqualified ? "disqualified" : item.RaterScore.ToString()) + '\t');
                 sb.Append((item.IsSecondaryRater ? "secondary rater" : "") + '\t');
-                sb.Append(item.RaterNotes);
+                sb.Append(ProcessColumnItem(item.RaterNotes));
                 sb.AppendLine();
             }
 
@@ -116,6 +116,8 @@ namespace TqiiLanguageTest.Controllers {
 
         [HttpGet("pass/{id}")]
         public IActionResult ReportPass(int id) => ProcessReport(id, true);
+
+        private static string ProcessColumnItem(string s) => s.Replace("\t", " ").Replace("\n", " ").Replace("\r", " ").Trim();
 
         private IActionResult ProcessReport(int id, bool pass) {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
