@@ -20,8 +20,7 @@ namespace TqiiLanguageTest.Controllers {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-            var report = _context?.ReportDetails.Where(ri => ri.TotalScore > 0 && ri.UserIdentification == "0000000214"
-            && ri.QuestionType == "BasicQuestions");
+            var report = _context?.ReportDetails.Where(ri => ri.TotalScore > 0);
 
             var sb = new StringBuilder();
 
