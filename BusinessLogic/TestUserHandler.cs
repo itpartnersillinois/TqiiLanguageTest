@@ -37,11 +37,12 @@ namespace TqiiLanguageTest.BusinessLogic {
         public TestUser? GetTestUser(Guid guid) => _context.TestUsers?.SingleOrDefault(tu => tu.Guid == guid);
 
         public List<Tuple<Guid?, DateTime?, DateTime?, string>> GetTestUserGuid(string email) {
-            var returnValue = _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy);
-            if (returnValue == null) {
-                return new List<Tuple<Guid?, DateTime?, DateTime?, string>>();
+            var returnValue = _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null && tu.DateTimeStart != null).OrderBy(tu => tu.OrderBy).ThenByDescending(tu => tu.DateTimeScheduled);
+            if (returnValue != null && returnValue.Count() > 0) {
+                return returnValue.Select(r => new Tuple<Guid?, DateTime?, DateTime?, string>(r.Guid, r.DateTimeScheduled, r.DateTimeExpired, r.Language)).ToList();
             }
-            return returnValue.Select(r => new Tuple<Guid?, DateTime?, DateTime?, string>(r.Guid, r.DateTimeScheduled, r.DateTimeExpired, r.Language)).ToList();
+            var returnValuePastTests = _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy).ThenByDescending(tu => tu.DateTimeScheduled);
+            return returnValuePastTests == null ? new List<Tuple<Guid?, DateTime?, DateTime?, string>>() : returnValuePastTests.Select(r => new Tuple<Guid?, DateTime?, DateTime?, string>(r.Guid, r.DateTimeScheduled, r.DateTimeExpired, r.Language)).ToList();
         }
 
         public Guid? GetTestUserGuidNextTestOnly(string email) =>
