@@ -14,6 +14,23 @@
 
 <p>Now, please click “Start Practice TQII Language Proficiency Test” to start your practice session. Or, if you have already finished the practice session, you can click “Start TQII Language Proficiency Test” to start your actual TQII Language Proficiency test.</p>
 
+
+<h2>Disclaimer</h2>
+
+<p>
+    Please be aware that applicants must successfully complete the requirements set forth in 23 Ill. Admin. Code 226.800(k) and adhere to the Code of Ethics for Qualified Interpreters in order to receive the qualified interpreter designation. Additionally, the applicant is required to verify that the information the applicant submits as part of the application, training, and/or assessment process in order to receive the qualified interpreter designation is accurate, to the best of the applicant’s knowledge.  The failure of an applicant to adhere to the Code of Ethics or submit accurate information as part of the application, training, and/or assessment process may result in the applicant being disqualified from receiving the qualified interpreter designation. If ISBE reasonably suspects that the applicant violated the Code of Ethics or knowingly misrepresented information in the application, training, and/or assessment process in order to receive the qualified interpreter designation, ISBE may refer the applicant for an investigation of the potential misconduct to any and all agencies or certificating entities with which the applicant holds professional licenses or certificates.
+</p>
+
+<div class="ils-input-disclaimer">
+    <label for="continue-checkbox">
+        I have read and agree with the above information.
+    </label>
+    <input id="continue-checkbox" type="checkbox" onclick="document.getElementById('shade').style.visibility = this.checked ? 'hidden' : '';">
+</div>
+
+<div style="margin-top: 20px;position: relative;">
+    <div id="shade" style="position: absolute; height: 100%; width: 100%; z-index: 9; backdrop-filter: blur(3px); background: rgba(225, 225, 225, .5);"></div>
+
 <h2>TQII Language Proficiency Test</h2>
 
 @if (Model.TestObjects == null || Model.TestObjects.Count == 0)
@@ -53,3 +70,4 @@
         }
     }
 }
+</div>
