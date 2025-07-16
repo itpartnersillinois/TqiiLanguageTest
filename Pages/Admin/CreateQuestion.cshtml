@@ -114,19 +114,19 @@
     <h3>Interactive Reading / Basic Question Section</h3>
     <div class="ils-input-entry form-group">
         <label for="Question_InteractiveReadingAnswer" class="control-label">Interactive Reading Text / Reading Section (use multiple "*" to show where the student should enter text, "^" to show multiple choice entries, "_" to emphasize text, "~" to bold text, "[]" to indicate no break)</label>
-        <textarea asp-for="Question.InteractiveReadingAnswer" class="ils-input-long form-control"></textarea>
+        <textarea asp-for="Question.InteractiveReadingAnswer" class="ils-input-long form-control" dir="auto"></textarea>
     </div>
     <div class="ils-input-entry form-group">
         <label for="Question_InteractiveReadingOptions" class="control-label">Answer Bank (separate multiple answers by a "|" symbol)</label>
-        <input asp-for="Question.InteractiveReadingOptions" class="ils-input-long form-control" />
+        <input asp-for="Question.InteractiveReadingOptions" class="ils-input-long form-control" dir="auto" />
     </div>
     <div class="ils-input-entry form-group">
         <label for="Question_InteractiveReadingOptionsDropDown" class="control-label">Drop Down Answers (separate multiple answers by a "|" symbol)</label>
-        <input asp-for="Question.InteractiveReadingOptionsDropDown" class="ils-input-long form-control" />
+        <input asp-for="Question.InteractiveReadingOptionsDropDown" class="ils-input-long form-control" dir="auto" />
     </div>
     <div class="ils-input-entry form-group">
         <label for="Question_InteractiveReadingOptionsAnswerKey" class="control-label">Answer Key (correct answer)</label>
-        <textarea asp-for="Question.InteractiveReadingOptionsAnswerKey" class="ils-input-long form-control"></textarea>
+        <textarea asp-for="Question.InteractiveReadingOptionsAnswerKey" class="ils-input-long form-control" dir="auto"></textarea>
     </div>
     @if (Model.Question.HasInteractiveReadingImage)
     {

@@ -17,7 +17,7 @@
     <div class="answer-bank">
         @foreach (var a in Model?.Answer?.ButtonInteractiveReadingOptions)
         {
-            <span>@Html.Raw(a)</span>
+            <span dir="auto">@Html.Raw(a)</span>
         }
     </div>
 }
@@ -27,7 +27,7 @@
     {
         <p>Use up/down arrows to switch between the test and the interface to add special characters.</p>
     }
-<p class="interactive" >@Html.Raw(Model.Answer?.InteractiveReadingAnswer)</p>
+    <p class="interactive" dir="auto">@Html.Raw(Model.Answer?.InteractiveReadingAnswer)</p>
 
 <div id="question" class="hidden">@Model.Answer?.Guid</div>
 
@@ -36,7 +36,7 @@
     <div class="answer-bank">
         @foreach (var a in Model?.Answer?.ButtonInteractiveReadingOptions)
         {
-            <span>@Html.Raw(a)</span>
+                <span dir="auto">@Html.Raw(a)</span>
         }
     </div>
 }
@@ -50,19 +50,19 @@
                 {
                     <div class="button-row">
                         @if (!(Model.Answer?.LanguagePopout ?? true) && characterRow.First() == '1') {
-                            <span class="button-blank"></span>
+                        <span class="button-blank" dir="auto"></span>
                         }
                         @if (!(Model.Answer?.LanguagePopout ?? true) && characterRow.First() == 'q')
                         {
-                            <span class="button-blank long"></span>
+                        <span class="button-blank long" dir="auto"></span>
                         }
                         @if (!(Model.Answer?.LanguagePopout ?? true) && characterRow.First() == 'a')
                         {
-                            <span class="button-blank long2"></span>
+                        <span class="button-blank long2" dir="auto"></span>
                         }
                         @if (!(Model.Answer?.LanguagePopout ?? true) && characterRow.First() == 'z')
                         {
-                            <span class="button-blank long3"></span>
+                        <span class="button-blank long3" dir="auto"></span>
                         }
                         @foreach (var character in characterRow.Split(' ').Select(t => t.Trim()).Where(t => !string.IsNullOrWhiteSpace(t)))
                         {
@@ -70,15 +70,15 @@
                         }
                         @if (!(Model.Answer?.LanguagePopout ?? true) && characterRow.First() == '1')
                         {
-                            <span class="button-blank"></span>
+                        <span class="button-blank" dir="auto"></span>
                         }
                         @if (!(Model.Answer?.LanguagePopout ?? true) && characterRow.First() == 'a')
                         {
-                            <span class="button-blank long2"></span>
+                        <span class="button-blank long2" dir="auto"></span>
                         }
                         @if (!(Model.Answer?.LanguagePopout ?? true) && characterRow.First() == 'z')
                         {
-                            <span class="button-blank long3"></span>
+                        <span class="button-blank long3" dir="auto"></span>
                         }
                     </div>
                 }
