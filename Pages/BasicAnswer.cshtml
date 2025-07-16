@@ -13,7 +13,7 @@
 }
 
 <div id="display-after-recording">
-<p class="interactive">@Html.Raw(Model?.Answer?.InteractiveReadingAnswer)</p>
+    <p class="interactive" dir="auto">@Html.Raw(Model?.Answer?.InteractiveReadingAnswer)</p>
 
 <div id="question" class="hidden">@Model?.Answer?.Guid</div>
 
@@ -24,7 +24,7 @@
     <p>@Model?.Answer?.BasicQuestion1</p>
             @foreach (var a in Model?.Answer?.BasicOptions1 ?? new List<string>())
     {
-        <label><input type="radio" name="a1" value="@a"> @a</label>
+                <label><input type="radio" name="a1" value="@a" dir="auto"> @a</label>
     }
 }
 
@@ -33,7 +33,7 @@
     <p>@Model?.Answer?.BasicQuestion2</p>
             @foreach (var a in Model?.Answer?.BasicOptions2 ?? new List<string>())
     {
-        <label><input type="radio" name="a2" value="@a"> @a</label>
+                <label><input type="radio" name="a2" value="@a" dir="auto"> @a</label>
     }
 }
 
@@ -42,7 +42,7 @@
             <p>@Model?.Answer?.BasicQuestion3</p>
             @foreach (var a in Model?.Answer?.BasicOptions3 ?? new List<string>())
     {
-        <label><input type="radio" name="a3" value="@a"> @a</label>
+                <label><input type="radio" name="a3" value="@a" dir="auto"> @a</label>
     }
 }
 </div>
