@@ -115,9 +115,9 @@
 
         @if (Model.Answer.Text != "" && Model.Answer.Question.InteractiveReadingAnswer != "")
         {
-            <p><strong>Interactive Reading: </strong>@Model.Answer.Question.InteractiveReadingAnswer</p>
+                <p><strong>Interactive Reading: </strong><span dir="auto">@Model.Answer.Question.InteractiveReadingAnswer</span></p>
             <p><strong>Answer: </strong>@Model.Answer.Text</p>
-                <p><strong>Key: </strong>@Model.Answer.Question.InteractiveReadingOptionsAnswerKey</p>
+                <p><strong>Key: </strong><span dir="auto">@Model.Answer.Question.InteractiveReadingOptionsAnswerKey</span></p>
         }
         else if (Model.Answer.Text != "" && Model.Answer.Question.QuestionText != "")
         {
