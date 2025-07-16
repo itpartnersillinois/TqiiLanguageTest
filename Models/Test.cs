@@ -22,6 +22,8 @@ namespace TqiiLanguageTest.Models {
 
         public string Introduction { get; set; } = string.Empty;
         public byte[] IntroductionRecording { get; set; } = Array.Empty<byte>();
+        public bool IsActive { get; set; }
+
         public bool IsPractice { get; set; }
         public string Language { get; set; } = string.Empty;
         public int NumberQuestions { get; set; }
