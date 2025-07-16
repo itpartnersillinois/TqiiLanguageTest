@@ -35,7 +35,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 return Unauthorized();
             }
             var language = Request.Query["language"].ToString();
-            var dictionary = _context.Tests?.Where(t => language == "" || language == t.Language).Select(t => new { t.Id, t.Title, t.Language }).OrderBy(t => t.Language).ThenBy(t => t.Title).ToDictionary(t => t.Id, t => t.Title + " (" + t.Language + ")");
+            var dictionary = _context.Tests?.Where(t => t.IsActive && (language == "" || language == t.Language)).Select(t => new { t.Id, t.Title, t.Language }).OrderBy(t => t.Language).ThenBy(t => t.Title).ToDictionary(t => t.Id, t => t.Title + " (" + t.Language + ")");
             var dictionaryNew = dictionary.ToDictionary(t => t.Key, t => t.Value);
             dictionaryNew.Add(0, "");
             ViewData["TestId"] = new SelectList(dictionary, "Key", "Value");
