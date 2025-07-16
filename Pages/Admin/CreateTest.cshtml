@@ -32,6 +32,10 @@
                 <span asp-validation-for="Test.NumberQuestions" class="text-danger"></span>
             </div>
             <div class="ils-input-entry form-group">
+                <label for="Test_IsActive" class="control-label">Is This Test Active?</label>
+                <input asp-for="Test.IsActive" class="form-control" />
+            </div>
+            <div class="ils-input-entry form-group">
                 <label for="Test_IsPractice" class="control-label">Is This a Practice Test?</label>
                 <input asp-for="Test.IsPractice" class="form-control" />
             </div>
