@@ -27,6 +27,9 @@ namespace TqiiLanguageTest.Pages {
             using var ms = new MemoryStream();
             Request.Form.Files.First().CopyTo(ms);
             var fileBytes = ms.ToArray();
+            if (fileBytes.Length <= 10240) {
+                return StatusCode(400);
+            }
             var guid = Guid.Parse(Request.Form["answerguid"]);
             var id = Request.Form["id"];
             _ = await _answerHandler.SetRecording(guid, fileBytes);
