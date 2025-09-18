@@ -1,0 +1,32 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Registration.IndexModel
+@{
+}
+
+<h1>Registration</h1>
+
+<label for="first_name">First Name:</label>
+<input type="text" id="first_name" name="first_name" value="@Model.FirstName" />
+<br />
+<label for="last_name">Last Name:</label>
+<input type="text" id="last_name" name="last_name" value="@Model.LastName" />
+<br />
+<label for="language">Language:</label>
+<select id="language">
+    <option value="">-- Select Language --</option>
+</select>
+<br />
+<p>The TQII has three parts.</p>
+<ol>
+    <li>Language Proficiency Exam</li>
+    <li>Special Education training</li>
+    <li>Language Interpretation training</li>
+</ol>
+
+<p>You may be able to receive a proficiency exam exemption.</p>
+<p>@Model.LanguageExemption</p>
+
+<label for="exemption">I believe I qualify for a proficiency exam exemption</label>
+<input type="checkbox" id="exemption" name="exemption" @(Model.Exemption ? "checked" : "") />
+<br />
+
