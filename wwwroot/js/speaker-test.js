@@ -1,5 +1,6 @@
 ﻿const information = document.getElementById('information');
 const continueButton = document.getElementById('continue');
+const retryButton = document.getElementById('retry');
 
 window.addEventListener("DOMContentLoaded", (event) => {
     playSample();
@@ -18,6 +19,7 @@ function playSample() {
         let audio = document.getElementById("audio");
         audio.remove();
         continueButton.classList.remove('hidden');
+        retryButton.classList.remove('hidden');
         console.debug('item ended');
     });
     document.body.appendChild(audioPlayer);

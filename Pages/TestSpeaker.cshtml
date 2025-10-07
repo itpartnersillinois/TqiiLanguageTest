@@ -12,8 +12,9 @@
 
 <div>
     <a href="/TestMicrophone" class="il-button hidden" id="continue">Test your microphone</a>
+    <a href="javascript:window.location.href=window.location.href" class="il-button hidden" id="retry">Retry the test for speakers</a>
 </div>
 
 @section Scripts {
-    <script src="~/js/speaker-test.js" asp-append-version="true"></script>
+    <script src="~/js/speaker-test.js?cache=20" asp-append-version="true"></script>
 }

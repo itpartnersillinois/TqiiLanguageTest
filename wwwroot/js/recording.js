@@ -68,7 +68,11 @@ window.addEventListener("DOMContentLoaded", (event) => {
                     body: fd
                 }).then(function (response) {
                     window.removeEventListener("beforeunload", beforeUnloadHandler);
-                    window.location.href = "/Question?id=" + params.get('id');
+                    if (response.ok) {
+                        window.location.href = "/Question?id=" + params.get('id');
+                    } else {
+                        window.location.href = "/RecordingError";
+                    }
                 });
             }
 

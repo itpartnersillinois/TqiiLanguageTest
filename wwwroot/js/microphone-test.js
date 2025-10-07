@@ -7,6 +7,7 @@
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.stop();
 
+        debugger;
         const information = document.getElementById('information');
         const continueButton = document.getElementById('continue');
         const record = document.getElementById('record');
@@ -22,7 +23,7 @@
                 mediaRecorder.stop();
                 record.innerText = "Record";
                 record.enabled = false;
-                information.innerText = "Listen for playback and either continue or re-record";
+                information.innerHTML = "Listen for playback and either continue or re-record. <br /><strong>By clicking the Continue button, I certified that I verified my voice was recorded correctly.</strong>";
             }
         }
 
