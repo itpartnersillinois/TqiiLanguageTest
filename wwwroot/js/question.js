@@ -84,7 +84,8 @@ function playSample() {
                     audioPlayer.controls = true;
                     let playButton = document.createElement("div");
                     playButton.innerText = "Autoplay has been disabled -- please click the 'play' button on the control to the right to start audio.";
-                    let instructions = document.getElementsByClassName('instruction');
+                    playButton.style.fontWeight = 'bold';
+                    let instructions = document.getElementsByClassName('instruction')[0];
                     instructions.appendChild(playButton);
                     // Autoplay was prevented.
                     // Show a "Play" button so that user can start playback.
