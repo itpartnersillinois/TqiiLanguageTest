@@ -72,8 +72,26 @@ function playSample() {
     audioPlayer.id = "audio";
     audioPlayer.src = '/Media/' + question.innerText;
     audioPlayer.controls = false;
+    audioPlayer.setAttribute("style", "position: absolute; top: 150px; right: 10px;");
     audioPlayer.addEventListener("canplaythrough", (event) => {
-        setTimeout(function () { audioPlayer.play(); }, 2000);
+        setTimeout(function () {
+            var promise = audioPlayer.play();
+            if (promise !== undefined) {
+                promise.then(_ => {
+                    // Autoplay started, do nothing
+                }).catch(error => {
+                    console.log('Autoplay prevented');
+                    audioPlayer.controls = true;
+                    let playButton = document.createElement("div");
+                    playButton.innerText = "Autoplay has been disabled -- please click the 'play' button on the control to the right to start audio.";
+                    playButton.style.fontWeight = 'bold';
+                    let instructions = document.getElementsByClassName('instruction')[0];
+                    instructions.appendChild(playButton);
+                    // Autoplay was prevented.
+                    // Show a "Play" button so that user can start playback.
+                });
+            }
+        }, 2000);
     });
     audioPlayer.addEventListener("ended", (event) => {
         console.debug('item ended');

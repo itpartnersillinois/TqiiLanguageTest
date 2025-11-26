@@ -49,8 +49,8 @@ namespace TqiiLanguageTest.Pages.Admin {
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync() {
-            if (_context.TestUsers == null || TestUser == null) {
-                return Page();
+            if (_context.TestUsers == null || TestUser == null || string.IsNullOrWhiteSpace(TestUser.Email)) {
+                return RedirectToPage("./Index");
             }
             if (TestUser.Email.Contains(',')) {
                 var emailArray = TestUser.Email.Split(',');
