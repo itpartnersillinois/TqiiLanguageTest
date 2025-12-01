@@ -1,0 +1,57 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Registration.CourseModel
+@{
+    ViewData["Title"] = "Registration - Choose Courses";
+}
+
+<h1>Choose Courses</h1>
+<p>Welcome to the TQII Registration Process</p>
+
+
+<fieldset id="english_fieldset">
+    <legend>Please select your English Proficiency Test:</legend>
+    @Html.Raw(Model.EnglishProficiency)
+    <ul>
+        @foreach (var ep in Model.EnglishProficiencyTests)
+        {
+            <li><input type="radio" id="english_@ep.Id" name="english" value="@ep.Id" /> <label for="english_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+            @ep.Description - @ep.Language</li>
+        }
+        <li>
+            <input type="radio" name="english" value="exempt" /> Exempt <br />
+            <label for="english_document">Upload a document to mark as exempt from the test:</label>
+            <input type="file" id="english_document" name="english_document" />
+        </li>
+    </ul>
+</fieldset>
+
+
+<button class="il-button" id="english_button" onclick="upload('english')">Submit English Proficiency Request</button>
+<p id="english_results" style="display: none;">English Proficiency has been chosen</p>
+
+
+<div style="display: none;" id="cohortpersonid">@Model.CohortPersonId</div>
+@section Scripts {
+    <script>
+        function upload(id) {
+            debugger;
+            var fd = new FormData();
+            var file_data = document.getElementById(id + '_document');
+            if (file_data.files.length > 0) {
+                fd.append('file_0', file_data.files[0]);
+                fd.append('filename', file_data.files[0].name)
+            }
+            fd.append('testid', document.getElementsByName(id)[0].value);
+            fd.append('cohortpersonid', document.getElementById('cohortpersonid').innerText);
+            fetch('/Registration/Course', {
+                method: 'POST',
+                body: fd
+            }).then(function (response) {
+                document.getElementById(id + '_fieldset').style.display = 'none';
+                document.getElementById(id + '_button').style.display = 'none';
+                document.getElementById(id + '_results').style.display = '';
+            });
+
+        }
+    </script>
+}

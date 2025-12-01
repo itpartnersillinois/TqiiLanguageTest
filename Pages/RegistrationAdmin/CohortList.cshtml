@@ -1,0 +1,54 @@
+﻿@page
+@model TqiiLanguageTest.Pages.RegistrationAdmin.CohortListModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Cohort List";
+}
+<h1>Cohort List</h1>
+<h2>List</h2>
+
+<ul>
+@foreach (var cohort in Model.Cohorts)
+{
+        <li><a href="/RegistrationAdmin/CohortList?id=@cohort.Id">@cohort.TestName</a>: @cohort.Description (@cohort.StartDate.ToString("d") - @cohort.EndDate.ToString("d"))<br />
+            <a href="/RegistrationAdmin/CohortEdit?cohortid=@cohort.Id">Add / Edit Tests</a>
+        </li>
+}
+</ul>
+
+<h2>Edit</h2>
+
+<form method="post">
+    <input asp-for="RegistrationCohort.Id" type="hidden" />
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_TestName" class="control-label">Name</label>
+        <input asp-for="RegistrationCohort.TestName" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_Description" class="control-label">Description</label>
+        <input asp-for="RegistrationCohort.Description" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_NumberStudents" class="control-label">Number of Students</label>
+        <input asp-for="RegistrationCohort.NumberStudents" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_StartDate" class="control-label">Start Date</label>
+        <input asp-for="RegistrationCohort.StartDate" type="date" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_EndDate" class="control-label">End Date</label>
+        <input asp-for="RegistrationCohort.EndDate" type="date" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Update" class="il-button" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function refresh() {
+            location.href = `/RegistrationAdmin/Instructions?id=${document.getElementById('instruction').value}`;
+        }
+    </script>
+}

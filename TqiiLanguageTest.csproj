@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Pages\RegistrationAdmin\" />
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
 

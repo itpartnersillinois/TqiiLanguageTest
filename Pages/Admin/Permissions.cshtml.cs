@@ -26,6 +26,9 @@ namespace TqiiLanguageTest.Pages.Admin {
         public bool NewIsItemWriter { get; set; } = default!;
 
         [BindProperty]
+        public bool NewIsRegistrationReviewer { get; set; } = default!;
+
+        [BindProperty]
         public bool NewIsReviewer { get; set; } = default!;
 
         [BindProperty]
@@ -47,6 +50,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 NewIsAdmin = Permissions.FirstOrDefault(p => p.Id == id)?.IsAdministrator ?? false;
                 NewIsReviewer = Permissions.FirstOrDefault(p => p.Id == id)?.IsReviewer ?? false;
                 NewIsItemWriter = Permissions.FirstOrDefault(p => p.Id == id)?.IsItemWriter ?? false;
+                NewIsRegistrationReviewer = Permissions.FirstOrDefault(p => p.Id == id)?.IsRegistrationReviewer ?? false;
             }
         }
 
@@ -60,7 +64,8 @@ namespace TqiiLanguageTest.Pages.Admin {
                     Email = NewPermissionEmail,
                     IsAdministrator = NewIsAdmin,
                     IsItemWriter = NewIsItemWriter,
-                    IsReviewer = NewIsReviewer
+                    IsReviewer = NewIsReviewer,
+                    IsRegistrationReviewer = NewIsRegistrationReviewer
                 };
                 _context.Permissions.Add(permission);
             } else if (string.IsNullOrWhiteSpace(NewPermissionEmail)) {
@@ -72,6 +77,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 basePermission.IsAdministrator = NewIsAdmin;
                 basePermission.IsItemWriter = NewIsItemWriter;
                 basePermission.IsReviewer = NewIsReviewer;
+                basePermission.IsRegistrationReviewer = NewIsRegistrationReviewer;
                 _context.Permissions.Update(basePermission);
             }
             await _context.SaveChangesAsync();

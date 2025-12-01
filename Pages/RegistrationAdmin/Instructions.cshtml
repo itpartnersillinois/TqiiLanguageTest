@@ -1,0 +1,49 @@
+﻿@page
+@model TqiiLanguageTest.Pages.RegistrationAdmin.InstructionsModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Instructions";
+}
+<h1>Instructions</h1>
+<div class="ils-input-entry form-group">
+
+<label for="instruction">Edit Instruction</label>
+<select id="instruction" onchange="">
+    <option value="0">None</option>
+    <option value="1" selected="@(Request.Query["id"] == "1")">Introduction</option>
+    <option value="2">Iein</option>
+    <option value="3">LangaugeProficiency1</option>
+    <option value="4">LangaugeProficiency2</option>
+    <option value="5">SpedProficiency</option>
+    <option value="6">Conclusion</option>
+    <option value="7">EmailApproved</option>
+    <option value="8">EmailDenied</option>
+    <option value="9">Waitlisted</option>
+</select>
+    <button class="il-button" onclick="refresh(); return false;">Refresh</button>
+</div>
+<h2>Edit</h2>
+
+<form method="post">
+    <input asp-for="RegistrationInstruction.Id" type="hidden" />
+    <input asp-for="RegistrationInstruction.TypeOfInstruction" type="hidden" />
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_Description" class="control-label">Description</label>
+        <input asp-for="RegistrationInstruction.Description" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_InstructionText" class="control-label">Instruction Text</label>
+        <textarea asp-for="RegistrationInstruction.InstructionText" class="form-control" style="width: 100%;"></textarea>
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Update" class="il-button" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function refresh() {
+            location.href = `/RegistrationAdmin/Instructions?id=${document.getElementById('instruction').value}`;
+        }
+    </script>
+}

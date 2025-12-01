@@ -13,6 +13,8 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public bool IsItemWriter(string email) => _context.Permissions?.SingleOrDefault(p => p.Email == email)?.IsItemWriter ?? false;
 
+        public bool IsRegistrationReviewer(string email) => _context.Permissions?.SingleOrDefault(p => p.Email == email)?.IsRegistrationReviewer ?? false;
+
         public bool IsReviewer(string email) => _context.Permissions?.SingleOrDefault(p => p.Email == email)?.IsReviewer ?? false;
     }
 }

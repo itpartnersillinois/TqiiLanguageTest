@@ -1,32 +1,66 @@
 ﻿@page
 @model TqiiLanguageTest.Pages.Registration.IndexModel
 @{
+    ViewData["Title"] = "Registration - Choose Cohort";
 }
 
 <h1>Registration</h1>
+<p>Welcome to the TQII Registration Process</p>
 
-<label for="first_name">First Name:</label>
-<input type="text" id="first_name" name="first_name" value="@Model.FirstName" />
-<br />
-<label for="last_name">Last Name:</label>
-<input type="text" id="last_name" name="last_name" value="@Model.LastName" />
-<br />
-<label for="language">Language:</label>
-<select id="language">
-    <option value="">-- Select Language --</option>
-</select>
-<br />
-<p>The TQII has three parts.</p>
+<h2>Student Information</h2>
+<p>Email: @Model.RegistrationPerson.Email</p>
+<p>Please fill out all information before choosing a cohort.</p>
+
+<form method="post">
+    <input asp-for="RegistrationPerson.Id" type="hidden"/>
+    <input asp-for="RegistrationPerson.Email" type="hidden" />
+    <div class="ils-input-entry form-group">
+        <label for="first_name" class="control-label">First Name:</label>
+        <input asp-for="RegistrationPerson.FirstName" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">Last Name:</label>
+        <input asp-for="RegistrationPerson.LastName" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">Country:</label>
+        <input asp-for="RegistrationPerson.Country" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">State:</label>
+        <input asp-for="RegistrationPerson.State" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">IEIN:</label>
+        <input asp-for="RegistrationPerson.Iein" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">Native Language:</label>
+        <input asp-for="RegistrationPerson.NativeLanguage" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Update" class="il-button" />
+    </div>
+</form>
+
+<h2>Cohort Information</h2>
+<p>The TQII has four parts.</p>
 <ol>
     <li>Language Proficiency Exam</li>
     <li>Special Education training</li>
-    <li>Language Interpretation training</li>
+    <li>English Language Interpretation training</li>
+    <li>Other Language Interpretation training</li>
 </ol>
 
-<p>You may be able to receive a proficiency exam exemption.</p>
-<p>@Model.LanguageExemption</p>
+<p>You will choose a cohort, and then you will choose to register in each of the four parts of the TQII process. </p>
 
-<label for="exemption">I believe I qualify for a proficiency exam exemption</label>
-<input type="checkbox" id="exemption" name="exemption" @(Model.Exemption ? "checked" : "") />
-<br />
-
+<p>@Model.Introduction</p>
+<ul>
+    @foreach (var cohort in Model.Cohorts)
+    {
+        <li>
+            <a href="/Registration/Course?cohortid=@cohort.Id">@cohort.TestName</a>: @cohort.Description <br />
+            @cohort.NumberSlots
+        </li>
+    }
+</ul>

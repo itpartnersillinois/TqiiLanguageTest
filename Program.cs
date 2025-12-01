@@ -15,6 +15,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDbContext<LanguageDbContext>(options =>
     options.UseSqlServer(connectionString, c => c.CommandTimeout(600)));
+builder.Services.AddDbContext<RegistrationDbContext>(options =>
+    options.UseSqlServer(connectionString, c => c.CommandTimeout(600)));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -30,6 +32,9 @@ builder.Services.AddScoped<Finalizing>();
 builder.Services.AddScoped<PermissionsHandler>();
 builder.Services.AddScoped<PackageHelper>();
 builder.Services.AddTransient<IEmailSender, EmailSender>(e => new EmailSender(builder.Configuration.GetValue<string>("SocketLabsApiKey")));
+builder.Services.AddScoped<InstructionHelper>();
+builder.Services.AddScoped<RegistrationTestHelper>();
+builder.Services.AddScoped<RegistrationPersonHelper>();
 
 builder.Services.AddRazorPages(options => {
     options.Conventions.AuthorizeFolder("/");
