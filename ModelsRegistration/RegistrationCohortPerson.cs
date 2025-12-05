@@ -18,6 +18,7 @@ namespace TqiiLanguageTest.ModelsRegistration {
         public bool IsApproved { get; set; }
         public bool IsDenied { get; set; }
         public bool IsRegistered => DateRegistered.HasValue;
+        public bool IsRegistrationCompleted { get; set; }
         public bool IsWaitlisted { get; set; }
         public string Language { get; set; } = string.Empty;
         public virtual RegistrationCohort? RegistrationCohort { get; set; }

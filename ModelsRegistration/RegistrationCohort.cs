@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TqiiLanguageTest.Models;
 
 namespace TqiiLanguageTest.ModelsRegistration {
 
@@ -14,7 +13,9 @@ namespace TqiiLanguageTest.ModelsRegistration {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string NumberSlots => $"Number of slots left: {NumberStudents - NumberStudentsEnrolled}";
+        public string NumberSlots => NumberStudentsEnrolled >= NumberStudents ? "This session is full -- we will contact you if seats become available" :
+            (NumberStudentsEnrolled + 5 >= NumberStudents ? "This session is filling up." : "Seats are available for this session");
+
         public int NumberStudents { get; set; }
 
         [NotMapped]

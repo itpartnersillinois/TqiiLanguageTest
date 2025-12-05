@@ -1,4 +1,5 @@
-﻿using TqiiLanguageTest.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TqiiLanguageTest.Data;
 using TqiiLanguageTest.ModelsRegistration;
 
 namespace TqiiLanguageTest.BusinessLogic {
@@ -10,14 +11,14 @@ namespace TqiiLanguageTest.BusinessLogic {
             _context = context;
         }
 
-        public async Task<int> AssignDocumentToTest(int id, byte[] document, string fileName) {
+        public async Task<int> AssignDocumentToTest(int id, byte[] document, string fileName, TestType testType) {
             var item = new RegistrationDocument {
                 RegistrationTestPersonId = id,
                 Document = document,
                 FileName = fileName,
                 Description = "",
                 DocumentType = "",
-                TestName = TestType.ProficiencyExam1
+                TestName = testType
             };
             _ = _context.Add(item);
             _ = await _context.SaveChangesAsync();
@@ -25,6 +26,7 @@ namespace TqiiLanguageTest.BusinessLogic {
         }
 
         public async Task<int> AssignPersonToCohort(int cohortId, int personId) {
+            var existingItem = _context.CohortPeople?.SingleOrDefault(c => c.RegistrationCohortId == cohortId && c.RegistrationPersonId == personId);
             var item = new RegistrationCohortPerson {
                 RegistrationCohortId = cohortId,
                 RegistrationPersonId = personId
@@ -34,17 +36,39 @@ namespace TqiiLanguageTest.BusinessLogic {
             return item.Id;
         }
 
-        public async Task<int> AssignPersonToTest(int testId, int cohortPersonId) {
+        public async Task<int> AssignPersonToTest(int? testId, int cohortPersonId, bool isExempt, string language) {
             var item = new RegistrationTestPerson {
                 RegistrationTestId = testId,
-                RegistrationCohortPersonId = cohortPersonId
+                RegistrationCohortPersonId = cohortPersonId,
+                Language = language,
+                IsProficiencyExemption = isExempt,
             };
             _ = _context.Add(item);
             _ = await _context.SaveChangesAsync();
             return item.Id;
         }
 
+        public RegistrationCohortPerson GetCohortPerson(int id) => _context.CohortPeople?.SingleOrDefault(c => c.Id == id) ?? new RegistrationCohortPerson();
+
         public RegistrationPerson GetPerson(string email) => _context.People?.SingleOrDefault(c => c.Email == email) ?? new RegistrationPerson();
+
+        public RegistrationTestPerson GetTestPerson(int id) => _context.RegistrationTestPeople?.SingleOrDefault(c => c.Id == id) ?? new RegistrationTestPerson();
+
+        public RegistrationCohort? IsPersonAssignedToCohort(int personId) => _context.CohortPeople?.Include(c => c.RegistrationCohort).SingleOrDefault(x => x.RegistrationPersonId == personId)?.RegistrationCohort;
+
+        public int? IsPersonAssignedToCohortGetId(int personId) => _context.CohortPeople?.SingleOrDefault(x => x.RegistrationPersonId == personId && x.IsRegistrationCompleted)?.Id;
+
+        public async Task<int> MarkPersonCohortAsComplete(int id) {
+            var existingItem = _context.CohortPeople?.SingleOrDefault(c => c.Id == id);
+            if (existingItem != null) {
+                existingItem.DateUpdated = DateTime.UtcNow;
+                existingItem.IsRegistrationCompleted = true;
+                _context.CohortPeople?.Update(existingItem);
+                _ = await _context.SaveChangesAsync();
+                return existingItem.Id;
+            }
+            return 0;
+        }
 
         public async Task<int> SavePerson(RegistrationPerson person, string email) {
             person.Email = email;
@@ -59,6 +83,16 @@ namespace TqiiLanguageTest.BusinessLogic {
             } else {
                 _context.People?.Update(person);
             }
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateCohortPerson(RegistrationCohortPerson cohortPerson) {
+            _context.CohortPeople?.Update(cohortPerson);
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> UpdateTestPerson(RegistrationTestPerson testPerson) {
+            _context.RegistrationTestPeople?.Update(testPerson);
             return await _context.SaveChangesAsync();
         }
     }

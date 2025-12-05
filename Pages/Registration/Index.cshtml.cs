@@ -16,7 +16,10 @@ namespace TqiiLanguageTest.Pages.Registration {
             _instructionHelper = instructionHelper;
         }
 
+        public RegistrationCohort? AssignedCohort { get; set; }
+        public string CohortIntroduction { get; set; } = "";
         public List<RegistrationCohort> Cohorts { get; set; } = default!;
+        public string Iein { get; set; } = "";
         public string Introduction { get; set; } = "";
 
         [BindProperty]
@@ -26,6 +29,9 @@ namespace TqiiLanguageTest.Pages.Registration {
             RegistrationPerson = _registrationPersonHelper.GetPerson(User.Identity?.Name ?? "");
             Cohorts = _registrationTestHelper.GetCohorts();
             Introduction = _instructionHelper.GetInstructionString(InstructionType.Introduction);
+            CohortIntroduction = _instructionHelper.GetInstructionString(InstructionType.CohortIntroduction);
+            Iein = _instructionHelper.GetInstructionString(InstructionType.Iein);
+            AssignedCohort = _registrationPersonHelper.IsPersonAssignedToCohort(RegistrationPerson.Id);
             return Page();
         }
 

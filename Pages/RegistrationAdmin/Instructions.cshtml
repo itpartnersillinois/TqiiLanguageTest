@@ -11,14 +11,16 @@
 <select id="instruction" onchange="">
     <option value="0">None</option>
     <option value="1" selected="@(Request.Query["id"] == "1")">Introduction</option>
-    <option value="2">Iein</option>
-    <option value="3">LangaugeProficiency1</option>
-    <option value="4">LangaugeProficiency2</option>
-    <option value="5">SpedProficiency</option>
-    <option value="6">Conclusion</option>
-    <option value="7">EmailApproved</option>
-    <option value="8">EmailDenied</option>
-    <option value="9">Waitlisted</option>
+    <option value="2" selected="@(Request.Query["id"] == "2")">Cohort Introduction</option>
+    <option value="3" selected="@(Request.Query["id"] == "3")">Iein</option>
+    <option value="4" selected="@(Request.Query["id"] == "4")">English Language Proficiency</option>
+    <option value="5" selected="@(Request.Query["id"] == "5")">Foreign Language Proficiency</option>
+    <option value="6" selected="@(Request.Query["id"] == "6")">Special Education</option>
+    <option value="7" selected="@(Request.Query["id"] == "7")">Interpereter</option>
+    <option value="8" selected="@(Request.Query["id"] == "8")">Conclusion</option>
+    <option value="9" selected="@(Request.Query["id"] == "9")">Email Approved</option>
+    <option value="10" selected="@(Request.Query["id"] == "10")">Email Denied</option>
+    <option value="11" selected="@(Request.Query["id"] == "11")">Waitlisted</option>
 </select>
     <button class="il-button" onclick="refresh(); return false;">Refresh</button>
 </div>

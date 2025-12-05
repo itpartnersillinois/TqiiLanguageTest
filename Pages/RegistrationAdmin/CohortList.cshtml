@@ -11,7 +11,8 @@
 @foreach (var cohort in Model.Cohorts)
 {
         <li><a href="/RegistrationAdmin/CohortList?id=@cohort.Id">@cohort.TestName</a>: @cohort.Description (@cohort.StartDate.ToString("d") - @cohort.EndDate.ToString("d"))<br />
-            <a href="/RegistrationAdmin/CohortEdit?cohortid=@cohort.Id">Add / Edit Tests</a>
+            <a href="/RegistrationAdmin/CohortEdit?cohortid=@cohort.Id">Add / Edit Tests</a><br />
+            <a href="/RegistrationAdmin/PeopleList?cohortid=@cohort.Id">View People</a><br />
         </li>
 }
 </ul>

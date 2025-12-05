@@ -7,51 +7,208 @@
 <h1>Choose Courses</h1>
 <p>Welcome to the TQII Registration Process</p>
 
+@if (Model.IsAlreadyRegistered)
+{
+    <p>You have already registered and your information is being evaluated. If you need to change your registration, please contact tqii@education.illinois.edu. </p>
+} 
+else
+{
+    <fieldset id="english_fieldset">
+        <legend>You will need to prove your English language proficiency through testing or an exemption request.</legend>
+        @Html.Raw(Model.EnglishProficiency)
+        <ul>
+            @foreach (var ep in Model.EnglishProficiencyTests)
+            {
+                <li>
+                    <input type="radio" id="english_@ep.Id" name="english" value="@ep.Id" /> <label for="english_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    @ep.Description
+                </li>
+            }
+        </ul>
+        <div class="exempt_information">
+            <input type="checkbox" id="english_exempt" name="english_exempt" onchange="display('english')" />
+            <label for="english_exempt">Do you want to request a English language proficiency testing exemption?</label>
+            <div id="english_file" style="display: none;">
+                <label for="english_document">Upload a file to document your English language proficiency exemption request. </label>
+                <input type="file" id="english_document" name="english_document" />
+            </div>
+        </div>
+    </fieldset>
+    <button class="il-button" id="english_button" onclick="upload('english')">Submit English Proficiency Request</button>
+    <p id="english_results" style="display: none;">English Proficiency has been added</p>
 
-<fieldset id="english_fieldset">
-    <legend>Please select your English Proficiency Test:</legend>
-    @Html.Raw(Model.EnglishProficiency)
-    <ul>
-        @foreach (var ep in Model.EnglishProficiencyTests)
-        {
-            <li><input type="radio" id="english_@ep.Id" name="english" value="@ep.Id" /> <label for="english_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
-            @ep.Description - @ep.Language</li>
-        }
-        <li>
-            <input type="radio" name="english" value="exempt" /> Exempt <br />
-            <label for="english_document">Upload a document to mark as exempt from the test:</label>
-            <input type="file" id="english_document" name="english_document" />
-        </li>
-    </ul>
-</fieldset>
+    <fieldset id="foreign_fieldset">
+        <legend>You will need to prove your foreign language proficiency through testing or an exemption request.</legend>
+        @Html.Raw(Model.ForeignLanguageProficiency)
+        <ul>
+            @foreach (var ep in Model.ForeignLanguageProficiencyTests)
+            {
+                <li>
+                    <input type="radio" id="foreign_@ep.Id" name="foreign" value="@ep.Id" /> <label for="foreign_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    @ep.Description
+                </li>
+            }
+        </ul>
+        <div class="ils-input-entry form-group">
+            <label for="foreign_language" class="control-label">Indicate which foreign language are you showing proficiency</label>
+            <select id="foreign_language" class="form-control" style="width: 100%;">
+                <option value="">Select your foreign language</option>
+                @foreach (var lang in Model.ForeignLanguages)
+                {
+                    <option value="@lang">@lang</option>
+                }
+            </select>
+        </div>
+        <div class="exempt_information">
+            <input type="checkbox" id="foreign_exempt" name="foreign_exempt" onchange="display('foreign')" />
+            <label for="foreign_exempt">Do you want to request a foreign language proficiency testing exemption?</label>
+            <div id="foreign_file" style="display: none;">
+                <label for="foreign_document">Upload a file to document your foreign language proficiency exemption request. </label>
+                <input type="file" id="foreign_document" name="foreign_document" />
+            </div>
+        </div>
+    </fieldset>
+    <button class="il-button" id="foreign_button" onclick="upload('foreign')">Submit Foreign Language Proficiency Request</button>
+    <p id="foreign_results" style="display: none;">Foreign Language Proficiency has been added</p>
 
+    <fieldset id="specialed_fieldset">
+        <legend>You will need to prove your special education proficiency through a course or an exemption request.</legend>
+        @Html.Raw(Model.SpecialEducation)
+        <ul>
+            @foreach (var ep in Model.SpecialEducationCourses)
+            {
+                <li>
+                    <input type="radio" id="specialed_@ep.Id" name="specialed" value="@ep.Id" /> <label for="specialed_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    @ep.Description
+                </li>
+            }
+        </ul>
+        <div class="exempt_information">
+            <input type="checkbox" id="specialed_exempt" name="specialed_exempt" onchange="display('specialed')" />
+            <label for="specialed_exempt">Do you want to request a special education proficiency exemption?</label>
+            <div id="specialed_file" style="display: none;">
+                <label for="specialed_document">Upload a file to document your special education proficiency request.</label>
+                <input type="file" id="specialed_document" name="specialed_document" />
+            </div>
+        </div>
+    </fieldset>
+    <button class="il-button" id="specialed_button" onclick="upload('specialed')">Submit Special Education Course Request</button>
+    <p id="specialed_results" style="display: none;">Special Education Course has been added</p>
 
-<button class="il-button" id="english_button" onclick="upload('english')">Submit English Proficiency Request</button>
-<p id="english_results" style="display: none;">English Proficiency has been chosen</p>
+    <fieldset id="interpreter_fieldset">
+        <legend>Please select your Interpreter Course:</legend>
+        @Html.Raw(Model.Interpreter)
+        <ul>
+            @foreach (var ep in Model.InterpreterCourses)
+            {
+                <li>
+                    <input type="radio" id="interpreter_@ep.Id" name="interpreter" value="@ep.Id" /> <label for="interpreter_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    @ep.Description
+                </li>
+            }
+        </ul>
+    </fieldset>
+    <button class="il-button" id="interpreter_button" onclick="upload('interpreter')">Submit Interpreter Course</button>
+    <p id="interpreter_results" style="display: none;">Interpreter Course has been added</p>
 
+    <div id="complete" style="display: none;">
+        <h2>Registration is complete</h2>
+        @Html.Raw(Model.Conclusion)
+    </div>
 
-<div style="display: none;" id="cohortpersonid">@Model.CohortPersonId</div>
+    <div style="display: none;" id="cohortpersonid">@Model.CohortPersonId</div>
+}
+
 @section Scripts {
     <script>
-        function upload(id) {
-            debugger;
-            var fd = new FormData();
-            var file_data = document.getElementById(id + '_document');
-            if (file_data.files.length > 0) {
-                fd.append('file_0', file_data.files[0]);
-                fd.append('filename', file_data.files[0].name)
+        document.addEventListener("DOMContentLoaded", (event) => {
+            if (document.querySelectorAll('input[name=english]').length == 1) {
+                document.querySelector('input[name=english]').checked = true;
             }
-            fd.append('testid', document.getElementsByName(id)[0].value);
-            fd.append('cohortpersonid', document.getElementById('cohortpersonid').innerText);
-            fetch('/Registration/Course', {
-                method: 'POST',
-                body: fd
-            }).then(function (response) {
-                document.getElementById(id + '_fieldset').style.display = 'none';
-                document.getElementById(id + '_button').style.display = 'none';
-                document.getElementById(id + '_results').style.display = '';
-            });
+            if (document.querySelectorAll('input[name=foreign]').length == 1) {
+                document.querySelector('input[name=foreign]').checked = true;
+            }
+            if (document.querySelectorAll('input[name=specialed]').length == 1) {
+                document.querySelector('input[name=specialed]').checked = true;
+            }
+            if (document.querySelectorAll('input[name=interpreter]').length == 1) {
+                document.querySelector('input[name=interpreter]').checked = true;
+                upload('interpreter');
+            }
+        });
 
+        function display(id) {
+            if (document.getElementById(id + '_exempt').checked) {
+                document.getElementById(id + '_file').style.display = '';
+            } else {
+                document.getElementById(id + '_file').style.display = 'none';
+            }
+        }
+
+        function upload(id) {
+            var fd = new FormData();
+            let isComplete = true;
+            var file_data = document.getElementById(id + '_document');
+            fd.append('testtype', id);
+            if (id == 'interpreter') {
+                fd.append('exempt', false);
+            } else {
+                fd.append('exempt', document.getElementById(id + '_exempt').checked);
+                if (document.getElementById(id + '_exempt').checked) {
+                    if (file_data == null || file_data.files.length == 0) {
+                        isComplete = false;
+                    } else {
+                        fd.append('file_0', file_data.files[0]);
+                        fd.append('filename', file_data.files[0].name)
+                    }
+                }
+            }
+            if (id == 'foreign') {
+                fd.append('language', document.getElementById(id + '_language').value);
+                if (document.getElementById(id + '_language').value == '') {
+                    isComplete = false;
+                }
+            } else {
+                fd.append('language', '');
+            }
+            fd.append('testid', document.querySelector('input[name="' + id + '"]:checked').value);
+            fd.append('cohortpersonid', document.getElementById('cohortpersonid').innerText);
+            if (document.querySelector('input[name="' + id + '"]:checked').value == '') {
+                isComplete = false;
+            }
+            if (document.getElementById('cohortpersonid').innerText == '') {
+                isComplete = false;
+            }
+            if (isComplete) {
+                fetch('/Registration/Course', {
+                    method: 'POST',
+                    body: fd
+                }).then(function (response) {
+                    document.getElementById(id + '_fieldset').style.display = 'none';
+                    document.getElementById(id + '_button').style.display = 'none';
+                    document.getElementById(id + '_results').style.display = '';
+                    if (document.getElementById('english_results').style.display == '' &&
+                        document.getElementById('foreign_results').style.display == '' &&
+                        document.getElementById('specialed_results').style.display == '' &&
+                        document.getElementById('interpreter_results').style.display == '') {
+                            debugger;
+                            document.getElementById('complete').style.display = '';
+                            document.getElementById('english_results').style.display = 'none';
+                            document.getElementById('foreign_results').style.display = 'none';
+                            document.getElementById('specialed_results').style.display = 'none';
+                            document.getElementById('interpreter_results').style.display = 'none';
+                            var fdComplete = new FormData();
+                            fdComplete.append('cohortpersonid', document.getElementById('cohortpersonid').innerText);
+                            fdComplete.append('complete', true);
+                            fetch('/Registration/Course', {
+                                method: 'POST',
+                                body: fdComplete
+                            });
+                        }
+                });
+            } else {
+                alert('Please complete all required fields before submitting.');
+            }
         }
     </script>
 }

@@ -1,4 +1,130 @@
 ﻿@page
 @model TqiiLanguageTest.Pages.RegistrationAdmin.PeopleListModel
 @{
+    Layout = "_Admin";
+    ViewData["Title"] = "People List";
+}
+<h1>People List</h1>
+<h2>Cohort Details</h2>
+<p>Cohort Name: @Model.Cohort.TestName (@Model.Cohort.DateString)</p>
+<p>@Model.Cohort.Description</p>
+
+<h2>People applied to Cohort</h2>
+
+<ul>
+    @foreach (var cohortPerson in Model.CohortPeople)
+    {
+        <li>
+            <p>
+                <span>@cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName
+                    <a href="mailto:@cohortPerson.RegistrationPerson?.Email">@cohortPerson.RegistrationPerson?.Email</a>
+                </span>
+                <select onchange="sendDecision(this)" data-id="@cohortPerson.Id" aria-label="Update @cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName">
+                    <option value="">Not Decided</option>
+                    <option value="approved" selected="@cohortPerson.IsApproved">Is Approved</option>
+                    <option value="denied" selected="@cohortPerson.IsDenied">Is Denied</option>
+                    <option value="wait" selected="@cohortPerson.IsWaitlisted">Is Waitlisted</option>
+                </select>
+            </p>
+            <div style="display: grid; column-gap: 10px; grid-template-columns: auto 200px; align-items: center;">
+                <div>
+                    <div class="ils-input-entry form-group">
+                        <label class="control-label" for="internal_@cohortPerson.Id" aria-label="Internal Notes for @cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName">Internal Notes:</label>
+                        <input class="form-control" id="internal_@cohortPerson.Id" style="width: auto;" value="@cohortPerson.InternalComment" />
+                    </div>
+                    <div class="ils-input-entry form-group">
+                        <label class="control-label" for="external_@cohortPerson.Id" aria-label="External Notes for @cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName">External Notes:</label>
+                        <input class="form-control" id="external_@cohortPerson.Id" style="width: auto;" value="@cohortPerson.ExternalComment" />
+                    </div>
+                </div>
+                <div>
+                    <button class="il-button" style="font: 700 1.1875rem / 1.25rem var(--il-font-sans);" onclick="recordNote(this);" data-id="@cohortPerson.Id">Update Notes for @cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName</button>
+                </div>
+            </div>
+            <ul>
+            @foreach (var c in Model.TestPeopleByPerson(cohortPerson.Id))
+            {
+                <li>
+                        <p>@c.RegistrationTest?.TestName
+                        @if (c.IsProficiencyExemption)
+                        {
+                                <span><a href="/registrationdocument/@c.RegistrationDocument?.Id" target="_blank">Requested Exemption Document</a> (will open in new window)</span>
+                                <select onchange="sendExemption(this)" data-id="@c.Id">
+                                    <option value="">Not Decided</option>
+                                    <option value="approved" selected="@c.IsProficiencyExemptionApproved">Is Approved</option>
+                                    <option value="denied" selected="@c.IsProficiencyExemptionDenied">Is Denied</option>
+                                </select>
+                        }
+                        </p>
+                </li>
+            }
+            </ul>
+            @if (cohortPerson.DateRegistered != null)
+            {
+                <p>Registered on: @cohortPerson.DateRegistered?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+            }
+            @if (cohortPerson.DateRegistrationSent != null)
+            {
+                <p>Email sent on: @cohortPerson.DateRegistrationSent?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+            }
+        </li>
+    }
+</ul>
+<p><button class="il-button" data-id="@Model.Cohort.Id" onclick="sendEmail(this);">Send Email</button></p>
+<p><a href="/registrationdocument/cohort/@Model.Cohort.Id">Download Text File</a></p>
+
+@section Scripts {
+    <script>
+        function sendDecision(e) {
+            var fd = new FormData();
+            fd.append('formtype', 'decision');
+            fd.append('id', e.getAttribute("data-id"));
+            fd.append('value', e.value);
+            fetch('/RegistrationAdmin/PeopleList', {
+                method: 'POST',
+                body: fd
+            }).then(function (response) {
+            });
+        }
+
+        function recordNote(e) {
+            var fd = new FormData();
+            fd.append('formtype', 'notes');
+            let id = e.getAttribute("data-id");
+            fd.append('id', id);
+            fd.append('internal', document.getElementById('internal_' + id).value);
+            fd.append('external', document.getElementById('external_' + id).value);
+            fetch('/RegistrationAdmin/PeopleList', {
+                method: 'POST',
+                body: fd
+            }).then(function (response) {
+            });
+        }
+
+        function sendExemption(e) {
+            var fd = new FormData();
+            fd.append('formtype', 'exemption');
+            fd.append('id', e.getAttribute("data-id"));
+            fd.append('value', e.value);
+            fetch('/RegistrationAdmin/PeopleList', {
+                method: 'POST',
+                body: fd
+            }).then(function (response) {
+            });
+        }
+
+        function sendEmail(e) {
+            if (window.confirm("Are you sure you want to send out the emails now?")) {
+                var fd = new FormData();
+                fd.append('formtype', 'email');
+                fd.append('id', e.getAttribute("data-id"));
+                fetch('/RegistrationAdmin/PeopleList', {
+                    method: 'POST',
+                    body: fd
+                }).then(function (response) {
+                    alert('Emails sent');
+                });
+             }
+        }
+    </script>
 }

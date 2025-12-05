@@ -19,7 +19,8 @@ namespace TqiiLanguageTest.ModelsRegistration {
         public string Language { get; set; } = string.Empty;
         public virtual RegistrationCohortPerson? RegistrationCohortPerson { get; set; }
         public int RegistrationCohortPersonId { get; set; }
+        public virtual RegistrationDocument? RegistrationDocument { get; set; }
         public virtual RegistrationTest? RegistrationTest { get; set; }
-        public int RegistrationTestId { get; set; }
+        public int? RegistrationTestId { get; set; }
     }
 }

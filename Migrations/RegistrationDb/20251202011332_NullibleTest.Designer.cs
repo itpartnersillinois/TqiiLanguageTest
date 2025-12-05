@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TqiiLanguageTest.Data;
 
@@ -11,9 +12,10 @@ using TqiiLanguageTest.Data;
 namespace TqiiLanguageTest.Migrations.RegistrationDb
 {
     [DbContext(typeof(RegistrationDbContext))]
-    partial class RegistrationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251202011332_NullibleTest")]
+    partial class NullibleTest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,9 +88,6 @@ namespace TqiiLanguageTest.Migrations.RegistrationDb
                     b.Property<bool>("IsDenied")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsRegistrationCompleted")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsWaitlisted")
                         .HasColumnType("bit");
 
@@ -146,8 +145,7 @@ namespace TqiiLanguageTest.Migrations.RegistrationDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RegistrationTestPersonId")
-                        .IsUnique();
+                    b.HasIndex("RegistrationTestPersonId");
 
                     b.ToTable("Documents");
                 });
@@ -332,8 +330,8 @@ namespace TqiiLanguageTest.Migrations.RegistrationDb
             modelBuilder.Entity("TqiiLanguageTest.ModelsRegistration.RegistrationDocument", b =>
                 {
                     b.HasOne("TqiiLanguageTest.ModelsRegistration.RegistrationTestPerson", "RegistrationTestPerson")
-                        .WithOne("RegistrationDocument")
-                        .HasForeignKey("TqiiLanguageTest.ModelsRegistration.RegistrationDocument", "RegistrationTestPersonId")
+                        .WithMany()
+                        .HasForeignKey("RegistrationTestPersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -372,11 +370,6 @@ namespace TqiiLanguageTest.Migrations.RegistrationDb
             modelBuilder.Entity("TqiiLanguageTest.ModelsRegistration.RegistrationCohort", b =>
                 {
                     b.Navigation("RegistrationTests");
-                });
-
-            modelBuilder.Entity("TqiiLanguageTest.ModelsRegistration.RegistrationTestPerson", b =>
-                {
-                    b.Navigation("RegistrationDocument");
                 });
 #pragma warning restore 612, 618
         }

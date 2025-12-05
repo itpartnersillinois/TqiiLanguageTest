@@ -9,7 +9,8 @@
 
 <h2>Student Information</h2>
 <p>Email: @Model.RegistrationPerson.Email</p>
-<p>Please fill out all information before choosing a cohort.</p>
+<p>All information will need to be filled out before a decision is made.</p>
+@Html.Raw(Model.Introduction)
 
 <form method="post">
     <input asp-for="RegistrationPerson.Id" type="hidden"/>
@@ -23,16 +24,9 @@
         <input asp-for="RegistrationPerson.LastName" class="form-control" style="width: 100%;" />
     </div>
     <div class="ils-input-entry form-group">
-        <label for="last_name" class="control-label">Country:</label>
-        <input asp-for="RegistrationPerson.Country" class="form-control" style="width: 100%;" />
-    </div>
-    <div class="ils-input-entry form-group">
-        <label for="last_name" class="control-label">State:</label>
-        <input asp-for="RegistrationPerson.State" class="form-control" style="width: 100%;" />
-    </div>
-    <div class="ils-input-entry form-group">
         <label for="last_name" class="control-label">IEIN:</label>
         <input asp-for="RegistrationPerson.Iein" class="form-control" style="width: 100%;" />
+        @Html.Raw(Model.Iein)
     </div>
     <div class="ils-input-entry form-group">
         <label for="last_name" class="control-label">Native Language:</label>
@@ -43,6 +37,7 @@
     </div>
 </form>
 
+<div id="cohort">
 <h2>Cohort Information</h2>
 <p>The TQII has four parts.</p>
 <ol>
@@ -52,15 +47,43 @@
     <li>Other Language Interpretation training</li>
 </ol>
 
-<p>You will choose a cohort, and then you will choose to register in each of the four parts of the TQII process. </p>
+@if (Model.AssignedCohort == null)
+{
+    <p>You will choose a cohort, and then you will choose to register in each of the four parts of the TQII process. </p>
 
-<p>@Model.Introduction</p>
-<ul>
-    @foreach (var cohort in Model.Cohorts)
-    {
+    @Html.Raw(Model.CohortIntroduction)
+    <ul>
+        @foreach (var cohort in Model.Cohorts)
+        {
+            <li>
+                <a href="/Registration/Course?cohortid=@cohort.Id">@cohort.TestName</a>: @cohort.Description <br />
+                @cohort.NumberSlots
+            </li>
+        }
+    </ul>
+} else
+{
+    <p>You have already enrolled for a cohort. </p>
+    <ul>
         <li>
-            <a href="/Registration/Course?cohortid=@cohort.Id">@cohort.TestName</a>: @cohort.Description <br />
-            @cohort.NumberSlots
+            <a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description <br />
         </li>
-    }
-</ul>
+    </ul>
+}
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            if (document.getElementById("RegistrationPerson_FirstName").value != '' &&
+                document.getElementById("RegistrationPerson_LastName").value != '' &&
+                document.getElementById("RegistrationPerson_Iein").value != '' &&
+                document.getElementById("RegistrationPerson_NativeLanguage").value != '') {
+                document.getElementById("cohort").style.display = '';
+            } else {
+                document.getElementById("cohort").style.display = 'none';
+            }
+        });
+
+    </script>
+}

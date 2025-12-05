@@ -35,6 +35,7 @@ builder.Services.AddTransient<IEmailSender, EmailSender>(e => new EmailSender(bu
 builder.Services.AddScoped<InstructionHelper>();
 builder.Services.AddScoped<RegistrationTestHelper>();
 builder.Services.AddScoped<RegistrationPersonHelper>();
+builder.Services.AddScoped<RegistrationEmail>();
 
 builder.Services.AddRazorPages(options => {
     options.Conventions.AuthorizeFolder("/");

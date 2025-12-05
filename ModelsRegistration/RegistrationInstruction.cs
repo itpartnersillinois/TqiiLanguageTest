@@ -6,10 +6,12 @@ namespace TqiiLanguageTest.ModelsRegistration {
     public enum InstructionType {
         None,
         Introduction,
+        CohortIntroduction,
         Iein,
         LangaugeProficiency1,
         LangaugeProficiency2,
         SpedProficiency,
+        InterpreterProficiency,
         Conclusion,
         EmailApproved,
         EmailDenied,

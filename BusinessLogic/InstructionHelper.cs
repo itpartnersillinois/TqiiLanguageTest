@@ -12,7 +12,10 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public RegistrationInstruction GetInstruction(InstructionType id) => _context.Instructions?.SingleOrDefault(i => i.TypeOfInstruction == id) ?? new RegistrationInstruction { TypeOfInstruction = id, Description = id.ToString() };
 
-        public string GetInstructionString(InstructionType id) => "<p>" + (GetInstruction(id)?.InstructionText ?? "") + "</p>";
+        public string GetInstructionString(InstructionType id) {
+            var returnValue = GetInstruction(id)?.InstructionText ?? "";
+            return string.IsNullOrWhiteSpace(returnValue) ? "" : "<p>" + returnValue.Replace("\r", "</p><p>").Replace("\n", "") + "</p>";
+        }
 
         public async Task<int> Save(RegistrationInstruction instruction) {
             instruction.InstructionText ??= "";
