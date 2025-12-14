@@ -5,7 +5,7 @@
 }
 
 <h1>Choose Courses</h1>
-<p>Welcome to the TQII Registration Process</p>
+<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. </p>
 
 @if (Model.IsAlreadyRegistered)
 {
@@ -20,7 +20,7 @@ else
             @foreach (var ep in Model.EnglishProficiencyTests)
             {
                 <li>
-                    <input type="radio" id="english_@ep.Id" name="english" value="@ep.Id" /> <label for="english_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    <input type="radio" id="english_@ep.Id" name="english" value="@ep.Id" onchange="enableButton('english')" /> <label for="english_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
                     @ep.Description
                 </li>
             }
@@ -30,11 +30,11 @@ else
             <label for="english_exempt">Do you want to request a English language proficiency testing exemption?</label>
             <div id="english_file" style="display: none;">
                 <label for="english_document">Upload a file to document your English language proficiency exemption request. </label>
-                <input type="file" id="english_document" name="english_document" />
+                <input type="file" id="english_document" name="english_document" onchange="enableButton('english')"/>
             </div>
         </div>
     </fieldset>
-    <button class="il-button" id="english_button" onclick="upload('english')">Submit English Proficiency Request</button>
+    <button class="il-button" disabled id="english_button" onclick="upload('english')">Submit English Proficiency Request</button>
     <p id="english_results" style="display: none;">English Proficiency has been added</p>
 
     <fieldset id="foreign_fieldset">
@@ -44,14 +44,14 @@ else
             @foreach (var ep in Model.ForeignLanguageProficiencyTests)
             {
                 <li>
-                    <input type="radio" id="foreign_@ep.Id" name="foreign" value="@ep.Id" /> <label for="foreign_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    <input type="radio" id="foreign_@ep.Id" name="foreign" value="@ep.Id" onchange="enableButton('foreign')" /> <label for="foreign_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
                     @ep.Description
                 </li>
             }
         </ul>
         <div class="ils-input-entry form-group">
             <label for="foreign_language" class="control-label">Indicate which foreign language are you showing proficiency</label>
-            <select id="foreign_language" class="form-control" style="width: 100%;">
+            <select id="foreign_language" class="form-control" style="width: 100%;" onchange="enableButton('foreign')">
                 <option value="">Select your foreign language</option>
                 @foreach (var lang in Model.ForeignLanguages)
                 {
@@ -64,11 +64,11 @@ else
             <label for="foreign_exempt">Do you want to request a foreign language proficiency testing exemption?</label>
             <div id="foreign_file" style="display: none;">
                 <label for="foreign_document">Upload a file to document your foreign language proficiency exemption request. </label>
-                <input type="file" id="foreign_document" name="foreign_document" />
+                <input type="file" id="foreign_document" name="foreign_document" onchange="enableButton('foreign')" />
             </div>
         </div>
     </fieldset>
-    <button class="il-button" id="foreign_button" onclick="upload('foreign')">Submit Foreign Language Proficiency Request</button>
+    <button class="il-button" disabled id="foreign_button" onclick="upload('foreign')">Submit Foreign Language Proficiency Request</button>
     <p id="foreign_results" style="display: none;">Foreign Language Proficiency has been added</p>
 
     <fieldset id="specialed_fieldset">
@@ -78,7 +78,7 @@ else
             @foreach (var ep in Model.SpecialEducationCourses)
             {
                 <li>
-                    <input type="radio" id="specialed_@ep.Id" name="specialed" value="@ep.Id" /> <label for="specialed_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    <input type="radio" id="specialed_@ep.Id" name="specialed" value="@ep.Id" onchange="enableButton('specialed')" /> <label for="specialed_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
                     @ep.Description
                 </li>
             }
@@ -88,11 +88,11 @@ else
             <label for="specialed_exempt">Do you want to request a special education proficiency exemption?</label>
             <div id="specialed_file" style="display: none;">
                 <label for="specialed_document">Upload a file to document your special education proficiency request.</label>
-                <input type="file" id="specialed_document" name="specialed_document" />
+                <input type="file" id="specialed_document" name="specialed_document" onchange="enableButton('specialed')" />
             </div>
         </div>
     </fieldset>
-    <button class="il-button" id="specialed_button" onclick="upload('specialed')">Submit Special Education Course Request</button>
+    <button class="il-button" disabled id="specialed_button" onclick="upload('specialed')">Submit Special Education Course Request</button>
     <p id="specialed_results" style="display: none;">Special Education Course has been added</p>
 
     <fieldset id="interpreter_fieldset">
@@ -124,12 +124,14 @@ else
         document.addEventListener("DOMContentLoaded", (event) => {
             if (document.querySelectorAll('input[name=english]').length == 1) {
                 document.querySelector('input[name=english]').checked = true;
+                document.getElementById('english_button').disabled = false;
             }
             if (document.querySelectorAll('input[name=foreign]').length == 1) {
                 document.querySelector('input[name=foreign]').checked = true;
             }
             if (document.querySelectorAll('input[name=specialed]').length == 1) {
                 document.querySelector('input[name=specialed]').checked = true;
+                document.getElementById('specialed_button').disabled = false;
             }
             if (document.querySelectorAll('input[name=interpreter]').length == 1) {
                 document.querySelector('input[name=interpreter]').checked = true;
@@ -137,12 +139,25 @@ else
             }
         });
 
+        function enableButton(id) {
+            if (document.getElementById(id + '_exempt').checked && document.getElementById(id + '_document').files.length == 0) {
+                document.getElementById(id + '_button').disabled = true;
+            } else if (document.querySelector('input[name="' + id + '"]:checked') == null) {
+                document.getElementById(id + '_button').disabled = true;
+            } else if (id == 'foreign' && document.getElementById('foreign_language').value == '') {
+                document.getElementById(id + '_button').disabled = true;
+            } else {
+                document.getElementById(id + '_button').disabled = false;
+            }
+        }
+
         function display(id) {
             if (document.getElementById(id + '_exempt').checked) {
                 document.getElementById(id + '_file').style.display = '';
             } else {
                 document.getElementById(id + '_file').style.display = 'none';
             }
+            enableButton(id);
         }
 
         function upload(id) {

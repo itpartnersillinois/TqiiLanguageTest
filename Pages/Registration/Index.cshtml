@@ -5,7 +5,7 @@
 }
 
 <h1>Registration</h1>
-<p>Welcome to the TQII Registration Process</p>
+<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. </p>
 
 <h2>Student Information</h2>
 <p>Email: @Model.RegistrationPerson.Email</p>
@@ -39,17 +39,16 @@
 
 <div id="cohort">
 <h2>Cohort Information</h2>
-<p>The TQII has four parts.</p>
-<ol>
-    <li>Language Proficiency Exam</li>
-    <li>Special Education training</li>
-    <li>English Language Interpretation training</li>
-    <li>Other Language Interpretation training</li>
-</ol>
+    <p>This program is a blend of synchronous and asynchronous online training and testing sessions, consisting of these three (3) modules:</p>
+    <ol>
+        <li><a href="https://tqii.education.illinois.edu/program-information/language-proficiency-waiver">Language Proficiency Testing</a> (in English and the target language)</li>
+        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/special-education-training">Language Proficiency Testing</a> (in English and the target language)</li>
+        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/interpreter-training">Interpreting Training and Testing</a> (at least 9 hours)</li>
+    </ol>
 
 @if (Model.AssignedCohort == null)
 {
-    <p>You will choose a cohort, and then you will choose to register in each of the four parts of the TQII process. </p>
+        <p>You will select the available cohort and register for all three cohorts, unless an exemption document is provided. You may only exempt from the Language Proficiency Testing and the Special Education training.</p>
 
     @Html.Raw(Model.CohortIntroduction)
     <ul>
