@@ -66,6 +66,10 @@
              <input type="hidden" asp-for="Test.Id" class="form-control" />
             <div class="form-group">
                 <input type="submit" value="@(Model?.Test?.Id > 0 ? "Edit" : "Create")" class="il-button" />
+                @if (Model?.Test?.Id > 0)
+                {
+                    <a class="il-button" href="DuplicateTest?id=@Model.Test.Id" style="margin-left:20px;">Duplicate Test</a>
+                }
             </div>
         </form>
     </div>
