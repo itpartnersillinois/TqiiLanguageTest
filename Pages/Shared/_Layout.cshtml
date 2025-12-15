@@ -8,6 +8,7 @@
     <link rel="icon" href="https://cdn.brand.illinois.edu/favicon.ico">
     <link rel="stylesheet" href="https://cdn.toolkit.illinois.edu/2.16/toolkit.css" media="all">
     <script src="https://cdn.toolkit.illinois.edu/2.16/toolkit.js"></script>
+    <link rel="stylesheet" href="//contrib.webtheme.illinois.edu/ils-input/input.min.css" media="all">
     <title>@ViewData["Title"] | TQII Language Test | UIUC</title>
     <link rel="stylesheet" href="~/css/site.css?cache=20" media="all">
 </head>
@@ -22,8 +23,9 @@
             <nav slot="links" aria-label="top right quick links" class="il-links">
                 <ul>
                     <li><a href="/Help">Help</a></li>
-                    <li><a href="/Admin">Admin Page</a></li>
-                    <li><a href="/Reviewer">Rater Page</a></li>
+                    <li><a href="/Admin">Admin</a></li>
+                    <li><a href="/Reviewer">Raters</a></li>
+                    <li><a href="/Registration">Registration</a></li>
                     <li>@(Html.Raw(User.Identity.Name ?? "<a href='/Identity/Account/Login'>Login</a>"))</li>
                     <li><a href="/Identity/Account/Logout">Sign out</a></li>
                 </ul>

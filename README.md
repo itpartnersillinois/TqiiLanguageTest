@@ -22,6 +22,8 @@ Run EF to set up a database, using user secrets to put in the connection string.
 
 ``
 Update-Database -Context LanguageDbContext
+
+Update-Database -Context RegistrationDbContext
 ``
 
 This uses the default Identity framework, so add the tables for the identity framework.
@@ -39,6 +41,8 @@ If you make changes to the database, make sure you add the changes to update the
 
 ``
 Add-Migration -Name {name} -Context LanguageDbContext
+
+Add-Migration -Name {name} -Context RegistrationDbContext
 ``
 
 Need to add the stored procedure dbo.ResetReviewerStats - this is to reset the counts for completed ratings, all ratings, and unfinished ratings.

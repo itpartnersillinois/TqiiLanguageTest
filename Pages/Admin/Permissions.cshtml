@@ -23,6 +23,9 @@
                 Test Writer?
             </th>
             <th>
+                Registration Reviewer?
+            </th>
+            <th>
                 Edit
             </th>
         </tr>
@@ -42,6 +45,9 @@
                 </td>
                 <td>
                     @(item.IsItemWriter ? "Test Writer" : "")
+                </td>
+                <td>
+                    @(item.IsRegistrationReviewer ? "Registration Reviewer" : "")
                 </td>
                 <td>
                     <a href="/Admin/Permissions?id=@item.Id">Edit Person</a>
@@ -68,6 +74,10 @@
     <div class="ils-input-entry form-group">
         <label for="NewIsItemWriter" class="control-label">Is Test Writer?</label>
         <input asp-for="NewIsItemWriter" class="form-control" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="NewIsRegistrationReviewer" class="control-label">Is Registration Reviewer?</label>
+        <input asp-for="NewIsRegistrationReviewer" class="form-control" />
     </div>
     <input type="hidden" asp-for="NewId" class="form-control" />
     <div class="ils-input-entry form-group">

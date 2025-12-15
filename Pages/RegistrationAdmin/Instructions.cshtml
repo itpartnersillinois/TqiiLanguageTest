@@ -1,0 +1,51 @@
+﻿@page
+@model TqiiLanguageTest.Pages.RegistrationAdmin.InstructionsModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Instructions";
+}
+<h1>Instructions</h1>
+<div class="ils-input-entry form-group">
+
+<label for="instruction">Edit Instruction</label>
+<select id="instruction" onchange="">
+    <option value="0">None</option>
+    <option value="1" selected="@(Request.Query["id"] == "1")">Introduction</option>
+    <option value="2" selected="@(Request.Query["id"] == "2")">Cohort Introduction</option>
+    <option value="3" selected="@(Request.Query["id"] == "3")">Iein</option>
+    <option value="4" selected="@(Request.Query["id"] == "4")">English Language Proficiency</option>
+    <option value="5" selected="@(Request.Query["id"] == "5")">Foreign Language Proficiency</option>
+    <option value="6" selected="@(Request.Query["id"] == "6")">Special Education</option>
+    <option value="7" selected="@(Request.Query["id"] == "7")">Interpereter</option>
+    <option value="8" selected="@(Request.Query["id"] == "8")">Conclusion</option>
+    <option value="9" selected="@(Request.Query["id"] == "9")">Email Approved</option>
+    <option value="10" selected="@(Request.Query["id"] == "10")">Email Denied</option>
+    <option value="11" selected="@(Request.Query["id"] == "11")">Waitlisted</option>
+</select>
+    <button class="il-button" onclick="refresh(); return false;">Refresh</button>
+</div>
+<h2>Edit</h2>
+
+<form method="post">
+    <input asp-for="RegistrationInstruction.Id" type="hidden" />
+    <input asp-for="RegistrationInstruction.TypeOfInstruction" type="hidden" />
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_Description" class="control-label">Description</label>
+        <input asp-for="RegistrationInstruction.Description" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_InstructionText" class="control-label">Instruction Text</label>
+        <textarea asp-for="RegistrationInstruction.InstructionText" class="form-control" style="width: 100%;"></textarea>
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Update" class="il-button" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function refresh() {
+            location.href = `/RegistrationAdmin/Instructions?id=${document.getElementById('instruction').value}`;
+        }
+    </script>
+}

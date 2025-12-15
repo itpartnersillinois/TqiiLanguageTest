@@ -1,0 +1,88 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Registration.IndexModel
+@{
+    ViewData["Title"] = "Registration - Choose Cohort";
+}
+
+<h1>Registration</h1>
+<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. </p>
+
+<h2>Student Information</h2>
+<p>Email: @Model.RegistrationPerson.Email</p>
+<p>All information will need to be filled out before a decision is made.</p>
+@Html.Raw(Model.Introduction)
+
+<form method="post">
+    <input asp-for="RegistrationPerson.Id" type="hidden"/>
+    <input asp-for="RegistrationPerson.Email" type="hidden" />
+    <div class="ils-input-entry form-group">
+        <label for="first_name" class="control-label">First Name:</label>
+        <input asp-for="RegistrationPerson.FirstName" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">Last Name:</label>
+        <input asp-for="RegistrationPerson.LastName" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">IEIN:</label>
+        <input asp-for="RegistrationPerson.Iein" class="form-control" style="width: 100%;" />
+        @Html.Raw(Model.Iein)
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="last_name" class="control-label">Native Language:</label>
+        <input asp-for="RegistrationPerson.NativeLanguage" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Update" class="il-button" />
+    </div>
+</form>
+
+<div id="cohort">
+<h2>Cohort Information</h2>
+    <p>This program is a blend of synchronous and asynchronous online training and testing sessions, consisting of these three (3) modules:</p>
+    <ol>
+        <li><a href="https://tqii.education.illinois.edu/program-information/language-proficiency-waiver">Language Proficiency Testing</a> (in English and the target language)</li>
+        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/special-education-training">Language Proficiency Testing</a> (in English and the target language)</li>
+        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/interpreter-training">Interpreting Training and Testing</a> (at least 9 hours)</li>
+    </ol>
+
+@if (Model.AssignedCohort == null)
+{
+        <p>You will select the available cohort and register for all three cohorts, unless an exemption document is provided. You may only exempt from the Language Proficiency Testing and the Special Education training.</p>
+
+    @Html.Raw(Model.CohortIntroduction)
+    <ul>
+        @foreach (var cohort in Model.Cohorts)
+        {
+            <li>
+                <a href="/Registration/Course?cohortid=@cohort.Id">@cohort.TestName</a>: @cohort.Description <br />
+                @cohort.NumberSlots
+            </li>
+        }
+    </ul>
+} else
+{
+    <p>You have already enrolled for a cohort. </p>
+    <ul>
+        <li>
+            <a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description <br />
+        </li>
+    </ul>
+}
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            if (document.getElementById("RegistrationPerson_FirstName").value != '' &&
+                document.getElementById("RegistrationPerson_LastName").value != '' &&
+                document.getElementById("RegistrationPerson_Iein").value != '' &&
+                document.getElementById("RegistrationPerson_NativeLanguage").value != '') {
+                document.getElementById("cohort").style.display = '';
+            } else {
+                document.getElementById("cohort").style.display = 'none';
+            }
+        });
+
+    </script>
+}
