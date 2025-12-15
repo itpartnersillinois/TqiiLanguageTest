@@ -12,7 +12,7 @@ namespace TqiiLanguageTest.Models {
 
         public bool IsAdministrator { get; set; }
         public bool IsItemWriter { get; set; }
-
+        public bool IsRegistrationReviewer { get; set; }
         public bool IsReviewer { get; set; }
     }
 }

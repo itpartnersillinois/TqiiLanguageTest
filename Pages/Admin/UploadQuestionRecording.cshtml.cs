@@ -20,7 +20,7 @@ namespace TqiiLanguageTest.Pages.Admin {
         public int TestId { get; set; }
 
         public IActionResult OnGet(int id, int testid) {
-            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+            if (!_permissions.IsItemWriter(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
             Id = id;

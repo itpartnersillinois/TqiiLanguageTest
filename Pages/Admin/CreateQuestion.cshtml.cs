@@ -21,7 +21,7 @@ namespace TqiiLanguageTest.Pages.Admin {
         public Question Question { get; set; } = default!;
 
         public IActionResult OnGet(int id, int questionid) {
-            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+            if (!_permissions.IsItemWriter(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
             var rubrics = _context.RaterScales?.Select(r => r.RaterScaleName).OrderBy(s => s).Distinct().ToList();

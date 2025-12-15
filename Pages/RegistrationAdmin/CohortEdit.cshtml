@@ -1,0 +1,81 @@
+﻿@page
+@model TqiiLanguageTest.Pages.RegistrationAdmin.CohortEditModel
+@{
+    Layout = "_Admin";
+    ViewData["Title"] = "Courses / Tests";
+}
+<h1>Courses / Tests</h1>
+<p>Cohort Name: @Model.Cohort.TestName</p>
+<p>Cohort Dates: @Model.Cohort.StartDate.ToString("d") - @Model.Cohort.EndDate.ToString("d")</p>
+
+<h2>List</h2>
+
+@if (Model.Tests != null)
+{
+    <ul>
+        @foreach (var test in Model.Tests)
+        {
+            <li>
+                <a href="/RegistrationAdmin/CohortEdit?cohortid=@test.RegistrationCohortId&id=@test.Id">@test.TestName</a>: @test.Description (@test.StartDate.ToString("d") - @test.EndDate.ToString("d"))
+            </li>
+        }
+    </ul>
+}
+
+<h2>Edit</h2>
+
+<form method="post">
+    <input asp-for="RegistrationTest.Id" type="hidden" />
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationTest_TestName" class="control-label">Name</label>
+        <input asp-for="RegistrationTest.TestName" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationTest_Description" class="control-label">Description</label>
+        <input asp-for="RegistrationTest.Description" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationTest_RegistrationLink" class="control-label">Registration Link</label>
+        <input asp-for="RegistrationTest.RegistrationLink" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationTest_Language" class="control-label">Language</label>
+        <select asp-for="RegistrationTest.Language" class="form-control" style="width: 100%;">
+            <option value="">No language</option>
+            @foreach (var language in Model.Languages)
+            {
+                <option value="@language">@language</option>
+            }
+        </select>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationTest_TypeOfTest" class="control-label">Course / Test Type</label>
+        <select asp-for="RegistrationTest.TypeOfTest" class="form-control" style="width: 100%;">
+            <option value="0">N/A</option>
+            <option value="1">Proficiency Exam - Primary</option>
+            <option value="2">Proficiency Exam - Secondary</option>
+            <option value="3">Special Education Course</option>
+            <option value="4">Interpreter Course</option>
+            <option value="9">Other</option>
+         </select>
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationTest_StartDate" class="control-label">Start Date</label>
+        <input asp-for="RegistrationTest.StartDate" type="date" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationTest_EndDate" class="control-label">End Date</label>
+        <input asp-for="RegistrationTest.EndDate" type="date" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Update" class="il-button" />
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        function refresh() {
+            location.href = `/RegistrationAdmin/Instructions?id=${document.getElementById('instruction').value}`;
+        }
+    </script>
+}
