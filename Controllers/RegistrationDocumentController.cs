@@ -42,6 +42,25 @@ namespace TqiiLanguageTest.Controllers {
             return File(Encoding.ASCII.GetBytes(sb.ToString()), "application/txt", $"cohort-list-{id}.txt");
         }
 
+        [HttpGet("cohortemail/{id}")]
+        public IActionResult CohortListEmailsApproved(int id) {
+            if (!_permissions.IsRegistrationReviewer(User.Identity?.Name ?? "") && !_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+                throw new Exception("Unauthorized");
+            }
+            var cohort = _registrationTestHelper.GetCohort(id);
+            var cohortPeople = _registrationTestHelper.GetCohortPeople(id);
+
+            var sb = new StringBuilder();
+
+            _ = sb.AppendLine($"Cohort List for {cohort.TestName} ({cohort.DateString})");
+            foreach (var cohortPerson in cohortPeople.Where(c => c.IsApproved)) {
+                _ = sb.Append($"{cohortPerson.RegistrationPerson?.Email}");
+                _ = sb.AppendLine();
+            }
+
+            return File(Encoding.ASCII.GetBytes(sb.ToString()), "application/txt", $"cohort-list-approved-email-{id}.txt");
+        }
+
         [HttpGet("{id}")]
         public void Index(int id) {
             if (!_permissions.IsRegistrationReviewer(User.Identity?.Name ?? "") && !_permissions.IsAdmin(User.Identity?.Name ?? "")) {
