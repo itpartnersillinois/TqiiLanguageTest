@@ -7,7 +7,6 @@
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.stop();
 
-        debugger;
         const information = document.getElementById('information');
         const continueButton = document.getElementById('continue');
         const record = document.getElementById('record');
@@ -16,6 +15,7 @@
         function recording() {
             if (mediaRecorder.state == "inactive") {
                 mediaRecorder.start();
+                information.classList.add('hidden');
                 continueButton.classList.add('hidden');
                 record.innerText = "Stop Recording";
                 information.innerText = "Recording now -- press stop for playback";
@@ -23,7 +23,7 @@
                 mediaRecorder.stop();
                 record.innerText = "Record";
                 record.enabled = false;
-                information.innerHTML = "Listen for playback and either continue or re-record. <br /><strong>By clicking the Continue button, I certified that I verified my voice was recorded correctly.</strong>";
+                information.innerHTML = "<div class='ils-input-disclaimer'><label for='continue-checkbox'>By clicking the checkbox, you confirm you can hear your recording. If you cannot hear your recording, please re-enable microphone permissions and test your microphone again.</label><input id='continue-checkbox' onclick='enablebutton();' type='checkbox'></div>";
             }
         }
 
@@ -43,7 +43,7 @@
             audioPlayer.addEventListener("ended", (event) => {
                 record.enabled = true;
                 chunks = [];
-                continueButton.classList.remove('hidden');
+                information.classList.remove('hidden');
                 console.debug('item ended');
             });
             document.body.appendChild(audioPlayer);
@@ -51,4 +51,8 @@
     }
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then(onSuccess);
+}
+
+function enablebutton() {
+    document.getElementById('continue').classList.remove('hidden');
 }
