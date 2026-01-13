@@ -12,14 +12,11 @@ namespace TqiiLanguageTest.Pages {
             _practiceTestHandler = practiceTestHandler;
         }
 
+        public bool DidUserCompleteAnyTests { get; set; }
+
         public List<TestObject> TestObjects { get; set; } = new List<TestObject>();
 
         public void OnGet() {
-            // TODO Asked to temporarily remove the "must take practice test" -- need to re-add this later
-            // Guid = _testUserHandler.DidUserCompleteAnyTests(User.Identity?.Name ?? "")
-            //     ? _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "")
-            //     : null;
-
             var tempTestObjects = _testUserHandler.GetTestUserGuid(User.Identity?.Name ?? "").Select(i =>
                 new TestObject {
                     Guid = i.Item1,
@@ -36,6 +33,7 @@ namespace TqiiLanguageTest.Pages {
                     TestObjects.Add(testObject);
                 }
             }
+            DidUserCompleteAnyTests = _testUserHandler.DidUserCompleteAnyTests(User.Identity?.Name ?? "");
         }
     }
 
