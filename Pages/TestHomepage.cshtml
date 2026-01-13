@@ -54,6 +54,8 @@
         @if (testObject.TimeExpired.HasValue && testObject.TimeExpired.Value < DateTime.Now)
         {
             <p>Your test has expired on @testObject.TimeExpired.Value.ToString("F") (all times are Central). Please contact TQII to schedule a re-test. </p>
+        } else if (!Model.DidUserCompleteAnyTests) {
+            <p>You need to complete a practice test before taking the actual test.</p>
         }
         else if (testObject.TimeActive.HasValue && testObject.TimeActive.Value > DateTime.Now)
         {
