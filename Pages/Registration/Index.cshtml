@@ -42,13 +42,13 @@
     <p>This program is a blend of synchronous and asynchronous online training and testing sessions, consisting of these three (3) modules:</p>
     <ol>
         <li><a href="https://tqii.education.illinois.edu/program-information/language-proficiency-waiver">Language Proficiency Testing</a> (in English and the target language)</li>
-        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/special-education-training">Language Proficiency Testing</a> (in English and the target language)</li>
+        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/special-education-training">Special Education Training and Testing</a></li>
         <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/interpreter-training">Interpreting Training and Testing</a> (at least 9 hours)</li>
     </ol>
 
 @if (Model.AssignedCohort == null)
 {
-        <p>You will select the available cohort and register for all three cohorts, unless an exemption document is provided. You may only exempt from the Language Proficiency Testing and the Special Education training.</p>
+    <p>You will select the available cohort and register for all three tests within the cohort, unless an exemption document is provided. You may only exempt from the Language Proficiency Testing and the Special Education training.</p>
 
     @Html.Raw(Model.CohortIntroduction)
     <ul>
@@ -60,9 +60,8 @@
             </li>
         }
     </ul>
-} else
-{
-    <p>You have already enrolled for a cohort. </p>
+} else {
+    <p>You have already enrolled for cohort @Model.AssignedCohort.TestName. </p>
     <ul>
         <li>
             <a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description <br />
