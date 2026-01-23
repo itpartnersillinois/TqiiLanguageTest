@@ -22,7 +22,7 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
 
         public RegistrationCohort Cohort { get; set; } = default!;
         public List<RegistrationCohortPerson> CohortPeople { get; set; } = default!;
-
+        public List<RegistrationCohortPerson> CohortPeopleIncomplete { get; set; } = default!;
         public List<RegistrationTestPerson> TestPeople { get; set; } = default!;
 
         public IActionResult OnGet() {
@@ -32,6 +32,7 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
             var id = string.IsNullOrWhiteSpace(Request.Query["cohortid"]) ? 0 : int.Parse(Request.Query["cohortid"]);
             Cohort = _registrationTestHelper.GetCohort(id);
             CohortPeople = _registrationTestHelper.GetCohortPeople(id);
+            CohortPeopleIncomplete = _registrationTestHelper.GetCohortPeopleIncomplete(id);
             TestPeople = _registrationTestHelper.GetTestPeople(id);
             return Page();
         }

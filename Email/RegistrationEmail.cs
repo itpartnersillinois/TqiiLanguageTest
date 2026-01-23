@@ -25,7 +25,7 @@ namespace TqiiLanguageTest.Email {
             var approved = _instructionHelper.GetInstructionString(InstructionType.EmailApproved);
             var denied = _instructionHelper.GetInstructionString(InstructionType.EmailDenied);
             var waitlisted = _instructionHelper.GetInstructionString(InstructionType.Waitlisted);
-            var cohortPeople = _context.CohortPeople?.Include(cp => cp.RegistrationCohort).Include(cp => cp.RegistrationPerson).Where(cp => cp.RegistrationCohortId == cohortId && cp.DateRegistrationSent == null).ToList() ?? new List<RegistrationCohortPerson>();
+            var cohortPeople = _context.CohortPeople?.Include(cp => cp.RegistrationCohort).Include(cp => cp.RegistrationPerson).Where(cp => cp.RegistrationCohortId == cohortId && cp.IsRegistrationCompleted && cp.DateRegistrationSent == null).ToList() ?? new List<RegistrationCohortPerson>();
             var count = 0;
             var countSkipped = 0;
             foreach (var cohortPerson in cohortPeople) {

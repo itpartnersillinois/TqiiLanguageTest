@@ -75,6 +75,20 @@
 <p><a href="/registrationdocument/cohort/@Model.Cohort.Id">Download Text File</a></p>
 <p><a href="/registrationdocument/cohortemail/@Model.Cohort.Id">Download Emails of Accepted People</a></p>
 
+<h2>Incomplete Registration</h2>
+<ul>
+    @foreach (var cohortPerson in Model.CohortPeopleIncomplete)
+    {
+        <li>
+            <p>
+                <span>@cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName
+                    <a href="mailto:@cohortPerson.RegistrationPerson?.Email">@cohortPerson.RegistrationPerson?.Email</a>
+                </span>
+            </p>
+        </li>
+    }
+</ul>
+
 @section Scripts {
     <script>
         function sendDecision(e) {
