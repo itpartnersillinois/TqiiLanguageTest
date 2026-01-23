@@ -22,7 +22,7 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
 
         public RegistrationCohort Cohort { get; set; } = default!;
         public List<RegistrationCohortPerson> CohortPeople { get; set; } = default!;
-
+        public List<RegistrationCohortPerson> CohortPeopleIncomplete { get; set; } = default!;
         public List<RegistrationTestPerson> TestPeople { get; set; } = default!;
 
         public IActionResult OnGet() {
@@ -32,6 +32,7 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
             var id = string.IsNullOrWhiteSpace(Request.Query["cohortid"]) ? 0 : int.Parse(Request.Query["cohortid"]);
             Cohort = _registrationTestHelper.GetCohort(id);
             CohortPeople = _registrationTestHelper.GetCohortPeople(id);
+            CohortPeopleIncomplete = _registrationTestHelper.GetCohortPeopleIncomplete(id);
             TestPeople = _registrationTestHelper.GetTestPeople(id);
             return Page();
         }
@@ -40,6 +41,7 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "") && !_permissions.IsRegistrationReviewer(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
+            var response = "";
             var id = string.IsNullOrWhiteSpace(Request.Form["id"]) ? 0 : int.Parse(Request.Form["id"]);
             var formType = string.IsNullOrWhiteSpace(Request.Form["formtype"]) ? "" : Request.Form["formtype"].ToString();
             if (formType.ToLowerInvariant() == "decision") {
@@ -61,9 +63,11 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
                 test.IsProficiencyExemptionDenied = Request.Form["value"].ToString() == "denied";
                 _ = await _registrationPersonHelper.UpdateTestPerson(test);
             } else if (formType.ToLowerInvariant() == "email") {
-                _ = await _registrationEmail.SendEmails(id);
+                response = await _registrationEmail.SendEmails(id, false);
+            } else if (formType.ToLowerInvariant() == "emailall") {
+                response = await _registrationEmail.SendEmails(id, true);
             }
-            return StatusCode(200);
+            return StatusCode(200, new { success = true, emails = response });
         }
 
         public IEnumerable<RegistrationTestPerson> TestPeopleByPerson(int cohortPersonId) => TestPeople.Where(tp => tp.RegistrationCohortPersonId == cohortPersonId);
