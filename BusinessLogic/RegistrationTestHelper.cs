@@ -15,7 +15,9 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public RegistrationCohort GetCohort(int id) => _context.Cohorts?.SingleOrDefault(c => c.Id == id) ?? new RegistrationCohort();
 
-        public List<RegistrationCohortPerson> GetCohortPeople(int cohortId) => _context.CohortPeople?.Include(r => r.RegistrationPerson).Where(r => r.RegistrationCohortId == cohortId && r.IsRegistrationCompleted).ToList() ?? new List<RegistrationCohortPerson>();
+        public List<RegistrationCohortPerson> GetCohortPeople(int cohortId) => _context.CohortPeople?.Include(r => r.RegistrationPerson).Where(r => r.RegistrationCohortId == cohortId && r.IsRegistrationCompleted && r.RegistrationPerson != null).OrderBy(r => r.RegistrationPerson.LastName).ThenBy(r => r.RegistrationPerson.FirstName).ToList() ?? new List<RegistrationCohortPerson>();
+
+        public List<RegistrationCohortPerson> GetCohortPeopleIncomplete(int cohortId) => _context.CohortPeople?.Include(r => r.RegistrationPerson).Where(r => r.RegistrationCohortId == cohortId && !r.IsRegistrationCompleted && r.RegistrationPerson != null).OrderBy(r => r.RegistrationPerson.LastName).ThenBy(r => r.RegistrationPerson.FirstName).ToList() ?? new List<RegistrationCohortPerson>();
 
         public List<RegistrationCohort> GetCohorts() {
             var returnValue = _context.Cohorts?.OrderBy(c => c.StartDate).ToList() ?? new List<RegistrationCohort>();
