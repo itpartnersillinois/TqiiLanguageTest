@@ -26,7 +26,6 @@ namespace TqiiLanguageTest.Pages.Registration {
             _instructionHelper = instructionHelper;
         }
 
-        public TestType TestTypeEnum { get; set; } = TestType.ProficiencyExam1;
         public RegistrationCohort Cohort { get; set; } = default!;
         public int CohortPersonId { get; set; }
         public string Conclusion { get; set; } = "";
