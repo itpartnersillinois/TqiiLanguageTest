@@ -27,6 +27,16 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public async Task<int> AssignPersonToCohort(int cohortId, int personId) {
             var existingItem = _context.CohortPeople?.SingleOrDefault(c => c.RegistrationCohortId == cohortId && c.RegistrationPersonId == personId);
+            if (existingItem != null) {
+                var tests = _context.RegistrationTestPeople?.Where(t => t.RegistrationCohortPersonId == existingItem.Id);
+                if (tests != null) {
+                    foreach (var test in tests) {
+                        _context.RegistrationTestPeople?.Remove(test);
+                    }
+                    _ = await _context.SaveChangesAsync();
+                }
+                return existingItem.Id;
+            }
             var item = new RegistrationCohortPerson {
                 RegistrationCohortId = cohortId,
                 RegistrationPersonId = personId

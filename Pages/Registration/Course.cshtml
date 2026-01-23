@@ -5,14 +5,16 @@
 }
 
 <h1>Choose Courses</h1>
-<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. </p>
-
 @if (Model.IsAlreadyRegistered)
 {
     <p>You have already registered and your information is being evaluated. If you need to change your registration, please contact tqii@education.illinois.edu. </p>
 } 
 else
 {
+<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. If you leave this page before the final submission process, your information will be lost and you will need to start over. You can <a  id="startover">reload this page to start over</a> at any time.</p>
+
+    <div id="english_parent">
+    <h2 id="english_title" style="margin: 1.25em 0 0;">English Language Proficiency</h2>
     <fieldset id="english_fieldset">
         <legend>You will need to prove your English language proficiency through testing or an exemption request.</legend>
         @Html.Raw(Model.EnglishProficiency)
@@ -35,8 +37,10 @@ else
         </div>
     </fieldset>
     <button class="il-button" disabled id="english_button" onclick="upload('english')">Submit English Proficiency Request</button>
-    <p id="english_results" style="display: none;">English Proficiency has been added</p>
-
+    <p id="english_results" style="display: none;"></p>
+    </div>
+    <div id="foreign_parent" style="display: none;">
+    <h2 id="foreign_title" style="margin: 1.25em 0 0;">Foreign Language Proficiency</h2>
     <fieldset id="foreign_fieldset">
         <legend>You will need to prove your foreign language proficiency through testing or an exemption request.</legend>
         @Html.Raw(Model.ForeignLanguageProficiency)
@@ -44,7 +48,7 @@ else
             @foreach (var ep in Model.ForeignLanguageProficiencyTests)
             {
                 <li>
-                    <input type="radio" id="foreign_@ep.Id" name="foreign" value="@ep.Id" onchange="enableButton('foreign')" /> <label for="foreign_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
+                    <input type="radio" id="foreign_@ep.Id" name="foreign" data-language="@ep.Language" value="@ep.Id" onchange="enableButton('foreign', this)" /> <label for="foreign_@ep.Id">@ep.TestName (@ep.DateString)</label><br />
                     @ep.Description
                 </li>
             }
@@ -69,8 +73,10 @@ else
         </div>
     </fieldset>
     <button class="il-button" disabled id="foreign_button" onclick="upload('foreign')">Submit Foreign Language Proficiency Request</button>
-    <p id="foreign_results" style="display: none;">Foreign Language Proficiency has been added</p>
-
+    <p id="foreign_results" style="display: none;"></p>
+    </div>
+    <div id="specialed_parent" style="display: none;">
+    <h2 id="specialed_title" style="margin: 1.25em 0 0;">Special Education Course</h2>
     <fieldset id="specialed_fieldset">
         <legend>You will need to prove your special education proficiency through a course or an exemption request.</legend>
         @Html.Raw(Model.SpecialEducation)
@@ -93,8 +99,10 @@ else
         </div>
     </fieldset>
     <button class="il-button" disabled id="specialed_button" onclick="upload('specialed')">Submit Special Education Course Request</button>
-    <p id="specialed_results" style="display: none;">Special Education Course has been added</p>
-
+    <p id="specialed_results" style="display: none;"></p>
+    </div>
+    <div id="interpreter_parent" style="display: none;">
+    <h2 id="interpreter_title" style="margin: 1.25em 0 0;">Interpreter Course</h2>
     <fieldset id="interpreter_fieldset">
         <legend>Please select your Interpreter Course:</legend>
         @Html.Raw(Model.Interpreter)
@@ -108,20 +116,23 @@ else
             }
         </ul>
     </fieldset>
-    <button class="il-button" id="interpreter_button" onclick="upload('interpreter')">Submit Interpreter Course</button>
-    <p id="interpreter_results" style="display: none;">Interpreter Course has been added</p>
+    <button class="il-button" id="interpreter_button" onclick="upload('interpreter')">Enroll for the Interpreter Course</button>
+    <p id="interpreter_results" style="display: none;"></p>
+    </div>
 
     <div id="complete" style="display: none;">
-        <h2>Registration is complete</h2>
+        <h2 style="margin: 1.25em 0 0;">Registration is complete</h2>
         @Html.Raw(Model.Conclusion)
     </div>
 
     <div style="display: none;" id="cohortpersonid">@Model.CohortPersonId</div>
+    <div style="display: none;" id="languageoverride"></div>
 }
 
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", (event) => {
+            document.getElementById('startover').setAttribute('href', window.location.pathname + window.location.search);
             if (document.querySelectorAll('input[name=english]').length == 1) {
                 document.querySelector('input[name=english]').checked = true;
                 document.getElementById('english_button').disabled = false;
@@ -139,12 +150,18 @@ else
             }
         });
 
-        function enableButton(id) {
+        function enableButton(id, value) {
+            let language = '';
+            if (value != null && value !== undefined) {
+                language = value.getAttribute('data-language');
+                document.getElementById('languageoverride').value = language;
+                document.getElementById(id + '_language').disabled = language != '';
+            }
             if (document.getElementById(id + '_exempt').checked && document.getElementById(id + '_document').files.length == 0) {
                 document.getElementById(id + '_button').disabled = true;
             } else if (document.querySelector('input[name="' + id + '"]:checked') == null) {
                 document.getElementById(id + '_button').disabled = true;
-            } else if (id == 'foreign' && document.getElementById('foreign_language').value == '') {
+            } else if (id == 'foreign' && document.getElementById('foreign_language').value == '' && (language == null || language == '')) {
                 document.getElementById(id + '_button').disabled = true;
             } else {
                 document.getElementById(id + '_button').disabled = false;
@@ -163,12 +180,14 @@ else
         function upload(id) {
             var fd = new FormData();
             let isComplete = true;
+            let isExempt = false;
             var file_data = document.getElementById(id + '_document');
             fd.append('testtype', id);
             if (id == 'interpreter') {
                 fd.append('exempt', false);
             } else {
-                fd.append('exempt', document.getElementById(id + '_exempt').checked);
+                isExempt = document.getElementById(id + '_exempt').checked;
+                fd.append('exempt', isExempt);
                 if (document.getElementById(id + '_exempt').checked) {
                     if (file_data == null || file_data.files.length == 0) {
                         isComplete = false;
@@ -179,8 +198,12 @@ else
                 }
             }
             if (id == 'foreign') {
-                fd.append('language', document.getElementById(id + '_language').value);
-                if (document.getElementById(id + '_language').value == '') {
+                let languageOverride = document.getElementById('languageoverride').value;
+                if (languageOverride == '') {
+                    languageOverride = document.getElementById(id + '_language').value;
+                } 
+                fd.append('language', languageOverride);
+                if (languageOverride == '') {
                     isComplete = false;
                 }
             } else {
@@ -199,19 +222,20 @@ else
                     method: 'POST',
                     body: fd
                 }).then(function (response) {
+                    document.getElementById(id + '_parent').style.display = '';
                     document.getElementById(id + '_fieldset').style.display = 'none';
                     document.getElementById(id + '_button').style.display = 'none';
+                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : 'You have enrolled for the ' + document.getElementById(id + '_title').innerText;
                     document.getElementById(id + '_results').style.display = '';
                     if (document.getElementById('english_results').style.display == '' &&
                         document.getElementById('foreign_results').style.display == '' &&
                         document.getElementById('specialed_results').style.display == '' &&
                         document.getElementById('interpreter_results').style.display == '') {
-                            debugger;
                             document.getElementById('complete').style.display = '';
-                            document.getElementById('english_results').style.display = 'none';
-                            document.getElementById('foreign_results').style.display = 'none';
-                            document.getElementById('specialed_results').style.display = 'none';
-                            document.getElementById('interpreter_results').style.display = 'none';
+                            document.getElementById('english_parent').style.display = 'none';
+                            document.getElementById('foreign_parent').style.display = 'none';
+                            document.getElementById('specialed_parent').style.display = 'none';
+                            document.getElementById('interpreter_parent').style.display = 'none';
                             var fdComplete = new FormData();
                             fdComplete.append('cohortpersonid', document.getElementById('cohortpersonid').innerText);
                             fdComplete.append('complete', true);
@@ -219,7 +243,15 @@ else
                                 method: 'POST',
                                 body: fdComplete
                             });
+                    } else {
+                        if (id == 'english') {
+                            document.getElementById('foreign_parent').style.display = '';
+                        } else if (id == 'foreign') {
+                            document.getElementById('specialed_parent').style.display = '';
+                        } else if (id == 'specialed') {
+                            document.getElementById('interpreter_parent').style.display = '';
                         }
+                    }
                 });
             } else {
                 alert('Please complete all required fields before submitting.');

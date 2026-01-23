@@ -1,4 +1,5 @@
-﻿using TqiiLanguageTest.Data;
+﻿using System.Text.RegularExpressions;
+using TqiiLanguageTest.Data;
 using TqiiLanguageTest.ModelsRegistration;
 
 namespace TqiiLanguageTest.BusinessLogic {
@@ -14,6 +15,7 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public string GetInstructionString(InstructionType id) {
             var returnValue = GetInstruction(id)?.InstructionText ?? "";
+            returnValue = Regex.Replace(returnValue, @"(https?://[^\s]+)", "<a href=\"$1\">$1</a>", RegexOptions.IgnoreCase);
             return string.IsNullOrWhiteSpace(returnValue) ? "" : "<p>" + returnValue.Replace("\r", "</p><p>").Replace("\n", "") + "</p>";
         }
 
@@ -21,6 +23,10 @@ namespace TqiiLanguageTest.BusinessLogic {
             instruction.InstructionText ??= "";
             instruction.Description ??= "";
             if (instruction.Id == 0) {
+                var oldInstruction = _context.Instructions?.SingleOrDefault(i => i.TypeOfInstruction == instruction.TypeOfInstruction);
+                if (oldInstruction != null) {
+                    _context.Remove(oldInstruction);
+                }
                 _ = _context.Add(instruction);
             } else {
                 _context.Instructions?.Update(instruction);
