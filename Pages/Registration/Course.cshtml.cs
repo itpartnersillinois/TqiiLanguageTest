@@ -51,12 +51,15 @@ namespace TqiiLanguageTest.Pages.Registration {
             RegistrationPerson = _registrationPersonHelper.GetPerson(User.Identity?.Name ?? "");
             Cohort = _registrationTestHelper.GetCohort(cohortId);
             Tests = _registrationTestHelper.GetTests(cohortId);
+
             EnglishProficiency = _instructionHelper.GetInstructionString(InstructionType.LangaugeProficiency1);
             ForeignLanguageProficiency = _instructionHelper.GetInstructionString(InstructionType.LangaugeProficiency2);
             SpecialEducation = _instructionHelper.GetInstructionString(InstructionType.SpedProficiency);
             Interpreter = _instructionHelper.GetInstructionString(InstructionType.InterpreterProficiency);
             Conclusion = _instructionHelper.GetInstructionString(InstructionType.Conclusion);
-            ForeignLanguages = _registrationTestHelper.GetLanguages().Where(l => l.ToLowerInvariant() != "english");
+            var languageTests = Tests.Select(t => t.Language.ToLowerInvariant()).Distinct();
+            ForeignLanguages = _registrationTestHelper.GetLanguages().Where(l => l.ToLowerInvariant() != "english" && !languageTests.Contains(l.ToLowerInvariant()));
+
             var assignedCohort = _registrationPersonHelper.IsPersonAssignedToCohortGetId(RegistrationPerson.Id);
             if (assignedCohort == null || assignedCohort == 0) {
                 CohortPersonId = await _registrationPersonHelper.AssignPersonToCohort(Cohort.Id, RegistrationPerson.Id);
