@@ -70,7 +70,8 @@
         </li>
     }
 </ul>
-<p><button class="il-button" data-id="@Model.Cohort.Id" onclick="sendEmail(this);">Send Email</button></p>
+<p><button class="il-button" data-id="@Model.Cohort.Id" onclick="sendEmail(this);">Send Email to Approved / Denied</button></p>
+<p><button class="il-button" data-id="@Model.Cohort.Id" onclick="sendEmailAll(this);">Send Email Including "Please Wait" Message</button></p>
 <p><a href="/registrationdocument/cohort/@Model.Cohort.Id">Download Text File</a></p>
 <p><a href="/registrationdocument/cohortemail/@Model.Cohort.Id">Download Emails of Accepted People</a></p>
 
@@ -122,10 +123,24 @@
                 fetch('/RegistrationAdmin/PeopleList', {
                     method: 'POST',
                     body: fd
-                }).then(function (response) {
-                    alert('Emails sent');
+                }).then(res => res.json()).then(json => {
+                    alert('Emails sent: ' + json.emails);
                 });
              }
         }
-    </script>
+
+        function sendEmailAll(e) {
+            if (window.confirm("Are you sure you want to send out the emails now? This will include 'Please Wait' notifications to those who have not .")) {
+                var fd = new FormData();
+                fd.append('formtype', 'emailall');
+                fd.append('id', e.getAttribute("data-id"));
+                fetch('/RegistrationAdmin/PeopleList', {
+                    method: 'POST',
+                    body: fd
+                }).then(res => res.json()).then(json => {
+                    alert('Emails sent: ' + json.emails);
+                });
+             }
+        }
+</script>
 }

@@ -17,7 +17,7 @@ namespace TqiiLanguageTest.Email {
             _instructionHelper = instructionHelper;
         }
 
-        public async Task<string> SendEmails(int cohortId) {
+        public async Task<string> SendEmails(int cohortId, bool sendAll) {
             var cohort = _context.Cohorts?.SingleOrDefault(c => c.Id == cohortId);
             if (cohort == null) {
                 return "Cohort not found.";
@@ -26,8 +26,11 @@ namespace TqiiLanguageTest.Email {
             var denied = _instructionHelper.GetInstructionString(InstructionType.EmailDenied);
             var waitlisted = _instructionHelper.GetInstructionString(InstructionType.Waitlisted);
             var cohortPeople = _context.CohortPeople?.Include(cp => cp.RegistrationCohort).Include(cp => cp.RegistrationPerson).Where(cp => cp.RegistrationCohortId == cohortId && cp.DateRegistrationSent == null).ToList() ?? new List<RegistrationCohortPerson>();
+            var count = 0;
+            var countSkipped = 0;
             foreach (var cohortPerson in cohortPeople) {
                 var body = $"<p>Dear {cohortPerson.RegistrationPerson?.FirstName},</p>";
+                var sendEmail = true;
                 if (cohortPerson.IsApproved) {
                     body += $"<p>Congratulations! You have been approved to participate in the {cohort?.TestName} starting on {cohort?.StartDate.ToString("MMMM dd, yyyy")}.</p>";
                     body += "<p>Please follow the instructions below to complete your registration:</p>";
@@ -36,8 +39,10 @@ namespace TqiiLanguageTest.Email {
                     foreach (var test in tests) {
                         if (test.IsProficiencyExemptionApproved) {
                             body += $"<li>You have been granted an exemption for the {test.RegistrationTest?.TestName}.</li>";
-                        } else {
+                        } else if (!string.IsNullOrWhiteSpace(test.RegistrationTest?.RegistrationLink)) {
                             body += $"<li>Register for the {test.RegistrationTest?.TestName} by visiting the following link: <a href='{test.RegistrationTest?.RegistrationLink}'>{test.RegistrationTest?.RegistrationLink}</a></li>";
+                        } else {
+                            body += $"<li>Register for the {test.RegistrationTest?.TestName} will be managed by the test administrator.</li>";
                         }
                     }
                     body += "</ul>";
@@ -56,14 +61,21 @@ namespace TqiiLanguageTest.Email {
                     body += waitlisted;
                     cohortPerson.DateRegistrationSent = DateTime.UtcNow;
                     _context.Update(cohortPerson);
-                } else {
+                } else if (sendAll) {
                     body += "<p>Your application is still under review. We will notify you once a decision has been made.</p>";
+                } else {
+                    sendEmail = false;
                 }
+                _ = await _context.SaveChangesAsync();
                 body += $"<p>{cohortPerson.ExternalComment}</p>";
-                await _emailSender.SendEmailAsync(cohortPerson.RegistrationPerson?.Email ?? "", "TQII Registration", body);
+                if (sendEmail) {
+                    count++;
+                    await _emailSender.SendEmailAsync(cohortPerson.RegistrationPerson?.Email ?? "", "TQII Registration", body);
+                } else {
+                    countSkipped++;
+                }
             }
-            _ = await _context.SaveChangesAsync();
-            return $"";
+            return $"{count} emails sent. {countSkipped} emails skipped.";
         }
     }
 }
