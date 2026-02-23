@@ -42,6 +42,14 @@
         <input asp-for="RegistrationCohort.EndDate" type="date" class="form-control" style="width: 100%;" />
     </div>
     <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_EnrollmentStartDate" class="control-label">Start Date</label>
+        <input asp-for="RegistrationCohort.EnrollmentStartDate" type="datetime-local" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
+        <label for="RegistrationInstruction_EnrollmentEndDate" class="control-label">End Date</label>
+        <input asp-for="RegistrationCohort.EnrollmentEndDate" type="datetime-local" class="form-control" style="width: 100%;" />
+    </div>
+    <div class="ils-input-entry form-group">
         <input type="submit" value="Update" class="il-button" />
     </div>
 </form>

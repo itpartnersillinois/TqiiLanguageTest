@@ -11,7 +11,7 @@
 } 
 else
 {
-<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. If you leave this page before the final submission process, your information will be lost and you will need to start over. You can <a  id="startover">reload this page to start over</a> at any time.</p>
+<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. If you leave this page before the final submission process, your information will be lost and you will need to start over. You can <a id="startover">reload this page to start over</a> at any time.</p>
 
     <div id="english_parent">
     <h2 id="english_title" style="margin: 1.25em 0 0;">English Language Proficiency</h2>
@@ -36,8 +36,7 @@ else
             </div>
         </div>
     </fieldset>
-    <button class="il-button" disabled id="english_button" onclick="upload('english')">Submit English Proficiency Request</button>
-    <p id="english_results" style="display: none;"></p>
+    <button class="il-button" disabled id="english_button" onclick="upload('english', false)">Submit English Proficiency Request</button>
     </div>
     <div id="foreign_parent" style="display: none;">
     <h2 id="foreign_title" style="margin: 1.25em 0 0;">Foreign Language Proficiency</h2>
@@ -72,8 +71,7 @@ else
             </div>
         </div>
     </fieldset>
-    <button class="il-button" disabled id="foreign_button" onclick="upload('foreign')">Submit Foreign Language Proficiency Request</button>
-    <p id="foreign_results" style="display: none;"></p>
+    <button class="il-button" disabled id="foreign_button" onclick="upload('foreign', false)">Submit Foreign Language Proficiency Request</button>
     </div>
     <div id="specialed_parent" style="display: none;">
     <h2 id="specialed_title" style="margin: 1.25em 0 0;">Special Education Course</h2>
@@ -98,8 +96,7 @@ else
             </div>
         </div>
     </fieldset>
-    <button class="il-button" disabled id="specialed_button" onclick="upload('specialed')">Submit Special Education Course Request</button>
-    <p id="specialed_results" style="display: none;"></p>
+    <button class="il-button" disabled id="specialed_button" onclick="upload('specialed', false)">Submit Special Education Course Request</button>
     </div>
     <div id="interpreter_parent" style="display: none;">
     <h2 id="interpreter_title" style="margin: 1.25em 0 0;">Interpreter Course</h2>
@@ -116,14 +113,21 @@ else
             }
         </ul>
     </fieldset>
-    <button class="il-button" id="interpreter_button" onclick="upload('interpreter')">Enroll for the Interpreter Course</button>
-    <p id="interpreter_results" style="display: none;"></p>
+    <button class="il-button" id="interpreter_button" onclick="upload('interpreter', false)">Enroll for the Interpreter Course</button>
     </div>
 
+    <div class="results" style="padding: 10px 50px; background: var(--il-cloud-1); margin-top: 50px;">
     <div id="complete" style="display: none;">
         <h2 style="margin: 1.25em 0 0;">Registration is complete</h2>
         @Html.Raw(Model.Conclusion)
     </div>
+    <h2 style="margin: 1.25em 0 0; font-size: 24px;">Results</h2>
+    <p id="english_results" style="display: none;"></p>
+    <p id="foreign_results" style="display: none;"></p>
+    <p id="specialed_results" style="display: none;"></p>
+    <p id="interpreter_results" style="display: none;"></p>
+    </div>
+
 
     <div style="display: none;" id="cohortpersonid">@Model.CohortPersonId</div>
     <div style="display: none;" id="languageoverride"></div>
@@ -146,8 +150,11 @@ else
             }
             if (document.querySelectorAll('input[name=interpreter]').length == 1) {
                 document.querySelector('input[name=interpreter]').checked = true;
-                upload('interpreter');
+                upload('interpreter', true);
             }
+            document.getElementById('foreign_parent').style.display = 'none';
+            document.getElementById('specialed_parent').style.display = 'none';
+            document.getElementById('interpreter_parent').style.display = 'none';
         });
 
         function enableButton(id, value) {
@@ -177,7 +184,7 @@ else
             enableButton(id);
         }
 
-        function upload(id) {
+        function upload(id, automatic) {
             var fd = new FormData();
             let isComplete = true;
             let isExempt = false;
@@ -222,10 +229,7 @@ else
                     method: 'POST',
                     body: fd
                 }).then(function (response) {
-                    document.getElementById(id + '_parent').style.display = '';
-                    document.getElementById(id + '_fieldset').style.display = 'none';
-                    document.getElementById(id + '_button').style.display = 'none';
-                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : 'You have enrolled for the ' + document.getElementById(id + '_title').innerText;
+                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : (automatic ? 'You have automatically been enrolled for the ' + document.getElementById(id + '_title').innerText : 'You have enrolled for the ' + document.getElementById(id + '_title').innerText);
                     document.getElementById(id + '_results').style.display = '';
                     if (document.getElementById('english_results').style.display == '' &&
                         document.getElementById('foreign_results').style.display == '' &&
@@ -244,12 +248,18 @@ else
                                 body: fdComplete
                             });
                     } else {
-                        if (id == 'english') {
-                            document.getElementById('foreign_parent').style.display = '';
-                        } else if (id == 'foreign') {
-                            document.getElementById('specialed_parent').style.display = '';
-                        } else if (id == 'specialed') {
-                            document.getElementById('interpreter_parent').style.display = '';
+                        if (!automatic) {
+                            document.getElementById('english_parent').style.display = 'none';
+                            document.getElementById('foreign_parent').style.display = 'none';
+                            document.getElementById('specialed_parent').style.display = 'none';
+                            document.getElementById('interpreter_parent').style.display = 'none';
+                            if (id == 'english') {
+                                document.getElementById('foreign_parent').style.display = '';
+                            } else if (id == 'foreign') {
+                                document.getElementById('specialed_parent').style.display = '';
+                            } else if (id == 'specialed') {
+                                document.getElementById('interpreter_parent').style.display = '';
+                            }
                         }
                     }
                 });

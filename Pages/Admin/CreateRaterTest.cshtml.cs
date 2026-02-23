@@ -91,11 +91,13 @@ namespace TqiiLanguageTest.Pages.Admin {
                         foreach (var raterAnswer in raterAnswers) {
                             float score = 0;
                             float count = 0;
-                            bool isSuspicious = true;
-                            bool isDisqualified = true;
+                            var isSuspicious = true;
+                            var isDisqualified = true;
                             foreach (var answer in raterAnswer) {
                                 score += answer.Score;
-                                count++;
+                                if (score > 0) {
+                                    count++;
+                                }
                                 isDisqualified = isSuspicious && answer.IsDisqualified;
                                 isSuspicious = isSuspicious && answer.IsSuspicious;
                             }
@@ -112,7 +114,7 @@ namespace TqiiLanguageTest.Pages.Admin {
                 testUser.ReviewerNotes = Request.Form["notes"];
                 testUser.Score = float.Parse(Request.Form["score"].ToString());
             } else {
-                int totals = 0;
+                var totals = 0;
                 if (!string.IsNullOrWhiteSpace(raters)) {
                     foreach (var rater in raters.Split(',').Select(r => int.Parse(r.Trim()))) {
                         _context.RaterTests.Add(new RaterTest { DateAssigned = currentDate, IsExtraScorer = false, RaterNameId = rater, TestUserId = testUserId, RaterAnswerRemoveIdString = "" });
