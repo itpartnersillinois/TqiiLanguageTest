@@ -54,19 +54,24 @@
     <ul>
         @foreach (var cohort in Model.Cohorts)
         {
-            <li>
-                <a href="/Registration/Course?cohortid=@cohort.Id">@cohort.TestName</a>: @cohort.Description <br />
-                @cohort.NumberSlots
-            </li>
+            @if (cohort.Message() == "")
+            {
+                <li>
+                    <a href="/Registration/Course?cohortid=@cohort.Id">@cohort.TestName</a>: @cohort.Description <br />
+                    @cohort.NumberSlots
+                </li>
+            }
+            else
+            {
+                <li>
+                    @cohort.TestName: @cohort.Description <br />
+                    @cohort.Message()
+                </li>
+            }
         }
     </ul>
 } else {
-    <p>You have already enrolled for cohort @Model.AssignedCohort.TestName. </p>
-    <ul>
-        <li>
-            <a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description <br />
-        </li>
-    </ul>
+        <p>You have successfully enrolled for the cohort <strong><a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description</strong>. Your information is being evaluated. If you need to change your registration, please contact tqii@education.illinois.edu.</p>
 }
 </div>
 

@@ -9,6 +9,9 @@ namespace TqiiLanguageTest.ModelsRegistration {
 
         public DateTime EndDate { get; set; }
 
+        public DateTime? EnrollmentStartDate { get; set; }
+        public DateTime? EnrollmentEndDate { get; set; }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -27,5 +30,23 @@ namespace TqiiLanguageTest.ModelsRegistration {
         public virtual ICollection<RegistrationTest>? RegistrationTests { get; set; }
         public DateTime StartDate { get; set; }
         public string TestName { get; set; } = string.Empty;
+
+        public string Message() {
+            if (EnrollmentStartDate.HasValue && EnrollmentEndDate.HasValue) {
+                if (DateTime.Now.AddDays(7) < EnrollmentStartDate.Value) {
+                    return $"Enrollment is not open.";
+                }
+                if (DateTime.Now < EnrollmentStartDate.Value) {
+                    return $"Enrollment opens on {EnrollmentStartDate.Value.ToLongDateString()} {EnrollmentStartDate.Value.ToShortTimeString()}.";
+                }
+                if (DateTime.Now > EnrollmentEndDate.Value) {
+                    return $"Enrollment closed on {EnrollmentEndDate.Value.ToLongDateString()} {EnrollmentEndDate.Value.ToShortTimeString()}.";
+                }
+            }
+            if (NumberStudentsEnrolled >= NumberStudents) {
+                return "This session is full.";
+            }
+            return "";
+        }
     }
 }

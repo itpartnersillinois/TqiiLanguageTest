@@ -58,7 +58,7 @@ namespace TqiiLanguageTest.Pages.Registration {
             Interpreter = _instructionHelper.GetInstructionString(InstructionType.InterpreterProficiency);
             Conclusion = _instructionHelper.GetInstructionString(InstructionType.Conclusion);
             var languageTests = Tests.Select(t => t.Language.ToLowerInvariant()).Distinct();
-            ForeignLanguages = _registrationTestHelper.GetLanguages().Where(l => l.ToLowerInvariant() != "english" && !languageTests.Contains(l.ToLowerInvariant()));
+            ForeignLanguages = _registrationTestHelper.GetLanguages().Where(l => l.ToLowerInvariant() != "english" && !l.ToLowerInvariant().Contains("pilot") && !languageTests.Contains(l.ToLowerInvariant()));
 
             var assignedCohort = _registrationPersonHelper.IsPersonAssignedToCohortGetId(RegistrationPerson.Id);
             if (assignedCohort == null || assignedCohort == 0) {
