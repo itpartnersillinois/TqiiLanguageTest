@@ -36,8 +36,8 @@ namespace TqiiLanguageTest.Pages.Registration {
         }
 
         public async Task<IActionResult> OnPostAsync() {
-            var returnValue = await _registrationPersonHelper.SavePerson(RegistrationPerson, User.Identity?.Name ?? "");
-            return this.RedirectToPage();
+            _ = await _registrationPersonHelper.SavePerson(RegistrationPerson, User.Identity?.Name ?? "");
+            return RedirectToPage();
         }
     }
 }

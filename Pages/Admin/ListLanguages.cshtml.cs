@@ -56,12 +56,12 @@ namespace TqiiLanguageTest.Pages.Admin {
         public async Task<IActionResult> OnPostAsync() {
             var item = await _context.LanguageOptions.FirstOrDefaultAsync(l => l.Id == Id);
             if (item != null) {
-                item.Language = NewLanguage.Trim();
-                item.Characters = NewCharacters.Trim();
+                item.Language = NewLanguage?.Trim() ?? "";
+                item.Characters = NewCharacters?.Trim() ?? "";
                 item.Popout = NewPopup;
                 item.EnforceStrictGrading = NewUseStrict;
             } else {
-                _context.LanguageOptions.Add(new LanguageOptions { Language = NewLanguage.Trim(), Characters = NewCharacters.Trim(), Popout = NewPopup, EnforceStrictGrading = NewUseStrict });
+                _context.LanguageOptions.Add(new LanguageOptions { Language = NewLanguage?.Trim() ?? "", Characters = NewCharacters?.Trim() ?? "", Popout = NewPopup, EnforceStrictGrading = NewUseStrict });
             }
             _ = await _context.SaveChangesAsync();
             return RedirectToPage("./ListLanguages");

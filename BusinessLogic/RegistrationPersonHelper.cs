@@ -64,7 +64,7 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public RegistrationTestPerson GetTestPerson(int id) => _context.RegistrationTestPeople?.SingleOrDefault(c => c.Id == id) ?? new RegistrationTestPerson();
 
-        public RegistrationCohort? IsPersonAssignedToCohort(int personId) => _context.CohortPeople?.Include(c => c.RegistrationCohort).SingleOrDefault(x => x.RegistrationPersonId == personId)?.RegistrationCohort;
+        public RegistrationCohort? IsPersonAssignedToCohort(int personId) => _context.CohortPeople?.Include(c => c.RegistrationCohort).SingleOrDefault(x => x.RegistrationPersonId == personId && x.IsRegistrationCompleted)?.RegistrationCohort;
 
         public int? IsPersonAssignedToCohortGetId(int personId) => _context.CohortPeople?.SingleOrDefault(x => x.RegistrationPersonId == personId && x.IsRegistrationCompleted)?.Id;
 
