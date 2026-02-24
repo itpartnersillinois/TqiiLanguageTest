@@ -31,7 +31,7 @@ namespace TqiiLanguageTest.Controllers {
             if (test == null) {
                 return NotFound();
             }
-            var questions = _context?.Questions?.Where(q => q.TestId == testUser.TestId).Select(q => new { q.Id, q.IntroductionText, q.QuestionText, q.RecordingText, q.InteractiveReadingAnswer, q.BasicAnswerKey1, q.BasicAnswerKey2, q.BasicAnswerKey3, q.BasicQuestion1, q.BasicQuestion2, q.BasicQuestion3, q.Title }).ToList();
+            var questions = _context?.Questions?.Where(q => q.TestId == testUser.TestId).Select(q => new { q.Id, q.Title, q.IntroductionText, q.RecordingText, q.InteractiveReadingAnswer, q.BasicQuestion1, q.QuestionText, q.BasicQuestion2, q.BasicQuestion3, q.QuestionType }).ToList();
             var answers = _context?.Answers?.Where(a => a.TestUserId == id).OrderBy(a => a.DateTimeStart).ToList() ?? new List<Answer>();
             using (var memoryStream = new MemoryStream()) {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true)) {
@@ -40,9 +40,8 @@ namespace TqiiLanguageTest.Controllers {
                         var prefix = GeneratePrefix(test, testUser, question.Title, answer);
                         if (answer.Recording.Count() > 0) {
                             var file = archive.CreateEntry($"{prefix}_answer.wav");
-                            using (var stream = file.Open()) {
-                                stream.Write(answer.Recording, 0, answer.Recording.Length);
-                            }
+                            using var stream = file.Open();
+                            stream.Write(answer.Recording, 0, answer.Recording.Length);
                         }
                         if (question != null) {
                             var sb = new StringBuilder();
@@ -85,26 +84,19 @@ namespace TqiiLanguageTest.Controllers {
             }
             var testUsers = _context?.TestUsers.Include(tu => tu.Test).Where(tu => ids.Contains(tu.Id)).ToList();
 
-            var questions = _context?.Questions?.Where(q => testUsers.Select(tu => tu.Test.Id).Contains(q.TestId)).ToList();
-            var answers = _context?.Answers?.Where(a => ids.Contains(a.TestUserId ?? 0)).ToList() ?? new List<Answer>();
+            var questions = _context?.Questions?.Where(q => testUsers.Select(tu => tu.Test.Id).Contains(q.TestId)).Select(q => new { q.Id, q.Title, q.IntroductionText, q.RecordingText, q.InteractiveReadingAnswer, q.BasicQuestion1, q.QuestionText, q.BasicQuestion2, q.BasicQuestion3, q.QuestionType }).ToList();
+            var answers = _context?.Answers?.Where(a => ids.Contains(a.TestUserId ?? 0)).ToList() ?? [];
             using (var memoryStream = new MemoryStream()) {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true)) {
                     foreach (var answer in answers) {
                         var question = questions?.SingleOrDefault(q => q.Id == answer.QuestionId);
-                        var prefix = GeneratePrefix(testUsers.Single(tu => tu.Id == answer.TestUserId).Test ?? new Test(), testUsers.Single(tu => tu.Id == answer.TestUserId), question.QuestionTitle, answer);
+                        var prefix = GeneratePrefix(testUsers.Single(tu => tu.Id == answer.TestUserId).Test ?? new Test(), testUsers.Single(tu => tu.Id == answer.TestUserId), question.Title, answer);
                         if (answer.Recording.Count() > 0) {
                             var file = archive.CreateEntry($"{prefix}_answer.wav");
-                            using (var stream = file.Open()) {
-                                stream.Write(answer.Recording, 0, answer.Recording.Length);
-                            }
+                            using var stream = file.Open();
+                            stream.Write(answer.Recording, 0, answer.Recording.Length);
                         }
                         if (question != null) {
-                            if (question.Recording.Count() > 0) {
-                                var file = archive.CreateEntry($"{prefix}_question.wav");
-                                using (var stream = file.Open()) {
-                                    stream.Write(question.Recording, 0, question.Recording.Length);
-                                }
-                            }
                             var sb = new StringBuilder();
                             AddString(ref sb, "ID " + answer.Id, false);
                             AddString(ref sb, "Title: " + question.Title, false);
@@ -126,9 +118,8 @@ namespace TqiiLanguageTest.Controllers {
                             AddString(ref sb, "------------------------", false);
                             var answerKey = archive.CreateEntry($"{prefix}_details.txt");
                             var questionList = Encoding.UTF8.GetBytes(sb.ToString());
-                            using (var stream = answerKey.Open()) {
-                                stream.Write(questionList, 0, questionList.Length);
-                            }
+                            using var stream = answerKey.Open();
+                            stream.Write(questionList, 0, questionList.Length);
                         }
                     }
                 }
