@@ -68,8 +68,8 @@
             @foreach (var item in Model.Raters)
             {
                 <li>
-                    <label for="@item.Id"> @item.Email (@item.NumberOfTests)</label><input type="checkbox" id="@item.Id" value="@item.Id" name="raters" />
-                    <label for="@item.Id-second" style="padding-left: 20px;"> Secondary Rater</label><input type="checkbox" id="@item.Id-second" value="@item.Id" name="raters-second" />
+                    <span style="display: inline-block; min-width: 600px;"><label for="@item.Id"> @item.FullName / @item.Email (@item.NumberOfTests)</label><input type="checkbox" id="@item.Id" value="@item.Id" name="raters" /></span>
+                    <span><label for="@item.Id-second" style="padding-left: 20px;"> Secondary Rater</label><input type="checkbox" id="@item.Id-second" value="@item.Id" name="raters-second" /></span>
                 </li>
             }
         </ul>

@@ -91,8 +91,9 @@ namespace TqiiLanguageTest.Controllers {
                     foreach (var answer in answers) {
                         var question = questions?.SingleOrDefault(q => q.Id == answer.QuestionId);
                         var prefix = GeneratePrefix(testUsers.Single(tu => tu.Id == answer.TestUserId).Test ?? new Test(), testUsers.Single(tu => tu.Id == answer.TestUserId), question.Title, answer);
+                        var folder = GenerateFolder(testUsers.Single(tu => tu.Id == answer.TestUserId).Test ?? new Test(), testUsers.Single(tu => tu.Id == answer.TestUserId));
                         if (answer.Recording.Count() > 0) {
-                            var file = archive.CreateEntry($"{prefix}_answer.wav");
+                            var file = archive.CreateEntry($"{folder}/{prefix}_answer.wav");
                             using var stream = file.Open();
                             stream.Write(answer.Recording, 0, answer.Recording.Length);
                         }
@@ -116,7 +117,7 @@ namespace TqiiLanguageTest.Controllers {
                             AddString(ref sb, question.BasicQuestion3, true);
                             AddString(ref sb, answer.BasicAnswers3, false);
                             AddString(ref sb, "------------------------", false);
-                            var answerKey = archive.CreateEntry($"{prefix}_details.txt");
+                            var answerKey = archive.CreateEntry($"{folder}/{prefix}_details.txt");
                             var questionList = Encoding.UTF8.GetBytes(sb.ToString());
                             using var stream = answerKey.Open();
                             stream.Write(questionList, 0, questionList.Length);
@@ -136,6 +137,10 @@ namespace TqiiLanguageTest.Controllers {
                     _ = sb.AppendLine("---------");
                 }
             }
+        }
+
+        private string GenerateFolder(Test test, TestUser testUser) {
+            return $"{test.Title}-{(testUser.DateTimeStart.HasValue ? testUser.DateTimeStart.Value.ToString("yyyyMMdd") : "")}-{testUser.UserIdentification}";
         }
 
         private string GeneratePrefix(Test test, TestUser testUser, string questionTitle, Answer answer) {

@@ -42,7 +42,7 @@ namespace TqiiLanguageTest.Email {
                         } else if (!string.IsNullOrWhiteSpace(test.RegistrationTest?.RegistrationLink)) {
                             body += $"<li>Register for the {test.RegistrationTest?.TestName} by visiting the following link: <a href='{test.RegistrationTest?.RegistrationLink}'>{test.RegistrationTest?.RegistrationLink}</a></li>";
                         } else {
-                            body += $"<li>Register for the {test.RegistrationTest?.TestName} will be managed by the test administrator.</li>";
+                            body += $"<li>Registration for the {test.RegistrationTest?.TestName} will be managed by the test administrator.</li>";
                         }
                     }
                     body += "</ul>";
