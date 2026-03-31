@@ -45,7 +45,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             return returnValuePastTests == null ? new List<Tuple<Guid?, DateTime?, DateTime?, string>>() : returnValuePastTests.Select(r => new Tuple<Guid?, DateTime?, DateTime?, string>(r.Guid, r.DateTimeScheduled, r.DateTimeExpired, r.Language)).ToList();
         }
 
-        public Guid? GetTestUserGuidNextTestOnly(string email) =>
-            _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null).OrderBy(tu => tu.OrderBy).FirstOrDefault()?.Guid;
+        public Guid? GetTestUserGuidNextTestOnly(string email, string language) =>
+            _context.TestUsers?.Include(tu => tu.Test)?.Where(tu => tu.Test != null && !tu.Test.IsPractice && tu.Email == email && tu.DateTimeEnd == null && tu.Language == language).OrderBy(tu => tu.OrderBy).FirstOrDefault()?.Guid;
     }
 }
