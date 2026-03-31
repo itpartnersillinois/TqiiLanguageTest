@@ -30,12 +30,16 @@ namespace TqiiLanguageTest.Pages.Admin {
 
         public async Task<IActionResult> OnPostAsync() {
             using var ms = new MemoryStream();
-            Request.Form.Files.First().CopyTo(ms);
-            var fileBytes = ms.ToArray();
             var id = int.Parse(Request.Form.First().Value);
             var testid = Request.Form["testid"];
             var imagetype = int.Parse(Request.Form["imageType"]);
-            var result = await _questionHandler.SaveByteArray(id, fileBytes, (ImageTypeEnum) imagetype);
+            if (Request.Form.Files.Count == 0) {
+                _ = await _questionHandler.SaveByteArray(id, Array.Empty<byte>(), (ImageTypeEnum)imagetype);
+                return RedirectToPage("./CreateTest", new { id = testid });
+            }
+            Request.Form.Files.First().CopyTo(ms);
+            var fileBytes = ms.ToArray();
+            var result = await _questionHandler.SaveByteArray(id, fileBytes, (ImageTypeEnum)imagetype);
             return RedirectToPage("./CreateTest", new { id = testid });
         }
     }

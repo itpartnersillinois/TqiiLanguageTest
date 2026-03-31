@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
 
@@ -68,7 +68,7 @@ namespace TqiiLanguageTest.Controllers {
                 sb.AppendLine();
             }
 
-            return File(Encoding.ASCII.GetBytes(sb.ToString()), "application/txt", "tqii-report-detail.txt");
+            return File(Encoding.Unicode.GetBytes(sb.ToString()), "application/txt", "tqii-report-detail.txt");
         }
 
         [HttpGet("isbe")]
