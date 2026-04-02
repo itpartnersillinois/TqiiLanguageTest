@@ -33,19 +33,23 @@ namespace TqiiLanguageTest.Email {
                 var sendEmail = true;
                 if (cohortPerson.IsApproved) {
                     body += $"<p>Congratulations! You have been approved to participate in the {cohort?.TestName} starting on {cohort?.StartDate.ToString("MMMM dd, yyyy")}.</p>";
-                    body += "<p>Please follow the instructions below to complete your registration:</p>";
-                    body += "<ul>";
+                    var instructions = "";
                     var tests = _context.RegistrationTestPeople?.Include(tp => tp.RegistrationTest).Where(tp => tp.RegistrationCohortPersonId == cohortPerson.Id).ToList() ?? new List<RegistrationTestPerson>();
                     foreach (var test in tests) {
                         if (test.IsProficiencyExemptionApproved) {
-                            body += $"<li>You have been granted an exemption for the {test.RegistrationTest?.TestName}.</li>";
+                            instructions += $"<li>You have been granted an exemption for the {test.RegistrationTest?.TestName}.</li>";
+                        } else if (test.RegistrationTest?.RegistrationLink == "admin") {
+                            instructions += $"<li>Registration for the {test.RegistrationTest?.TestName} will be managed by the test administrator.</li>";
                         } else if (!string.IsNullOrWhiteSpace(test.RegistrationTest?.RegistrationLink)) {
-                            body += $"<li>Register for the {test.RegistrationTest?.TestName} by visiting the following link: <a href='{test.RegistrationTest?.RegistrationLink}'>{test.RegistrationTest?.RegistrationLink}</a></li>";
-                        } else {
-                            body += $"<li>Registration for the {test.RegistrationTest?.TestName} will be managed by the test administrator.</li>";
+                            instructions += $"<li>Registration for the {test.RegistrationTest?.TestName} by visiting the following link: <a href='{test.RegistrationTest?.RegistrationLink}'>{test.RegistrationTest?.RegistrationLink}</a></li>";
                         }
                     }
-                    body += "</ul>";
+                    if (!string.IsNullOrWhiteSpace(instructions)) {
+                        body += "<p>Please follow the instructions below to complete your registration:</p>";
+                        body += "<ul>";
+                        body += instructions;
+                        body += "</ul>";
+                    }
                     body += approved;
                     cohortPerson.DateRegistered = DateTime.UtcNow;
                     cohortPerson.DateRegistrationSent = DateTime.UtcNow;
