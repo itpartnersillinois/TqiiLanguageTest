@@ -16,8 +16,8 @@ namespace TqiiLanguageTest.ModelsRegistration {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public string NumberSlots => NumberStudentsEnrolled >= NumberStudents ? "This session is full -- we will contact you if seats become available" :
-            (NumberStudentsEnrolled + 5 >= NumberStudents ? "This session is filling up." : "Seats are available for this session");
+        public string NumberSlots => NumberStudentsApplied >= NumberStudents ? "This session is full -- we will contact you if seats become available" :
+            (NumberStudentsApplied + 5 >= NumberStudents ? "This session is filling up." : "Seats are available for this session");
 
         public int NumberStudents { get; set; }
 
@@ -43,7 +43,7 @@ namespace TqiiLanguageTest.ModelsRegistration {
                     return $"Enrollment closed on {EnrollmentEndDate.Value.ToLongDateString()} {EnrollmentEndDate.Value.ToShortTimeString()}.";
                 }
             }
-            if (NumberStudentsEnrolled >= NumberStudents) {
+            if (NumberStudentsApplied >= NumberStudents) {
                 return "This session is full.";
             }
             return "";

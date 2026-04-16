@@ -229,7 +229,7 @@ else
                     method: 'POST',
                     body: fd
                 }).then(function (response) {
-                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : (automatic ? 'You have automatically been enrolled for the ' + document.getElementById(id + '_title').innerText : 'You have enrolled for the ' + document.getElementById(id + '_title').innerText);
+                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : 'You have registered for the ' + document.getElementById(id + '_title').innerText;
                     document.getElementById(id + '_results').style.display = '';
                     if (document.getElementById('english_results').style.display == '' &&
                         document.getElementById('foreign_results').style.display == '' &&
