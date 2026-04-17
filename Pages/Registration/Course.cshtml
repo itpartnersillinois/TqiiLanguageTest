@@ -5,11 +5,15 @@
 }
 
 <h1>Choose Courses</h1>
+@if (Model.IsFull)
+{
+    <p>This cohort is full. Please check back later to see if anyone has withdrawn from the cohort.</p>
+} 
 @if (Model.IsAlreadyRegistered)
 {
-    <p>You have already registered and your information is being evaluated. If you need to change your registration, please contact tqii@education.illinois.edu. </p>
+    <p>You have already registered and your information is being evaluated. If you need to withdraw your registration, please contact tqii@education.illinois.edu. </p>
 } 
-else
+@if (!Model.IsAlreadyRegistered && !Model.IsFull)
 {
 <p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. If you leave this page before the final submission process, your information will be lost and you will need to start over. You can <a id="startover">reload this page to start over</a> at any time.</p>
 
@@ -229,7 +233,7 @@ else
                     method: 'POST',
                     body: fd
                 }).then(function (response) {
-                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : (automatic ? 'You have automatically been enrolled for the ' + document.getElementById(id + '_title').innerText : 'You have enrolled for the ' + document.getElementById(id + '_title').innerText);
+                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : 'You have registered for the ' + document.getElementById(id + '_title').innerText;
                     document.getElementById(id + '_results').style.display = '';
                     if (document.getElementById('english_results').style.display == '' &&
                         document.getElementById('foreign_results').style.display == '' &&
