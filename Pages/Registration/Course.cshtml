@@ -5,11 +5,15 @@
 }
 
 <h1>Choose Courses</h1>
+@if (Model.IsFull)
+{
+    <p>This cohort is full. Please check back later to see if anyone has withdrawn from the cohort.</p>
+} 
 @if (Model.IsAlreadyRegistered)
 {
-    <p>You have already registered and your information is being evaluated. If you need to change your registration, please contact tqii@education.illinois.edu. </p>
+    <p>You have already registered and your information is being evaluated. If you need to withdraw your registration, please contact tqii@education.illinois.edu. </p>
 } 
-else
+@if (!Model.IsAlreadyRegistered && !Model.IsFull)
 {
 <p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. If you leave this page before the final submission process, your information will be lost and you will need to start over. You can <a id="startover">reload this page to start over</a> at any time.</p>
 

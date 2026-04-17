@@ -36,6 +36,12 @@ namespace TqiiLanguageTest.BusinessLogic {
                     _ = await _context.SaveChangesAsync();
                 }
                 return existingItem.Id;
+            } else {
+                var numberApplied = _context.CohortPeople?.Count(cp => cp.RegistrationCohortId == cohortId) ?? 0;
+                var numberSlots = _context.Cohorts?.FirstOrDefault(c => c.Id == cohortId)?.NumberStudents ?? 0;
+                if (numberSlots >= numberApplied) {
+                    return 0;
+                }
             }
             var item = new RegistrationCohortPerson {
                 RegistrationCohortId = cohortId,
