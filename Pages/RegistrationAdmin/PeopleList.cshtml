@@ -18,6 +18,7 @@
             <p>
                 <span>@cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName
                     <a href="mailto:@cohortPerson.RegistrationPerson?.Email">@cohortPerson.RegistrationPerson?.Email</a>
+                    Started registration on @cohortPerson.DateCreated.ToString("f");
                 </span>
                 <select onchange="sendDecision(this)" data-id="@cohortPerson.Id" aria-label="Update @cohortPerson.RegistrationPerson?.FirstName @cohortPerson.RegistrationPerson?.LastName">
                     <option value="">Not Decided</option>

@@ -39,6 +39,8 @@ namespace TqiiLanguageTest.Pages.Registration {
         public IEnumerable<RegistrationTest> InterpreterCourses => Tests.Where(t => t.TypeOfTest == TestType.Interpreter);
         public bool IsAlreadyRegistered { get; set; } = false;
 
+        public bool IsFull { get; set; } = false;
+
         [BindProperty]
         public RegistrationPerson RegistrationPerson { get; set; } = default!;
 
@@ -67,6 +69,7 @@ namespace TqiiLanguageTest.Pages.Registration {
                 CohortPersonId = assignedCohort.Value;
                 IsAlreadyRegistered = true;
             }
+            IsFull = CohortPersonId == 0;
             return Page();
         }
 

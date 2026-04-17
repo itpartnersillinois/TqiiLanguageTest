@@ -23,7 +23,7 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "") && !_permissions.IsRegistrationReviewer(User.Identity?.Name ?? "")) {
                 return Unauthorized();
             }
-            Cohorts = _registrationTestHelper.GetCohorts();
+            Cohorts = _registrationTestHelper.GetCohorts(0);
             var id = string.IsNullOrWhiteSpace(Request.Query["id"]) ? 0 : int.Parse(Request.Query["id"]);
             RegistrationCohort = _registrationTestHelper.GetCohort(id);
             return Page();
@@ -34,7 +34,7 @@ namespace TqiiLanguageTest.Pages.RegistrationAdmin {
                 return Unauthorized();
             }
             _ = await _registrationTestHelper.SaveCohort(RegistrationCohort);
-            return this.RedirectToPage();
+            return RedirectToPage();
         }
     }
 }

@@ -19,10 +19,21 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public List<RegistrationCohortPerson> GetCohortPeopleIncomplete(int cohortId) => _context.CohortPeople?.Include(r => r.RegistrationPerson).Where(r => r.RegistrationCohortId == cohortId && !r.IsRegistrationCompleted && r.RegistrationPerson != null).OrderBy(r => r.RegistrationPerson.LastName).ThenBy(r => r.RegistrationPerson.FirstName).ToList() ?? new List<RegistrationCohortPerson>();
 
-        public List<RegistrationCohort> GetCohorts() {
+        public List<RegistrationCohort> GetCohorts(int registrationPersonId) {
             var returnValue = _context.Cohorts?.OrderBy(c => c.StartDate).ToList() ?? new List<RegistrationCohort>();
+            var saveChanges = false;
+            foreach (var cohortPerson in _context.CohortPeople.Where(cp => cp.DateCreated.AddDays(3) < DateTime.Now && !cp.IsRegistrationCompleted)) {
+                foreach (var cohortTest in _context.RegistrationTestPeople.Where(rt => rt.RegistrationCohortPersonId == cohortPerson.Id)) {
+                    _context.RegistrationTestPeople.Remove(cohortTest);
+                }
+                _context.CohortPeople.Remove(cohortPerson);
+                saveChanges = true;
+            }
+            if (saveChanges) {
+                _context.SaveChanges();
+            }
             foreach (var cohort in returnValue) {
-                cohort.NumberStudentsApplied = _context.CohortPeople?.Count(cp => cp.RegistrationCohortId == cohort.Id) ?? 0;
+                cohort.NumberStudentsApplied = _context.CohortPeople?.Count(cp => cp.RegistrationCohortId == cohort.Id && cp.RegistrationPersonId != registrationPersonId) ?? 0;
                 cohort.NumberStudentsEnrolled = _context.CohortPeople?.Count(cp => cp.RegistrationCohortId == cohort.Id && (cp.DateRegistered != null || cp.IsApproved)) ?? 0;
             }
             return returnValue;
@@ -54,11 +65,11 @@ namespace TqiiLanguageTest.BusinessLogic {
             test.TestName ??= "";
             test.RegistrationLink ??= "";
             test.Language ??= "";
-            if (test.Id == 0) {
+            if (test.Id == 0 && test.TestName != "") {
                 _ = _context.Add(test);
             } else if (test.TestName == "") {
                 _context.RegistrationTests?.Remove(test);
-            } else {
+            } else if (test.Id != 0) {
                 _context.RegistrationTests?.Update(test);
             }
             return await _context.SaveChangesAsync();
