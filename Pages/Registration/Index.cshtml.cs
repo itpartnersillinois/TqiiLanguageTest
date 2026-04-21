@@ -26,7 +26,8 @@ namespace TqiiLanguageTest.Pages.Registration {
         public RegistrationPerson RegistrationPerson { get; set; } = default!;
 
         public IActionResult OnGet() {
-            RegistrationPerson = _registrationPersonHelper.GetPerson(User.Identity?.Name ?? "");
+            var name = User.Identity?.Name ?? "";
+            RegistrationPerson = _registrationPersonHelper.GetPerson(name);
             Cohorts = _registrationTestHelper.GetCohorts(RegistrationPerson.Id);
             Introduction = _instructionHelper.GetInstructionString(InstructionType.Introduction);
             CohortIntroduction = _instructionHelper.GetInstructionString(InstructionType.CohortIntroduction);
