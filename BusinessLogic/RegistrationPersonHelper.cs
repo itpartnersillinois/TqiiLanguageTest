@@ -39,7 +39,7 @@ namespace TqiiLanguageTest.BusinessLogic {
             } else {
                 var numberApplied = _context.CohortPeople?.Count(cp => cp.RegistrationCohortId == cohortId) ?? 0;
                 var numberSlots = _context.Cohorts?.FirstOrDefault(c => c.Id == cohortId)?.NumberStudents ?? 0;
-                if (numberSlots >= numberApplied) {
+                if (numberApplied >= numberSlots) {
                     return 0;
                 }
             }

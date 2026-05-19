@@ -15,7 +15,9 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public string GetInstructionString(InstructionType id) {
             var returnValue = GetInstruction(id)?.InstructionText ?? "";
-            returnValue = Regex.Replace(returnValue, @"(https?://[^\s]+)", "<a href=\"$1\">$1</a>", RegexOptions.IgnoreCase);
+            if (!returnValue.Contains("<a")) {
+                returnValue = Regex.Replace(returnValue, @"(https?://[^\s]+)", "<a href=\"$1\">$1</a>", RegexOptions.IgnoreCase);
+            }
             return string.IsNullOrWhiteSpace(returnValue) ? "" : "<p>" + returnValue.Replace("\r", "</p><p>").Replace("\n", "") + "</p>";
         }
 
