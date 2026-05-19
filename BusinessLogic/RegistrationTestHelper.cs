@@ -34,13 +34,13 @@ namespace TqiiLanguageTest.BusinessLogic {
             }
             var cohortPeople = _context.CohortPeople?.Where(cp => cp.RegistrationPersonId == registrationPersonId).ToList() ?? new List<RegistrationCohortPerson>();
             foreach (var cohort in returnValue) {
-                if (cohortPeople.Any(cp => cp.RegistrationCohortId == cohort.Id)) {
+                if (cohortPeople.Any(cp => cp.RegistrationCohortId == cohort.Id && cp.RegistrationCohortId == cohort.Id)) {
                     // If the person started registration, blank the students enrolled or applied so they can continue.
                     cohort.NumberStudentsApplied = 0;
                     cohort.NumberStudentsEnrolled = 0;
                 } else {
-                    cohort.NumberStudentsApplied = _context.CohortPeople?.Count(cp => cp.RegistrationPersonId != registrationPersonId) ?? 0;
-                    cohort.NumberStudentsEnrolled = _context.CohortPeople?.Count(cp => cp.DateRegistered != null || cp.IsApproved) ?? 0;
+                    cohort.NumberStudentsApplied = _context.CohortPeople?.Count(cp => cp.RegistrationCohortId == cohort.Id && cp.RegistrationPersonId != registrationPersonId) ?? 0;
+                    cohort.NumberStudentsEnrolled = _context.CohortPeople?.Count(cp => cp.RegistrationCohortId == cohort.Id && (cp.DateRegistered != null || cp.IsApproved)) ?? 0;
                 }
             }
             return returnValue;
