@@ -17,6 +17,30 @@ namespace TqiiLanguageTest.Email {
             _instructionHelper = instructionHelper;
         }
 
+        public async Task<string> SendConfirmationEmail(int cohortPersonId) {
+            var cohortPerson = _context.CohortPeople?.Include(cp => cp.RegistrationCohort).Include(cp => cp.RegistrationPerson).SingleOrDefault(cp => cp.Id == cohortPersonId);
+            if (cohortPerson == null) {
+                return "Cohort person not found.";
+            }
+            var completion = _instructionHelper.GetInstructionString(InstructionType.EmailOnCompletion);
+            var tests = _context.RegistrationTestPeople?.Include(tp => tp.RegistrationTest).Where(tp => tp.RegistrationCohortPersonId == cohortPerson.Id).ToList() ?? new List<RegistrationTestPerson>();
+
+            var body = $"<p>Dear {cohortPerson.RegistrationPerson?.FirstName},</p>";
+            body += $"<p>Thank you for registering for the {cohortPerson.RegistrationCohort?.TestName} starting on {cohortPerson.RegistrationCohort?.StartDate.ToString("MMMM dd, yyyy")}.</p>";
+            body += completion;
+            body += "<p>Test details</p><ul>";
+            foreach (var test in tests) {
+                if (test.IsProficiencyExemption) {
+                    body += $"<li>You have requested an exemption for the {test.RegistrationTest?.TestName}{(string.IsNullOrWhiteSpace(test.Language) ? "" : $" ({test.Language})")}.</li>";
+                } else
+                    body += $"<li>You have enrolled for the {test.RegistrationTest?.TestName}{(string.IsNullOrWhiteSpace(test.Language) ? "" : $" ({test.Language})")}.</li>";
+            }
+            body += "</ul>";
+
+            await _emailSender.SendEmailAsync(cohortPerson.RegistrationPerson?.Email ?? "", "TQII Registration Confirmation", body);
+            return "";
+        }
+
         public async Task<string> SendEmails(int cohortId, bool sendAll) {
             var cohort = _context.Cohorts?.SingleOrDefault(c => c.Id == cohortId);
             if (cohort == null) {

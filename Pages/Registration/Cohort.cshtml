@@ -1,0 +1,55 @@
+﻿@page
+@model TqiiLanguageTest.Pages.Registration.CohortModel
+@{
+    ViewData["Title"] = "Registration - Choose Cohort";
+}
+<div class="steps">Step 2 of 5</div>
+<div id="cohort">
+<h1>Cohort Information</h1>
+    <p>This program is a blend of synchronous and asynchronous online training and testing sessions, consisting of these three (3) modules:</p>
+    <ol>
+        <li><a href="https://tqii.education.illinois.edu/program-information/language-proficiency-waiver">Language Proficiency Testing</a> (in English and the target language)</li>
+        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/special-education-training">Special Education Training and Testing</a></li>
+        <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/interpreter-training">Interpreting Training and Testing</a> (at least 9 hours)</li>
+    </ol>
+
+@if (Model.AssignedCohort == null)
+{
+    <p>You will select the available cohort and register for all three tests within the cohort, unless an exemption document is provided. You may only exempt from the Language Proficiency Testing and the Special Education training.</p>
+
+    @Html.Raw(Model.CohortIntroduction)
+    @if (Model.Cohorts.Count == 0)
+    {
+        <p>There are no cohorts available for registration at this time. Please check back later.</p>
+    }
+    <form method="post">
+    <ul>
+        @foreach (var cohort in Model.Cohorts)
+        {
+            @if (cohort.Message() == "")
+            {
+                <li style="list-style: none; margin-left: 20px; display: flex;">
+                        <input type="radio" id="cohort_@cohort.Id" name="cohortid" value="@cohort.Id" style="margin-right: 12px; margin-top: 8px;" />
+                    <div>
+                        <label for="cohort_@cohort.Id">@cohort.TestName</label>: @cohort.Description <br />
+                        @cohort.NumberSlots
+                    </div>
+                </li>
+            }
+            else
+            {
+                <li>
+                    @cohort.TestName: @cohort.Description <br />
+                    @cohort.Message()
+                </li>
+            }
+        }
+    </ul>
+    <div class="ils-input-entry form-group">
+        <input type="submit" value="Go to Step 3" class="il-button" />
+    </div>
+    </form>
+} else {
+        <p>You have successfully enrolled for the cohort <strong><a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description</strong>. Your information is being evaluated. If you need to withdraw your registration, please contact tqii@education.illinois.edu.</p>
+}
+</div>

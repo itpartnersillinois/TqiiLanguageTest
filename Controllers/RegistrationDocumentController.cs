@@ -1,5 +1,5 @@
-﻿using System.Text;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Text;
 using TqiiLanguageTest.BusinessLogic;
 using TqiiLanguageTest.Data;
 
@@ -32,9 +32,14 @@ namespace TqiiLanguageTest.Controllers {
             foreach (var cohortPerson in cohortPeople) {
                 _ = sb.Append($"{cohortPerson.RegistrationPerson?.FirstName} {@cohortPerson.RegistrationPerson?.LastName}\t");
                 _ = sb.Append($"{cohortPerson.RegistrationPerson?.Email}\t");
+                _ = sb.Append($"{cohortPerson.RegistrationPerson?.Iein}\t");
+                _ = sb.Append($"{cohortPerson.RegistrationPerson?.NativeLanguage}\t");
                 foreach (var test in testPeople.Where(tp => tp.RegistrationCohortPersonId == cohortPerson.Id).OrderBy(c => c.RegistrationTest?.TypeOfTest)) {
                     _ = sb.Append($"{test.RegistrationTest?.TestName} ({test.RegistrationTest?.TypeOfTest})\t");
-                    _ = sb.Append($"{(test.IsProficiencyExemption ? "Requested Exemption" : "")}\t\t");
+                    _ = sb.Append($"{test.Language}\t");
+                    _ = sb.Append($"{(test.IsProficiencyExemption && test.IsProficiencyExemptionApproved ? "Requested Exemption Approved" : test.IsProficiencyExemption && test.IsProficiencyExemptionDenied ? "Requested Exemption Denied" : test.IsProficiencyExemption ? "Requested Exemption" : "")}\t");
+                    _ = sb.Append($"{test.ExternalComment}\t");
+                    _ = sb.Append($"{test.InternalComment}\t");
                 }
                 _ = sb.AppendLine();
             }

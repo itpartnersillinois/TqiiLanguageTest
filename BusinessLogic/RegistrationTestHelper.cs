@@ -19,8 +19,10 @@ namespace TqiiLanguageTest.BusinessLogic {
 
         public List<RegistrationCohortPerson> GetCohortPeopleIncomplete(int cohortId) => _context.CohortPeople?.Include(r => r.RegistrationPerson).Where(r => r.RegistrationCohortId == cohortId && !r.IsRegistrationCompleted && r.RegistrationPerson != null).OrderBy(r => r.RegistrationPerson.LastName).ThenBy(r => r.RegistrationPerson.FirstName).ToList() ?? new List<RegistrationCohortPerson>();
 
-        public List<RegistrationCohort> GetCohorts(int registrationPersonId) {
-            var returnValue = _context.Cohorts?.OrderBy(c => c.StartDate).ToList() ?? new List<RegistrationCohort>();
+        public List<RegistrationCohort> GetCohorts(int registrationPersonId, bool getAll = false) {
+            var returnValue = getAll ?
+                _context.Cohorts?.OrderBy(c => c.StartDate).ToList() ?? new List<RegistrationCohort>() :
+                _context.Cohorts?.Where(c => c.EnrollmentEndDate.HasValue && c.EnrollmentEndDate.Value.AddDays(7) > DateTime.Now).OrderBy(c => c.StartDate).ToList() ?? new List<RegistrationCohort>();
             var saveChanges = false;
             foreach (var cohortPerson in _context.CohortPeople.Where(cp => cp.DateCreated.AddDays(3) < DateTime.Now && !cp.IsRegistrationCompleted)) {
                 foreach (var cohortTest in _context.RegistrationTestPeople.Where(rt => rt.RegistrationCohortPersonId == cohortPerson.Id)) {

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TqiiLanguageTest.BusinessLogic;
+using TqiiLanguageTest.Email;
 using TqiiLanguageTest.ModelsRegistration;
 
 namespace TqiiLanguageTest.Pages.Registration {
@@ -12,6 +13,7 @@ namespace TqiiLanguageTest.Pages.Registration {
         private readonly RegistrationPersonHelper _registrationPersonHelper;
 
         private readonly RegistrationTestHelper _registrationTestHelper;
+        private readonly RegistrationEmail _registrationEmail;
 
         private readonly Dictionary<string, TestType> _testTypeLookup = new() {
             { "english", TestType.ProficiencyExam1 },
@@ -20,10 +22,11 @@ namespace TqiiLanguageTest.Pages.Registration {
             { "interpreter", TestType.Interpreter }
         };
 
-        public CourseModel(RegistrationTestHelper registrationTestHelper, RegistrationPersonHelper registrationPersonHelper, InstructionHelper instructionHelper) {
+        public CourseModel(RegistrationTestHelper registrationTestHelper, RegistrationPersonHelper registrationPersonHelper, InstructionHelper instructionHelper, RegistrationEmail registrationEmail) {
             _registrationTestHelper = registrationTestHelper;
             _registrationPersonHelper = registrationPersonHelper;
             _instructionHelper = instructionHelper;
+            _registrationEmail = registrationEmail;
         }
 
         public RegistrationCohort Cohort { get; set; } = default!;
@@ -78,7 +81,10 @@ namespace TqiiLanguageTest.Pages.Registration {
             var cohortPersonId = string.IsNullOrWhiteSpace(Request.Form["cohortpersonid"]) ? 0 : int.Parse(Request.Form["cohortpersonid"]);
             var isComplete = string.IsNullOrWhiteSpace(Request.Form["complete"]) ? false : bool.Parse(Request.Form["complete"]);
             if (isComplete) {
-                _ = await _registrationPersonHelper.MarkPersonCohortAsComplete(cohortPersonId);
+                var id = await _registrationPersonHelper.MarkPersonCohortAsComplete(cohortPersonId);
+                if (id != 0) {
+                    _ = await _registrationEmail.SendConfirmationEmail(cohortPersonId);
+                }
             } else {
                 var isExempt = string.IsNullOrWhiteSpace(Request.Form["exempt"]) ? true : bool.Parse(Request.Form["exempt"]);
                 var language = string.IsNullOrWhiteSpace(Request.Form["language"]) ? "" : Request.Form["language"].ToString();
