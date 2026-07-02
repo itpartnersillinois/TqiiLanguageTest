@@ -24,13 +24,20 @@
         <input asp-for="RegistrationPerson.LastName" class="form-control" style="width: 100%;" />
     </div>
     <div class="ils-input-entry form-group">
-        <label for="last_name" class="control-label">IEIN:</label>
+        <label for="iein" class="control-label">IEIN:</label>
         <input asp-for="RegistrationPerson.Iein" class="form-control" style="width: 100%;" />
         @Html.Raw(Model.Iein)
     </div>
     <div class="ils-input-entry form-group">
-        <label for="last_name" class="control-label">Native Language:</label>
+        <label for="native_language" class="control-label">Native Language:</label>
         <input asp-for="RegistrationPerson.NativeLanguage" class="form-control" style="width: 100%;" />
+    </div>
+    <p>Your test performance data will be used for routine quality control and test improvement, including efforts to evaluate and improve the reliability, validity, fairness, security, and overall effectiveness of the test. In addition, with your consent, your test performance data may also be used for research purposes to help improve language assessment. Any research use will follow approved research procedures and applicable confidentiality protections. Whether or not you consent to this will not affect your test scores, access to the test or other TQII services.</p>
+    <div class="ils-input-entry-radio form-group">
+        <input type="radio" id="allow_data_true" asp-for="RegistrationPerson.AllowDataForResearchPurposes" class="form-control" value="true" style="width: 100%;" />
+        <label for="allow_data_true" class="control-label">I consent to have my test performance data used for research purposes.</label>
+        <input type="radio" id="allow_data_false" asp-for="RegistrationPerson.AllowDataForResearchPurposes" class="form-control" value="false" style="width: 100%;" />
+        <label for="allow_data_false" class="control-label">I do not consent to have my test performance data used for research purposes.</label>
     </div>
     <div class="ils-input-entry form-group">
         <input type="submit" value="Go to Step 2" class="il-button" />

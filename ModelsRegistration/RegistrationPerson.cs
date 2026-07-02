@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace TqiiLanguageTest.ModelsRegistration {
 
     public class RegistrationPerson {
+        public bool AllowDataForResearchPurposes { get; set; } = true;
         public string Country { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;

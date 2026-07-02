@@ -30,7 +30,7 @@ namespace TqiiLanguageTest.Controllers {
 
             _ = sb.AppendLine($"Cohort List for {cohort.TestName} ({cohort.DateString})");
             foreach (var cohortPerson in cohortPeople) {
-                _ = sb.Append($"{cohortPerson.RegistrationPerson?.FirstName} {@cohortPerson.RegistrationPerson?.LastName}\t");
+                _ = sb.Append($"{cohortPerson.RegistrationPerson?.FirstName} {cohortPerson.RegistrationPerson?.LastName}\t");
                 _ = sb.Append($"{cohortPerson.RegistrationPerson?.Email}\t");
                 _ = sb.Append($"{cohortPerson.RegistrationPerson?.Iein}\t");
                 _ = sb.Append($"{cohortPerson.RegistrationPerson?.NativeLanguage}\t");
