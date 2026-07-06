@@ -5,12 +5,12 @@ using TqiiLanguageTest.ModelsRegistration;
 
 namespace TqiiLanguageTest.Pages.Registration {
 
-    public class IndexModel : PageModel {
+    public class CohortModel : PageModel {
         private readonly InstructionHelper _instructionHelper;
         private readonly RegistrationPersonHelper _registrationPersonHelper;
         private readonly RegistrationTestHelper _registrationTestHelper;
 
-        public IndexModel(RegistrationTestHelper registrationTestHelper, RegistrationPersonHelper registrationPersonHelper, InstructionHelper instructionHelper) {
+        public CohortModel(RegistrationTestHelper registrationTestHelper, RegistrationPersonHelper registrationPersonHelper, InstructionHelper instructionHelper) {
             _registrationTestHelper = registrationTestHelper;
             _registrationPersonHelper = registrationPersonHelper;
             _instructionHelper = instructionHelper;
@@ -37,8 +37,11 @@ namespace TqiiLanguageTest.Pages.Registration {
         }
 
         public async Task<IActionResult> OnPostAsync() {
-            _ = await _registrationPersonHelper.SavePerson(RegistrationPerson, User.Identity?.Name ?? "");
-            return RedirectToPage("/Registration/Cohort");
+            var cohortId = Request.Form["cohortid"];
+            if (string.IsNullOrWhiteSpace(cohortId)) {
+                return RedirectToPage("/Registration/Cohort");
+            }
+            return RedirectToPage("/Registration/Course", new { cohortid = cohortId });
         }
     }
 }

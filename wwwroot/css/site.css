@@ -112,6 +112,14 @@ button[disabled].il-button, .il-formatted button[disabled].il-button:focus, .il-
         font-size: 1em;
     }
 
+.steps {
+    color: var(--il-altgeld);
+    font-weight: 600;
+    font-size: 24px;
+    border: 2px solid;
+    padding: 0 10px;
+}
+
 .letters {
     width: 80%;
     margin: 40px 0 10px 0;

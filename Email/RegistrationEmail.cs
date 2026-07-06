@@ -17,6 +17,30 @@ namespace TqiiLanguageTest.Email {
             _instructionHelper = instructionHelper;
         }
 
+        public async Task<string> SendConfirmationEmail(int cohortPersonId) {
+            var cohortPerson = _context.CohortPeople?.Include(cp => cp.RegistrationCohort).Include(cp => cp.RegistrationPerson).SingleOrDefault(cp => cp.Id == cohortPersonId);
+            if (cohortPerson == null) {
+                return "Cohort person not found.";
+            }
+            var completion = _instructionHelper.GetInstructionString(InstructionType.EmailOnCompletion);
+            var tests = _context.RegistrationTestPeople?.Include(tp => tp.RegistrationTest).Where(tp => tp.RegistrationCohortPersonId == cohortPerson.Id).ToList() ?? new List<RegistrationTestPerson>();
+
+            var body = $"<p>Dear {cohortPerson.RegistrationPerson?.FirstName},</p>";
+            body += $"<p>Thank you for registering for the {cohortPerson.RegistrationCohort?.TestName} starting on {cohortPerson.RegistrationCohort?.StartDate.ToString("MMMM dd, yyyy")}.</p>";
+            body += completion;
+            body += "<p>Test details</p><ul>";
+            foreach (var test in tests) {
+                if (test.IsProficiencyExemption) {
+                    body += $"<li>You have requested an exemption for the {test.RegistrationTest?.TestName}{(string.IsNullOrWhiteSpace(test.Language) ? "" : $" ({test.Language})")}.</li>";
+                } else
+                    body += $"<li>You have enrolled for the {test.RegistrationTest?.TestName}{(string.IsNullOrWhiteSpace(test.Language) ? "" : $" ({test.Language})")}.</li>";
+            }
+            body += "</ul>";
+
+            await _emailSender.SendEmailAsync(cohortPerson.RegistrationPerson?.Email ?? "", "TQII Registration Confirmation", body);
+            return "";
+        }
+
         public async Task<string> SendEmails(int cohortId, bool sendAll) {
             var cohort = _context.Cohorts?.SingleOrDefault(c => c.Id == cohortId);
             if (cohort == null) {
@@ -32,20 +56,19 @@ namespace TqiiLanguageTest.Email {
                 var body = $"<p>Dear {cohortPerson.RegistrationPerson?.FirstName},</p>";
                 var sendEmail = true;
                 if (cohortPerson.IsApproved) {
-                    body += $"<p>Congratulations! You have been approved to participate in the {cohort?.TestName} starting on {cohort?.StartDate.ToString("MMMM dd, yyyy")}.</p>";
+                    body += $"<p>Congratulations! You have been approved to participate in {cohort?.TestName} starting on {cohort?.StartDate.ToString("MMMM dd, yyyy")}. Please see the details below regarding your module approval status and the remaining training and testing requirements:</p>";
                     var instructions = "";
                     var tests = _context.RegistrationTestPeople?.Include(tp => tp.RegistrationTest).Where(tp => tp.RegistrationCohortPersonId == cohortPerson.Id).ToList() ?? new List<RegistrationTestPerson>();
                     foreach (var test in tests) {
                         if (test.IsProficiencyExemptionApproved) {
-                            instructions += $"<li>You have been granted an exemption for the {test.RegistrationTest?.TestName}.</li>";
-                        } else if (test.RegistrationTest?.RegistrationLink == "admin") {
-                            instructions += $"<li>Registration for the {test.RegistrationTest?.TestName} will be managed by the test administrator.</li>";
-                        } else if (!string.IsNullOrWhiteSpace(test.RegistrationTest?.RegistrationLink)) {
-                            instructions += $"<li>Registration for the {test.RegistrationTest?.TestName} by visiting the following link: <a href='{test.RegistrationTest?.RegistrationLink}'>{test.RegistrationTest?.RegistrationLink}</a></li>";
+                            instructions += $"<li>{test.RegistrationTest?.TestName}: exempted.</li>";
+                        } else if (test.RegistrationTest?.RegistrationLink == "admin" || string.IsNullOrWhiteSpace(test.RegistrationTest?.RegistrationLink)) {
+                            instructions += $"<li>{test.RegistrationTest?.TestName}: required.</li>";
+                        } else {
+                            instructions += $"<li><a href='{test.RegistrationTest?.RegistrationLink}'>{test.RegistrationTest?.TestName}</a>: required</li>";
                         }
                     }
                     if (!string.IsNullOrWhiteSpace(instructions)) {
-                        body += "<p>Please follow the instructions below to complete your registration:</p>";
                         body += "<ul>";
                         body += instructions;
                         body += "</ul>";

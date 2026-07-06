@@ -4,21 +4,21 @@
     ViewData["Title"] = "Registration - Choose Courses";
 }
 
-<h1>Choose Courses</h1>
 @if (Model.IsFull)
 {
+    <h1>Course is Full</h1>
     <p>This cohort is full. Please check back later to see if anyone has withdrawn from the cohort.</p>
 } 
 @if (Model.IsAlreadyRegistered)
 {
+    <h1>Registered</h1>
     <p>You have already registered and your information is being evaluated. If you need to withdraw your registration, please contact tqii@education.illinois.edu. </p>
 } 
 @if (!Model.IsAlreadyRegistered && !Model.IsFull)
 {
-<p>Welcome to the Training Qualified Interpreters for IEP Meetings registration platform. If you leave this page before the final submission process, your information will be lost and you will need to start over. You can <a id="startover">reload this page to start over</a> at any time.</p>
-
     <div id="english_parent">
-    <h2 id="english_title" style="margin: 1.25em 0 0;">English Language Proficiency</h2>
+    <div class="steps">Step 3 of 5</div>
+    <h1 id="english_title" style="margin: 1.25em 0 0;">Verify English Language Proficiency</h1>
     <fieldset id="english_fieldset">
         <legend>You will need to prove your English language proficiency through testing or an exemption request.</legend>
         @Html.Raw(Model.EnglishProficiency)
@@ -43,7 +43,8 @@
     <button class="il-button" disabled id="english_button" onclick="upload('english', false)">Submit English Proficiency Request</button>
     </div>
     <div id="foreign_parent" style="display: none;">
-    <h2 id="foreign_title" style="margin: 1.25em 0 0;">Foreign Language Proficiency</h2>
+    <div class="steps">Step 4 of 5</div>
+    <h1 id="foreign_title" style="margin: 1.25em 0 0;">Verify Foreign Language Proficiency</h1>
     <fieldset id="foreign_fieldset">
         <legend>You will need to prove your foreign language proficiency through testing or an exemption request.</legend>
         @Html.Raw(Model.ForeignLanguageProficiency)
@@ -78,7 +79,8 @@
     <button class="il-button" disabled id="foreign_button" onclick="upload('foreign', false)">Submit Foreign Language Proficiency Request</button>
     </div>
     <div id="specialed_parent" style="display: none;">
-    <h2 id="specialed_title" style="margin: 1.25em 0 0;">Special Education Course</h2>
+    <div class="steps">Step 5 of 5</div>
+    <h1 id="specialed_title" style="margin: 1.25em 0 0;">Verify Special Education Course</h1>
     <fieldset id="specialed_fieldset">
         <legend>You will need to prove your special education proficiency through a course or an exemption request.</legend>
         @Html.Raw(Model.SpecialEducation)
@@ -103,7 +105,7 @@
     <button class="il-button" disabled id="specialed_button" onclick="upload('specialed', false)">Submit Special Education Course Request</button>
     </div>
     <div id="interpreter_parent" style="display: none;">
-    <h2 id="interpreter_title" style="margin: 1.25em 0 0;">Interpreter Course</h2>
+    <h1 id="interpreter_title" style="margin: 1.25em 0 0;">Interpreter Course</h1>
     <fieldset id="interpreter_fieldset">
         <legend>Please select your Interpreter Course:</legend>
         @Html.Raw(Model.Interpreter)
@@ -120,12 +122,11 @@
     <button class="il-button" id="interpreter_button" onclick="upload('interpreter', false)">Enroll for the Interpreter Course</button>
     </div>
 
-    <div class="results" style="padding: 10px 50px; background: var(--il-cloud-1); margin-top: 50px;">
+    <div class="results" style="padding: 10px 50px; margin-top: 50px;">
     <div id="complete" style="display: none;">
         <h2 style="margin: 1.25em 0 0;">Registration is complete</h2>
         @Html.Raw(Model.Conclusion)
     </div>
-    <h2 style="margin: 1.25em 0 0; font-size: 24px;">Results</h2>
     <p id="english_results" style="display: none;"></p>
     <p id="foreign_results" style="display: none;"></p>
     <p id="specialed_results" style="display: none;"></p>
@@ -140,7 +141,6 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", (event) => {
-            document.getElementById('startover').setAttribute('href', window.location.pathname + window.location.search);
             if (document.querySelectorAll('input[name=english]').length == 1) {
                 document.querySelector('input[name=english]').checked = true;
                 document.getElementById('english_button').disabled = false;
@@ -210,11 +210,11 @@
             }
             if (id == 'foreign') {
                 let languageOverride = document.getElementById('languageoverride').value;
-                if (languageOverride == '') {
+                if (languageOverride == undefined || languageOverride == '') {
                     languageOverride = document.getElementById(id + '_language').value;
                 } 
                 fd.append('language', languageOverride);
-                if (languageOverride == '') {
+                if (languageOverride == undefined || languageOverride == '') {
                     isComplete = false;
                 }
             } else {
@@ -233,7 +233,7 @@
                     method: 'POST',
                     body: fd
                 }).then(function (response) {
-                    document.getElementById(id + '_results').innerText = isExempt ? 'You have requested an exemption from the ' + document.getElementById(id + '_title').innerText : 'You have registered for the ' + document.getElementById(id + '_title').innerText;
+                    document.getElementById(id + '_results').innerText = '';
                     document.getElementById(id + '_results').style.display = '';
                     if (document.getElementById('english_results').style.display == '' &&
                         document.getElementById('foreign_results').style.display == '' &&
