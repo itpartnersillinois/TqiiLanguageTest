@@ -15,7 +15,8 @@ namespace TqiiLanguageTest.ModelsRegistration {
         Conclusion,
         EmailApproved,
         EmailDenied,
-        Waitlisted
+        Waitlisted,
+        EmailOnCompletion
     }
 
     public class RegistrationInstruction {
