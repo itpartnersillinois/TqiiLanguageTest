@@ -26,9 +26,9 @@ namespace TqiiLanguageTest.Email {
             var tests = _context.RegistrationTestPeople?.Include(tp => tp.RegistrationTest).Where(tp => tp.RegistrationCohortPersonId == cohortPerson.Id).ToList() ?? new List<RegistrationTestPerson>();
 
             var body = $"<p>Dear {cohortPerson.RegistrationPerson?.FirstName},</p>";
-            body += $"<p>Thank you for registering for the {cohortPerson.RegistrationCohort?.TestName} starting on {cohortPerson.RegistrationCohort?.StartDate.ToString("MMMM dd, yyyy")}.</p>";
             body += completion;
             body += "<p>Test details</p><ul>";
+            body += $"{cohortPerson.RegistrationCohort?.TestName} starting on {cohortPerson.RegistrationCohort?.StartDate.ToString("MMMM dd, yyyy")}";
             foreach (var test in tests) {
                 if (test.IsProficiencyExemption) {
                     body += $"<li>You have requested an exemption for the {test.RegistrationTest?.TestName}{(string.IsNullOrWhiteSpace(test.Language) ? "" : $" ({test.Language})")}.</li>";
@@ -53,9 +53,11 @@ namespace TqiiLanguageTest.Email {
             var count = 0;
             var countSkipped = 0;
             foreach (var cohortPerson in cohortPeople) {
+                var subject = "TQII Registration";
                 var body = $"<p>Dear {cohortPerson.RegistrationPerson?.FirstName},</p>";
                 var sendEmail = true;
                 if (cohortPerson.IsApproved) {
+                    subject = "TQII Registration Approved";
                     body += $"<p>Congratulations! You have been approved to participate in {cohort?.TestName} starting on {cohort?.StartDate.ToString("MMMM dd, yyyy")}. Please see the details below regarding your module approval status and the remaining training and testing requirements:</p>";
                     var instructions = "";
                     var tests = _context.RegistrationTestPeople?.Include(tp => tp.RegistrationTest).Where(tp => tp.RegistrationCohortPersonId == cohortPerson.Id).ToList() ?? new List<RegistrationTestPerson>();
@@ -73,18 +75,29 @@ namespace TqiiLanguageTest.Email {
                         body += instructions;
                         body += "</ul>";
                     }
+                    if (!string.IsNullOrWhiteSpace(cohortPerson.ExternalComment)) {
+                        body += $"<p>Note: <strong>{cohortPerson.ExternalComment}</strong></p>";
+                    }
                     body += approved;
                     cohortPerson.DateRegistered = DateTime.UtcNow;
                     cohortPerson.DateRegistrationSent = DateTime.UtcNow;
                     _context.Update(cohortPerson);
                 } else if (cohortPerson.IsDenied) {
+                    subject = "TQII Registration Denied";
                     body += $"<p>We regret to inform you that your application for the {cohort?.TestName} starting on {cohort?.StartDate.ToString("MMMM dd, yyyy")} has been denied.</p>";
+                    if (!string.IsNullOrWhiteSpace(cohortPerson.ExternalComment)) {
+                        body += $"<p>Note: <strong>{cohortPerson.ExternalComment}</strong></p>";
+                    }
                     body += denied;
                     cohortPerson.DateRegistrationSent = DateTime.UtcNow;
                     _context.Update(cohortPerson);
                 } else if (cohortPerson.IsWaitlisted) {
+                    subject = "TQII Registration";
                     body += $"<p>You have been placed on the waitlist for the {cohort?.TestName} starting on {cohort?.StartDate.ToString("MMMM dd, yyyy")}.</p>";
                     body += "<p>We will notify you if a spot becomes available.</p>";
+                    if (!string.IsNullOrWhiteSpace(cohortPerson.ExternalComment)) {
+                        body += $"<p>Note: <strong>{cohortPerson.ExternalComment}</strong></p>";
+                    }
                     body += waitlisted;
                     cohortPerson.DateRegistrationSent = DateTime.UtcNow;
                     _context.Update(cohortPerson);
@@ -94,10 +107,9 @@ namespace TqiiLanguageTest.Email {
                     sendEmail = false;
                 }
                 _ = await _context.SaveChangesAsync();
-                body += $"<p>{cohortPerson.ExternalComment}</p>";
                 if (sendEmail) {
                     count++;
-                    await _emailSender.SendEmailAsync(cohortPerson.RegistrationPerson?.Email ?? "", "TQII Registration", body);
+                    await _emailSender.SendEmailAsync(cohortPerson.RegistrationPerson?.Email ?? "", subject, body);
                 } else {
                     countSkipped++;
                 }
