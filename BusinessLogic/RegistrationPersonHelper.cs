@@ -86,6 +86,22 @@ namespace TqiiLanguageTest.BusinessLogic {
             return 0;
         }
 
+        public async Task<int> RemovePersonFromCohort(int personId, int cohortId) {
+            var existingItem = _context.CohortPeople?.SingleOrDefault(c => c.RegistrationCohortId == cohortId && c.RegistrationPersonId == personId);
+            if (existingItem != null) {
+                var tests = _context.RegistrationTestPeople?.Where(t => t.RegistrationCohortPersonId == existingItem.Id);
+                if (tests != null) {
+                    foreach (var test in tests) {
+                        _context.RegistrationTestPeople?.Remove(test);
+                    }
+                }
+                _context.CohortPeople?.Remove(existingItem);
+                _ = await _context.SaveChangesAsync();
+                return existingItem.Id;
+            }
+            return 0;
+        }
+
         public async Task<int> SavePerson(RegistrationPerson person, string email) {
             person.Email = email;
             person.FirstName ??= "";

@@ -13,8 +13,6 @@
         <li><a href="https://tqii.education.illinois.edu/program-information/training-modules/interpreter-training">Interpreting Training and Testing</a> (at least 9 hours)</li>
     </ol>
 
-@if (Model.AssignedCohort == null)
-{
     <p>You will select the available cohort and register for all three modules within the cohort, unless an exemption document is provided. You may only exempt from the Language Proficiency Testing and the Special Education training.</p>
 
     @Html.Raw(Model.CohortIntroduction)
@@ -49,7 +47,9 @@
         <input type="submit" value="Go to Step 3" class="il-button" />
     </div>
     </form>
-} else {
-        <p>You have successfully submitted your registration application for the cohort <strong><a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description</strong>. Your information is being evaluated. If you need to withdraw your registration, please contact tqii@education.illinois.edu.</p>
+@if (Model.AssignedCohort != null)
+{
+    <p>You have successfully submitted your registration application for the cohort <strong><a href="/Registration/Course?cohortid=@Model.AssignedCohort.Id">@Model.AssignedCohort.TestName</a>: @Model.AssignedCohort.Description</strong>. Your information is being evaluated. If you need to withdraw your registration, please contact tqii@education.illinois.edu.</p>
+    <p>If you continue with this process, it will remove all previous registration applications.</p>
 }
 </div>
