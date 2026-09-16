@@ -41,6 +41,12 @@ namespace TqiiLanguageTest.Pages.Registration {
             if (string.IsNullOrWhiteSpace(cohortId)) {
                 return RedirectToPage("/Registration/Cohort");
             }
+            var name = User.Identity?.Name ?? "";
+            RegistrationPerson = _registrationPersonHelper.GetPerson(name);
+            AssignedCohort = _registrationPersonHelper.IsPersonAssignedToCohort(RegistrationPerson.Id);
+            if (AssignedCohort != null && AssignedCohort.Id != 0 && AssignedCohort.Id != int.Parse(cohortId)) {
+                _ = await _registrationPersonHelper.RemovePersonFromCohort(RegistrationPerson.Id, AssignedCohort.Id);
+            }
             return RedirectToPage("/Registration/Course", new { cohortid = cohortId });
         }
     }
