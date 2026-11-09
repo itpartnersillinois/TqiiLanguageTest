@@ -102,8 +102,11 @@ namespace TqiiLanguageTest.BusinessLogic {
             return 0;
         }
 
-        public async Task<int> SavePerson(RegistrationPerson person, string email) {
+        public async Task<string> SavePerson(RegistrationPerson person, string email) {
             person.Email = email;
+            if (string.IsNullOrWhiteSpace(person.FirstName) || string.IsNullOrWhiteSpace(person.LastName) || string.IsNullOrWhiteSpace(person.Country) || string.IsNullOrWhiteSpace(person.State) || string.IsNullOrWhiteSpace(person.NativeLanguage)) {
+                return "Please fill in all required fields.";
+            }
             person.FirstName ??= "";
             person.Country ??= "";
             person.NativeLanguage ??= "";
@@ -115,7 +118,8 @@ namespace TqiiLanguageTest.BusinessLogic {
             } else {
                 _context.People?.Update(person);
             }
-            return await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
+            return "";
         }
 
         public async Task<int> UpdateCohortPerson(RegistrationCohortPerson cohortPerson) {

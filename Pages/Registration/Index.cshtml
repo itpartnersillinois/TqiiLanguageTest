@@ -12,6 +12,10 @@
 <p>Email: @Model.RegistrationPerson.Email</p>
 @Html.Raw(Model.Introduction)
 
+@if (Model.Error != "") {
+    <p style="color:darkred">@Model.Error</p>
+}
+
 <form method="post">
     <input asp-for="RegistrationPerson.Id" type="hidden"/>
     <input asp-for="RegistrationPerson.Email" type="hidden" />
