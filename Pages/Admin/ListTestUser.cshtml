@@ -83,44 +83,43 @@
     <tbody>
 @foreach (var item in Model.TestUser) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserIdentification) (@Html.DisplayFor(modelItem => item.Email))
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Test.Title)
-            </td>
-            <td>
-                    @(item.DateTimeStart.HasValue ? Html.DisplayFor(modelItem => item.DateTimeStart) : item.DateTimeScheduled.HasValue ? Html.DisplayFor(modelItem => item.DateTimeScheduled) : "not started") - @(item.DateTimeEnd.HasValue ? Html.DisplayFor(modelItem => item.DateTimeEnd) : item.DateTimeScheduled.HasValue && !item.DateTimeStart.HasValue ? " (scheduled)" : "current")
-            </td>
-            <td>
-                    @(item.DateTimeEnd.HasValue ? "Restarts: " + item.NumberTimesRefreshed : (item.CurrentQuestionOrder == 0 ? "Not Started" : "On Question " + item.CurrentQuestionOrder))
-            </td>
-            <td>
-                <a href="/Admin/RealtimeReport?id=@item.Id" target="_blank">View</a>
-            </td>
-            <td>
-                <a href="/audioanswerdownload/@item.Id">Download Data</a>
-            </td>
-            <td>
-                <a href="#" onclick="deleteTestUser('@item.Id'); return false;">Delete</a>
-            </td>
                 <td>
-                    @if (item.Score > 0)
-                    {
-                        <a href="/Admin/DetailReport?id=@item.Id" target="_blank">Score: @item.Score</a>
-
-                    }
-                    else if (item.DateTimeEnd.HasValue)
-                    {
-                        <a href="/Admin/CreateRaterTest?id=@item.Id" target="_blank">Raters:&nbsp;@item.NumberReviewers Completed:&nbsp;@item.NumberReviewerScores </a><br />
-                        <a href="/testrater/@item.Id">Download Rater Data</a>
-                    }
-                    else
-                    {
-                        <span>Still taking test</span>
-                    }
+                    @Html.DisplayFor(modelItem => item.UserIdentification) (@Html.DisplayFor(modelItem => item.Email))
                 </td>
-            </tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Test.Title)
+                </td>
+                <td>
+                        @(item.DateTimeStart.HasValue ? Html.DisplayFor(modelItem => item.DateTimeStart) : item.DateTimeScheduled.HasValue ? Html.DisplayFor(modelItem => item.DateTimeScheduled) : "not started") - @(item.DateTimeEnd.HasValue ? Html.DisplayFor(modelItem => item.DateTimeEnd) : item.DateTimeScheduled.HasValue && !item.DateTimeStart.HasValue ? " (scheduled)" : "current")
+                </td>
+                <td>
+                        @(item.DateTimeEnd.HasValue ? "Restarts: " + item.NumberTimesRefreshed : (item.CurrentQuestionOrder == 0 ? "Not Started" : "On Question " + item.CurrentQuestionOrder))
+                </td>
+                <td>
+                    <a href="/Admin/RealtimeReport?id=@item.Id" target="_blank">View</a>
+                </td>
+                <td>
+                    <a href="/audioanswerdownload/@item.Id">Download Data</a>
+                </td>
+                <td>
+                    <a href="#" onclick="deleteTestUser('@item.Id'); return false;">Delete</a>
+                </td>
+                <td>
+                @if (item.Score > 0)
+                {
+                    <a href="/Admin/DetailReport?id=@item.Id" target="_blank">Score: @item.Score</a>
+                }
+                else if (item.DateTimeEnd.HasValue)
+                {
+                    <a href="/Admin/CreateRaterTest?id=@item.Id" target="_blank">Raters:&nbsp;@item.NumberReviewers Completed:&nbsp;@item.NumberReviewerScores </a><br />
+                    <a href="/testrater/@item.Id">Download Rater Data</a>
+                }
+                else
+                {
+                    <span>Still taking test - <a href="#" onclick="finalizeTestUser('@item.Id'); return false;">Finalize</a></span>
+                }
+            </td>
+        </tr>
 }
     </tbody>
 </table>
@@ -167,6 +166,16 @@
                 fetch('/deletetestuser/' + id, {
                     method: 'GET'
                 }).then(function (response) {
+                    location.reload();
+                });
+            }
+        }
+
+        function finalizeTestUser(id) {
+            if (confirm("Finalizing the user's test will mean they cannot finish the test on their own. Are you sure?")) {
+                fetch('/deletetestuser/finalize/' + id, {
+                    method: 'GET'
+                }).then(function(response) {
                     location.reload();
                 });
             }
