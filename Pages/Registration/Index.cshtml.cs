@@ -19,6 +19,7 @@ namespace TqiiLanguageTest.Pages.Registration {
         public RegistrationCohort? AssignedCohort { get; set; }
         public string CohortIntroduction { get; set; } = "";
         public List<RegistrationCohort> Cohorts { get; set; } = default!;
+        public string Error { get; set; } = "";
         public string Iein { get; set; } = "";
         public string Introduction { get; set; } = "";
 
@@ -37,7 +38,11 @@ namespace TqiiLanguageTest.Pages.Registration {
         }
 
         public async Task<IActionResult> OnPostAsync() {
-            _ = await _registrationPersonHelper.SavePerson(RegistrationPerson, User.Identity?.Name ?? "");
+            var results = await _registrationPersonHelper.SavePerson(RegistrationPerson, User.Identity?.Name ?? "");
+            if (results != "") {
+                Error = results;
+                return Page();
+            }
             return RedirectToPage("/Registration/Cohort");
         }
     }

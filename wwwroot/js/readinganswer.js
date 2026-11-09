@@ -210,8 +210,9 @@ window.addEventListener("DOMContentLoaded", (event) => {
         document.querySelectorAll('.interactive span.question').forEach(s => {
             s.appendChild(document.createTextNode('['));
             s.querySelectorAll('input').forEach(i => {
-                if (s.id != 'answer') {
+                if (s.id != 'answer' && !i.classList.contains('answered')) {
                     s.appendChild(document.createTextNode(i.value));
+                    i.classList.add('answered');
                 }
             });
             s.appendChild(document.createTextNode(']'));

@@ -66,16 +66,30 @@ window.addEventListener("DOMContentLoaded", (event) => {
             } else {
                 answerText.value = event.target.innerHTML;
             }
+            let continueSubmission = true;
             if (document.getElementsByName('a1').length > 0) {
                 answerText1.value = document.querySelector('input[name="a1"]:checked').value;
+                if (answerText1.value == '') {
+                    continueSubmission = false;
+                }
             }
             if (document.getElementsByName('a2').length > 0) {
                 answerText2.value = document.querySelector('input[name="a2"]:checked').value;
+                if (answerText2.value == '') {
+                    continueSubmission = false;
+                }
             }
             if (document.getElementsByName('a3').length > 0) {
                 answerText3.value = document.querySelector('input[name="a3"]:checked').value;
+                if (answerText3.value == '') {
+                    continueSubmission = false;
+                }
             }
-            document.forms[0].submit();
+            if (continueSubmission) {
+                document.forms[0].submit();
+            } else if (confirm("You have not answered all questions. Are you sure you want to continue?")) {
+                document.forms[0].submit();
+            }
         })
     });
 });

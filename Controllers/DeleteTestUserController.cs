@@ -31,6 +31,36 @@ namespace TqiiLanguageTest.Controllers {
             return Ok();
         }
 
+
+        [HttpGet("finalize/{id}")]
+        public IActionResult Finalize(int id) {
+            if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
+                return Unauthorized();
+            }
+            var testUser = _context?.TestUsers?.SingleOrDefault(tu => tu.Id == id);
+            if (testUser == null) {
+                return NotFound();
+            }
+            var answers = _context?.Answers?.Where(a => a.TestUserId == id).ToList() ?? new List<Answer>();
+            var fullAnswers = _context?.Questions?.Where(a => a.TestId == testUser.TestId).ToList() ?? new List<Question>();
+
+            foreach (var fullAnswer in fullAnswers) {
+                if (!answers.Any(a => a.QuestionId == fullAnswer.Id)) {
+                    _context?.Answers?.Add(new Answer {
+                        TestUserId = testUser.Id,
+                        QuestionId = fullAnswer.Id,
+                        DateTimeTextAnswered = null,
+                        Text = "not answered - finalized by admin",
+                        ReviewerNotes = "not answered - finalized by admin"
+                    });
+                }
+            }
+
+            testUser.DateTimeEnd = DateTime.Now;
+            _context?.SaveChanges();
+            return Ok();
+        }
+
         [HttpGet("rewind/{id}")]
         public IActionResult Rewind(int id) {
             if (!_permissions.IsAdmin(User.Identity?.Name ?? "")) {
